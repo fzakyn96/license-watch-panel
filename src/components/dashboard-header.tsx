@@ -1,25 +1,116 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Bell, LogOut, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiFetch } from "@/lib/auth";
 
 interface DashboardHeaderProps {
   onLogout: () => void;
 }
 
 export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const { toast } = useToast();
 
-  const handleNotificationToggle = (enabled: boolean) => {
-    setNotificationsEnabled(enabled);
-    toast({
-      title: enabled ? "Notifikasi diaktifkan" : "Notifikasi dinonaktifkan",
-      description: enabled 
-        ? "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa" 
-        : "Notifikasi telah dinonaktifkan",
-    });
+  useEffect(() => {
+    checkNotificationStatus();
+  }, []);
+
+  const checkNotificationStatus = async () => {
+    try {
+      const response = await apiFetch('http://localhost:8080/cron/running');
+      const data = await response.json();
+      
+      if (response.status === 200) {
+        setNotificationsEnabled(true);
+      }
+    } catch (error) {
+      console.error('Error checking notification status:', error);
+    }
+  };
+
+  const handleNotificationToggle = async (enabled: boolean) => {
+    try {
+      if (enabled) {
+        const response = await apiFetch('http://localhost:8080/cron/running');
+        const data = await response.json();
+
+        if (data.status === 404) {
+          const createResponse = await apiFetch('http://localhost:8080/cron/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: "sendEmail",
+              time_schedule: "0 9,15 * * 1-5",
+              is_running: true
+            })
+          });
+
+          if (createResponse.ok) {
+            setNotificationsEnabled(true);
+            toast({
+              title: "Notifikasi diaktifkan",
+              description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
+            });
+          }
+        } else if (data.status === 200 && data.data.length > 0) {
+          const uuid = data.data[0].uuid;
+          const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              uuid: uuid,
+              is_running: true
+            })
+          });
+
+          if (switchResponse.ok) {
+            setNotificationsEnabled(true);
+            toast({
+              title: "Notifikasi diaktifkan",
+              description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
+            });
+          }
+        }
+      } else {
+        const response = await apiFetch('http://localhost:8080/cron/running');
+        const data = await response.json();
+
+        if (data.status === 200 && data.data.length > 0) {
+          const uuid = data.data[0].uuid;
+          const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              uuid: uuid,
+              is_running: false
+            })
+          });
+
+          if (switchResponse.ok) {
+            setNotificationsEnabled(false);
+            toast({
+              title: "Notifikasi dinonaktifkan",
+              description: "Notifikasi telah dinonaktifkan"
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling notification:', error);
+      toast({
+        title: "Error",
+        description: "Terjadi kesalahan saat mengubah status notifikasi",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -32,7 +123,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
               <Shield className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">License Monitor</h1>
+              <h1 className="text-xl font-bold text-foreground">Lisensi Aset</h1>
               <p className="text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
             </div>
           </div>
