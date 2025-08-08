@@ -48,6 +48,7 @@ export const EditLicense = () => {
           },
           body: JSON.stringify({ uuid })
         });
+        
         const data = await response.json();
 
         if (data.status === 200) {
