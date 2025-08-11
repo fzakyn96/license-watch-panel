@@ -14,6 +14,7 @@ import { AddLicense } from "./pages/AddLicense";
 import LicensePrices from "./pages/LicensePrices";
 import { getAuth, isAuthenticated, logout as authLogout } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryParams } from "@/hooks/use-query-params";
 
 
 const queryClient = new QueryClient();
@@ -42,10 +43,27 @@ const ProtectedRoute = ({ children, isAuthenticated }: ProtectedRouteProps) => {
   return <>{children}</>;
 };
 
-const App = () => {
+// Component wrapper untuk menangkap query params
+const AppContent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => isAuthenticated());
   const [iframeLoginFailed, setIframeLoginFailed] = useState(false);
   const { toast } = useToast();
+  
+  // Capture query parameters saat app pertama dijalankan
+  const { getUuid, getAllParams, hasUuid } = useQueryParams();
+
+  // Log semua query parameters yang terdeteksi
+  useEffect(() => {
+    const allParams = getAllParams();
+    if (Object.keys(allParams).length > 0) {
+      console.log("🔍 Query parameters terdeteksi saat app start:", allParams);
+      
+      // Contoh handling parameter spesifik
+      if (hasUuid()) {
+        console.log("📋 UUID parameter ditemukan:", getUuid());
+      }
+    }
+  }, []);
 
 
   const handleLogin = () => {
@@ -71,25 +89,34 @@ const App = () => {
 
   const loginIframe = async ({ onLogin }: LoginFormProps) => {
     try {
-      const createRes = await fetch(`${import.meta.env.VITE_BASE_URL}/iframe-client/create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "site_name": "https://google.com",
-          "is_revoked": false,
-          // "redirect": "https://digio.pgn.co.id/digio" //jika diisi dari button
-        })
-      });
+      // Cek apakah ada UUID dari query parameter
+      const queryUuid = getUuid();
+      let uuid = queryUuid;
 
-      if (!createRes.ok) {
-        throw new Error("Gagal membuat iframe client");
-      }
+      if (!queryUuid) {
+        // Jika tidak ada UUID dari query, buat baru seperti sebelumnya
+        const createRes = await fetch(`${import.meta.env.VITE_BASE_URL}/iframe-client/create`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            "site_name": "https://google.com",
+            "is_revoked": false,
+            // "redirect": "https://digio.pgn.co.id/digio" //jika diisi dari button
+          })
+        });
 
-      const createData = await createRes.json();
-      const uuid = createData.data.uuid;
+        if (!createRes.ok) {
+          throw new Error("Gagal membuat iframe client");
+        }
 
-      if (!uuid) {
-        throw new Error("UUID tidak ditemukan dalam response");
+        const createData = await createRes.json();
+        uuid = createData.data.uuid;
+
+        if (!uuid) {
+          throw new Error("UUID tidak ditemukan dalam response");
+        }
+      } else {
+        console.log("🔗 Menggunakan UUID dari query parameter:", queryUuid);
       }
 
       // Iframe login flow: Step 2 - Login with UUID
@@ -180,40 +207,46 @@ const App = () => {
   console.log("App render - isLoggedIn:", isLoggedIn, "isInIframe:", isInIframe());
 
   return (
+    <Routes>
+      <Route path="/login" element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute isAuthenticated={isLoggedIn}>
+            <Dashboard onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit/:uuid"
+        element={
+          <ProtectedRoute isAuthenticated={isLoggedIn}>
+            <EditLicense />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/add" element={
+        <ProtectedRoute isAuthenticated={isLoggedIn}>
+          <AddLicense />
+        </ProtectedRoute>
+      } />
+      <Route path="/prices" element={
+        <ProtectedRoute isAuthenticated={isLoggedIn}>
+          <LicensePrices onLogout={handleLogout} />
+        </ProtectedRoute>
+      } />
+    </Routes>
+  );
+};
+
+const App = () => {
+  return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute isAuthenticated={isLoggedIn}>
-                  <Dashboard onLogout={handleLogout} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/edit/:uuid"
-              element={
-                <ProtectedRoute isAuthenticated={isLoggedIn}>
-                  <EditLicense />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/add" element={
-              <ProtectedRoute isAuthenticated={isLoggedIn}>
-                <AddLicense />
-              </ProtectedRoute>
-            } />
-            <Route path="/prices" element={
-              <ProtectedRoute isAuthenticated={isLoggedIn}>
-                <LicensePrices onLogout={handleLogout} />
-              </ProtectedRoute>
-            } />
-          </Routes>
+          <AppContent />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
