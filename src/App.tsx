@@ -51,6 +51,7 @@ const App = () => {
   const handleLogin = () => {
     console.log("handleLogin called - setting isLoggedIn to true");
     console.log("Current isLoggedIn before update:", isLoggedIn);
+    console.log("isAuthenticated() check:", isAuthenticated());
     setIsLoggedIn(true);
     console.log("setIsLoggedIn(true) called");
   };
@@ -132,6 +133,16 @@ const App = () => {
       });
     }
   }
+
+  // Sync state with actual authentication status
+  useEffect(() => {
+    const actualAuthStatus = isAuthenticated();
+    console.log("Auth sync check - isLoggedIn:", isLoggedIn, "actual auth:", actualAuthStatus);
+    if (actualAuthStatus !== isLoggedIn) {
+      console.log("Syncing isLoggedIn state with actual auth status:", actualAuthStatus);
+      setIsLoggedIn(actualAuthStatus);
+    }
+  }, [isLoggedIn]);
 
   // Auto-logout saat token kadaluarsa
   const attemptedRef = useRef(false);
