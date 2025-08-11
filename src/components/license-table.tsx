@@ -407,6 +407,56 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
   return (
     <div className="space-y-4">
+      {/* Title with Action Buttons */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground">
+            Daftar Lisensi Aset
+          </h3>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button
+            onClick={() => navigate('/add')}
+            className="flex items-center justify-center gap-2"
+            variant="success"
+          >
+            <PlusIcon className="w-4 h-4" />
+            Tambah Lisensi
+          </Button>
+          <Button
+            onClick={() => navigate('/license-prices')}
+            variant="warning"
+            className="flex items-center justify-center gap-2"
+          >
+            <DollarSign className="w-4 h-4" />
+            Harga Lisensi
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center justify-center gap-2">
+                <MoreVertical className="w-4 h-4" />
+                Excel
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={handleDownloadTemplate}>
+                <Download className="w-4 h-4 mr-2" />
+                Download Template
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleImport}>
+                <Upload className="w-4 h-4 mr-2" />
+                Import Data
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExport}>
+                <Download className="w-4 h-4 mr-2" />
+                Export Data
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
       {/* Search and Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="relative flex-1 max-w-sm">
@@ -418,118 +468,81 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             className="pl-10"
           />
         </div>
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Show:</span>
-            <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-              <SelectTrigger className="w-16">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2 sm:space-y-0 sm:space-x-2 sm:flex sm:flex-wrap">
-          <Button
-            onClick={() => navigate('/add')}
-            className="w-full sm:w-auto flex items-center justify-center gap-2"
-            variant="success"
-          >
-            <PlusIcon className="w-4 h-4" />
-            Tambah Lisensi
-          </Button>
-          <Button
-            onClick={() => navigate('/license-prices')}
-            variant="warning"
-            className="w-full sm:w-auto flex items-center justify-center gap-2"
-          >
-            <DollarSign className="w-4 h-4" />
-            Harga Lisensi
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <MoreVertical className="w-4 h-4 mr-2" />
-                Excel
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={handleImport}>
-                <Upload className="w-4 h-4 mr-2" />
-                Import Excel
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExport}>
-                <Download className="w-4 h-4 mr-2" />
-                Export Excel
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  Import Data Lisensi
-                </DialogTitle>
-              </DialogHeader>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label>
-                    Template Excel
-                  </Label>
-                  <div className="text-sm text-muted-foreground">
-                    Gunakan template yang telah disediakan untuk mengimport data
-                  </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleDownloadTemplate}
-                    className="w-full"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download Template
-                  </Button>
-                </div>
-                <div className="space-y-2">
-                  <Label>Upload File</Label>
-                  <div className="text-sm text-muted-foreground">
-                    Pilih file Excel yang akan diimport
-                  </div>
-                  <div className="grid gap-2">
-                    <Input
-                      type="file"
-                      accept=".xlsx"
-                      onChange={handleFileSelect}
-                      disabled={isUploading}
-                    />
-                    <Button
-                      onClick={handleUpload}
-                      disabled={!selectedFile || isUploading}
-                      className="w-full"
-                    >
-                      {isUploading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Mengupload...
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-4 h-4 mr-2" />
-                          Upload
-                        </>
-                      )}
-                     </Button>
-                  </div>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-          </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Show:</span>
+          <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+            <SelectTrigger className="w-16">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
+
+      <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Import Data Lisensi
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label>
+                Template Excel
+              </Label>
+              <div className="text-sm text-muted-foreground">
+                Gunakan template yang telah disediakan untuk mengimport data
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleDownloadTemplate}
+                className="w-full"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download Template
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label>Upload File</Label>
+              <div className="text-sm text-muted-foreground">
+                Pilih file Excel yang akan diimport
+              </div>
+              <div className="grid gap-2">
+                <Input
+                  type="file"
+                  accept=".xlsx"
+                  onChange={handleFileSelect}
+                  disabled={isUploading}
+                />
+                <Button
+                  onClick={handleUpload}
+                  disabled={!selectedFile || isUploading}
+                  className="w-full"
+                >
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Mengupload...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload
+                    </>
+                  )}
+                 </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>

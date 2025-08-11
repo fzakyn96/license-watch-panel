@@ -31,12 +31,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
           
           <StatusCards ref={statusCardsRef} />
           
-          <div>
-            <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-4">
-              Daftar Lisensi Aset
-            </h3>
-            <LicenseTable onDataChange={handleDataChange} />
-          </div>
+          <LicenseTable onDataChange={handleDataChange} />
         </div>
       </main>
     </div>
