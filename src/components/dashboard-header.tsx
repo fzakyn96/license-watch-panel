@@ -183,7 +183,6 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
             >
               <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="hidden sm:inline">Logout</span>
-              <span className="sm:hidden">Exit</span>
             </Button>
           </div>
         </div>

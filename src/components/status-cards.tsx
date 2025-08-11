@@ -48,7 +48,7 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
                 title: "Lisensi Aman",
                 count: item.count,
                 total: item.total_data,
-                icon: <CheckCircle className="w-8 h-8" />,
+                icon: <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8" />,
                 color: "text-success-foreground",
                 bgColor: "bg-success"
               };
@@ -57,7 +57,7 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
                 title: "Akan Kadaluarsa",
                 count: item.count,
                 total: item.total_data,
-                icon: <AlertTriangle className="w-8 h-8" />,
+                icon: <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8" />,
                 color: "text-warning-foreground",
                 bgColor: "bg-warning"
               };
@@ -66,7 +66,7 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
                 title: "Sudah Kadaluarsa",
                 count: item.count,
                 total: item.total_data,
-                icon: <XCircle className="w-8 h-8" />,
+                icon: <XCircle className="w-6 h-6 sm:w-8 sm:h-8" />,
                 color: "text-destructive-foreground",
                 bgColor: "bg-destructive"
               };
@@ -135,8 +135,8 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
             <CardTitle className="text-sm sm:text-base lg:text-lg font-semibold text-muted-foreground">
               {status.title}
             </CardTitle>
-            <div className={`p-1.5 sm:p-2 rounded-lg ${status.bgColor} ${status.color}`}>
-              <div className="w-6 h-6 sm:w-8 sm:h-8">
+            <div className={`p-2 sm:p-2 rounded-lg ${status.bgColor} ${status.color} flex items-center justify-center`}>
+              <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
                 {status.icon}
               </div>
             </div>
