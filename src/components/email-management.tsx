@@ -129,7 +129,6 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         });
       }
     } catch (error) {
-      console.error('Error adding email recipient:', error);
       toast({
         title: "Error",
         description: "Terjadi kesalahan saat menambahkan penerima email",
