@@ -13,8 +13,14 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [isInIframe, setIsInIframe] = useState(false);
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    // Check if app is running in iframe
+    setIsInIframe(window.self !== window.top);
+  }, []);
 
   useEffect(() => {
     checkNotificationStatus();
@@ -174,16 +180,18 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
               )}
             </Button>
 
-            {/* Logout button */}
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={onLogout}
-              className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
-            >
-              <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Logout</span>
-            </Button>
+            {/* Logout button - Hidden when in iframe */}
+            {!isInIframe && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={onLogout}
+                className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
+              >
+                <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
