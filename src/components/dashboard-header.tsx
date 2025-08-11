@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Bell, LogOut, Shield, Mail } from "lucide-react";
+import { Bell, LogOut, Shield, Mail, Sun, Moon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { EmailManagement } from "@/components/email-management";
+import { useTheme } from "next-themes";
 
 interface DashboardHeaderProps {
   onLogout: () => void;
@@ -13,6 +14,7 @@ interface DashboardHeaderProps {
 export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     checkNotificationStatus();
@@ -116,9 +118,11 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
         <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg">
-              <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground" />
-            </div>
+            <img 
+              src={theme === 'dark' ? '/logo-white.png' : '/logo-dark.png'} 
+              alt="Lisensi Aset Logo"
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+            />
             <div className="hidden sm:block">
               <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
               <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
@@ -141,6 +145,23 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
                 <span className="hidden sm:inline">Email</span>
               </Button>
             </EmailManagement>
+
+            {/* Theme toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-3 h-3 sm:w-4 sm:h-4" />
+              ) : (
+                <Moon className="w-3 h-3 sm:w-4 sm:h-4" />
+              )}
+              <span className="hidden sm:inline">
+                {theme === "dark" ? "Light" : "Dark"}
+              </span>
+            </Button>
 
             {/* Notification toggle */}
             <div className="flex items-center space-x-2 sm:space-x-3">
