@@ -277,8 +277,8 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
           </div>
 
           {/* Table */}
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <Table>
+          <div className="border rounded-lg overflow-x-auto">
+            <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
               <TableHeader>
                 <TableRow className="bg-muted/50">
                   <TableHead className="font-semibold">Nama Lisensi</TableHead>
