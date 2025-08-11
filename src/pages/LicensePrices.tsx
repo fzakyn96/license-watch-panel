@@ -239,7 +239,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
               />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Show:</span>
+              <span className="text-sm text-muted-foreground">Tampilkan:</span>
               <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
                 <SelectTrigger className="w-16">
                   <SelectValue />

@@ -484,7 +484,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
           />
         </div>
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <span className="text-sm text-muted-foreground">Show:</span>
+          <span className="text-sm text-muted-foreground">Tampilkan:</span>
           <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
             <SelectTrigger className="w-16">
               <SelectValue />
