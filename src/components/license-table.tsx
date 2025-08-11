@@ -418,7 +418,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             className="pl-10"
           />
         </div>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+        <div className="space-y-3">
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Show:</span>
             <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
@@ -433,18 +433,19 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex gap-2">
+          <div className="space-y-2 sm:space-y-0 sm:space-x-2 sm:flex sm:flex-wrap">
           <Button
             onClick={() => navigate('/add')}
-            className="flex items-center gap-2"
+            className="w-full sm:w-auto flex items-center justify-center gap-2"
+            variant="success"
           >
             <PlusIcon className="w-4 h-4" />
             Tambah Lisensi
           </Button>
           <Button
-            onClick={() => navigate('/prices')}
-            variant="outline"
-            className="flex items-center gap-2"
+            onClick={() => navigate('/license-prices')}
+            variant="warning"
+            className="w-full sm:w-auto flex items-center justify-center gap-2"
           >
             <DollarSign className="w-4 h-4" />
             Harga Lisensi

@@ -148,9 +148,6 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 Daftar harga dan informasi lisensi aset perusahaan
               </p>
             </div>
-            <Button onClick={() => navigate("/")} variant="outline">
-              Kembali ke Dashboard
-            </Button>
           </div>
 
           {/* Search and Controls */}
@@ -164,7 +161,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 className="pl-10"
               />
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Show:</span>
                 <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
@@ -179,6 +176,9 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                   </SelectContent>
                 </Select>
               </div>
+              <Button onClick={() => navigate("/")} variant="secondary" className="w-full sm:w-auto">
+                Kembali ke Dashboard
+              </Button>
             </div>
           </div>
 
