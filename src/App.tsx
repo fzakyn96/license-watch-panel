@@ -109,14 +109,20 @@ const App = () => {
       const expiresAt = Date.now() + 3600 * 1000; // epoch ms
 
       // Simpan token dari iframe login response
-      setCookie(AUTH_TOKEN_KEY, data.data, { expires: new Date(expiresAt), path: "/" });
-      setCookie(AUTH_NAME_KEY, "Iframe User", { expires: new Date(expiresAt), path: "/" });
-      setCookie(AUTH_GROUP_KEY, "iframe", { expires: new Date(expiresAt), path: "/" });
-      setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
+      setCookie(AUTH_TOKEN_KEY, data.data, {
+        expires: new Date(expiresAt), path: "/",
+        sameSite: "None",
+        secure: true,
+      });
+      setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), {
+        expires: new Date(expiresAt), path: "/",
+        sameSite: "None",
+        secure: true,
+      });
 
       toast({
         title: "Login berhasil",
-        description: `Selamat datang, Iframe User`,
+        description: `Selamat datang`,
         variant: "success",
       });
 
@@ -172,7 +178,7 @@ const App = () => {
   }, [isLoggedIn, iframeLoginFailed]);
 
   console.log("App render - isLoggedIn:", isLoggedIn, "isInIframe:", isInIframe());
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
