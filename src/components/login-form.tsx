@@ -26,96 +26,41 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
   const { toast } = useToast();
   const { theme } = useTheme();
 
-  const isInIframe = () => {
-    try {
-      return window.self !== window.top;
-    } catch (e) {
-      return true;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      if (isInIframe()) {
-        // Iframe login flow: Step 1 - Create iframe client
-        const createRes = await fetch(`${import.meta.env.VITE_BASE_URL}/iframe-client/create`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        });
+      // Normal login flow
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, directory: "pertamina" }),
+      });
 
-        if (!createRes.ok) {
-          throw new Error("Gagal membuat iframe client");
-        }
-
-        const createData = await createRes.json();
-        const uuid = createData.uuid;
-
-        if (!uuid) {
-          throw new Error("UUID tidak ditemukan dalam response");
-        }
-
-        // Iframe login flow: Step 2 - Login with UUID
-        const loginRes = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/iframeLogin?uuid=${uuid}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!loginRes.ok) {
-          const text = await loginRes.text();
-          throw new Error(text || "Iframe login gagal");
-        }
-
-        const data = (await loginRes.json()) as LoginResponse;
-
-        const expiresAt = Date.now() + data.expires * 1000; // epoch ms
-
-        // Simpan semua nilai response ke cookie
-        setCookie(AUTH_TOKEN_KEY, data.token, { expires: new Date(expiresAt), path: "/" });
-        setCookie(AUTH_NAME_KEY, data.name, { expires: new Date(expiresAt), path: "/" });
-        setCookie(AUTH_GROUP_KEY, data.group, { expires: new Date(expiresAt), path: "/" });
-        setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
-
-        toast({
-          title: "Login berhasil",
-          description: `Selamat datang, ${data.name}`,
-          variant: "success",
-        });
-
-        onLogin();
-      } else {
-        // Normal login flow
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password, directory: "pertamina" }),
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || "Login gagal");
-        }
-
-        const data = (await res.json()) as LoginResponse;
-
-        const expiresAt = Date.now() + data.expires * 1000; // epoch ms
-
-        // Simpan semua nilai response ke cookie
-        setCookie(AUTH_TOKEN_KEY, data.token, { expires: new Date(expiresAt), path: "/" });
-        setCookie(AUTH_NAME_KEY, data.name, { expires: new Date(expiresAt), path: "/" });
-        setCookie(AUTH_GROUP_KEY, data.group, { expires: new Date(expiresAt), path: "/" });
-        setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
-
-        toast({
-          title: "Login berhasil",
-          description: `Selamat datang, ${data.name}`,
-          variant: "success",
-        });
-
-        onLogin();
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Login gagal");
       }
+
+      const data = (await res.json()) as LoginResponse;
+
+      const expiresAt = Date.now() + data.expires * 1000; // epoch ms
+
+      // Simpan semua nilai response ke cookie
+      setCookie(AUTH_TOKEN_KEY, data.token, { expires: new Date(expiresAt), path: "/" });
+      setCookie(AUTH_NAME_KEY, data.name, { expires: new Date(expiresAt), path: "/" });
+      setCookie(AUTH_GROUP_KEY, data.group, { expires: new Date(expiresAt), path: "/" });
+      setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
+
+      toast({
+        title: "Login berhasil",
+        description: `Selamat datang, ${data.name}`,
+        variant: "success",
+      });
+
+      onLogin();
     } catch (error: any) {
       toast({
         title: "Login gagal",

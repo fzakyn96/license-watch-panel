@@ -28,6 +28,13 @@ interface ProtectedRouteProps {
 }
 
 type LoginResponse = {
+  name: string;
+  group: string;
+  token: string;
+  expires: number; // seconds
+};
+
+type IframeLoginResponse = {
   data: string;
 };
 
@@ -94,20 +101,20 @@ const App = () => {
       throw new Error(text || "Iframe login gagal");
     }
 
-    const data = (await loginRes.json()) as LoginResponse;
+    const data = (await loginRes.json()) as IframeLoginResponse;
     console.log(data.data);
 
     const expiresAt = Date.now() + 3600 * 1000; // epoch ms
 
-    // Simpan semua nilai response ke cookie
+    // Simpan token dari iframe login response
     setCookie(AUTH_TOKEN_KEY, data.data, { expires: new Date(expiresAt), path: "/" });
-    // setCookie(AUTH_NAME_KEY, data.name, { expires: new Date(expiresAt), path: "/" });
-    // setCookie(AUTH_GROUP_KEY, data.group, { expires: new Date(expiresAt), path: "/" });
-    // setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
+    setCookie(AUTH_NAME_KEY, "Iframe User", { expires: new Date(expiresAt), path: "/" });
+    setCookie(AUTH_GROUP_KEY, "iframe", { expires: new Date(expiresAt), path: "/" });
+    setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
 
     toast({
       title: "Login berhasil",
-      description: `Selamat datang,`,
+      description: `Selamat datang, Iframe User`,
       variant: "success",
     });
 
