@@ -95,26 +95,11 @@ const AppContent = () => {
 
       if (!queryUuid) {
         // Jika tidak ada UUID dari query, buat baru seperti sebelumnya
-        const createRes = await fetch(`${import.meta.env.VITE_BASE_URL}/iframe-client/create`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            "site_name": "https://google.com",
-            "is_revoked": false,
-            // "redirect": "https://digio.pgn.co.id/digio" //jika diisi dari button
-          })
-        });
-
-        if (!createRes.ok) {
-          throw new Error("Gagal membuat iframe client");
-        }
-
-        const createData = await createRes.json();
-        uuid = createData.data.uuid;
-
-        if (!uuid) {
-          throw new Error("UUID tidak ditemukan dalam response");
-        }
+        toast({
+          title: "Tidak ditemukan UUID",
+          description: "UUID Iframe harus terdaftar",
+          variant: "destructive",
+        })
       } else {
         console.log("🔗 Menggunakan UUID dari query parameter:", queryUuid);
       }
@@ -153,11 +138,8 @@ const AppContent = () => {
         variant: "success",
       });
 
-      console.log("About to call onLogin callback");
       onLogin();
-      console.log("onLogin callback completed");
     } catch (error) {
-      console.error("Iframe login error:", error);
       setIframeLoginFailed(true); // Prevent retry loop
       toast({
         title: "Login gagal",
@@ -170,9 +152,7 @@ const AppContent = () => {
   // Sync state with actual authentication status
   useEffect(() => {
     const actualAuthStatus = isAuthenticated();
-    console.log("Auth sync check - isLoggedIn:", isLoggedIn, "actual auth:", actualAuthStatus);
     if (actualAuthStatus !== isLoggedIn) {
-      console.log("Syncing isLoggedIn state with actual auth status:", actualAuthStatus);
       setIsLoggedIn(actualAuthStatus);
     }
   }, [isLoggedIn]);
@@ -203,8 +183,6 @@ const AppContent = () => {
       if (timer) window.clearTimeout(timer);
     };
   }, [isLoggedIn, iframeLoginFailed]);
-
-  console.log("App render - isLoggedIn:", isLoggedIn, "isInIframe:", isInIframe());
 
   return (
     <Routes>
