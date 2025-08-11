@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Bell, LogOut, Shield } from "lucide-react";
+import { Bell, LogOut, Shield, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
+import { EmailManagement } from "@/components/email-management";
 
 interface DashboardHeaderProps {
   onLogout: () => void;
@@ -128,7 +129,19 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
           </div>
 
           {/* Navigation items */}
-          <div className="flex items-center space-x-3 sm:space-x-6">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Email Management */}
+            <EmailManagement>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
+              >
+                <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Email</span>
+              </Button>
+            </EmailManagement>
+
             {/* Notification toggle */}
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Bell className={`w-4 h-4 sm:w-5 sm:h-5 ${notificationsEnabled ? 'text-primary' : 'text-muted-foreground'}`} />
