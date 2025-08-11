@@ -32,10 +32,13 @@ type IframeLoginResponse = {
 };
 
 const ProtectedRoute = ({ children, isAuthenticated }: ProtectedRouteProps) => {
+  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
   if (!isAuthenticated) {
+    console.log("Not authenticated, redirecting to login");
     return <Navigate to="/login" replace />;
   }
 
+  console.log("Authenticated, rendering children");
   return <>{children}</>;
 };
 
@@ -47,7 +50,9 @@ const App = () => {
 
   const handleLogin = () => {
     console.log("handleLogin called - setting isLoggedIn to true");
+    console.log("Current isLoggedIn before update:", isLoggedIn);
     setIsLoggedIn(true);
+    console.log("setIsLoggedIn(true) called");
   };
 
   const handleLogout = () => {
@@ -153,8 +158,10 @@ const App = () => {
     return () => {
       if (timer) window.clearTimeout(timer);
     };
-  }, [isLoggedIn]);
+  }, [isLoggedIn, iframeLoginFailed]);
 
+  console.log("App render - isLoggedIn:", isLoggedIn, "isInIframe:", isInIframe());
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
