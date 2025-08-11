@@ -47,9 +47,9 @@ export const EditLicense = () => {
         const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/find?uuid=${uuid}`);
         const data = await response.json();
 
-        if (data.status === 200 && data.data && data.data.length > 0) {
-          // Ambil data pertama dari array dan exclude history_licenses
-          const { history_licenses, ...licenseData } = data.data[0];
+        if (data.status === 200 && data.data) {
+          // Exclude history_licenses dari data yang diterima
+          const { history_licenses, ...licenseData } = data.data;
           setFormData(licenseData);
         } else {
           throw new Error('Gagal memuat data lisensi');
