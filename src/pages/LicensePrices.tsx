@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { DashboardHeader } from "@/components/dashboard-header";
 import {
   Table,
   TableBody,
@@ -12,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Loader2, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 
@@ -134,8 +133,31 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardHeader onLogout={onLogout} />
+    <div>
+      <header className="bg-card border-b border-border shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
+                <Shield className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-foreground">Lisensi Aset</h1>
+                <p className="text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
+              </div>
+            </div>
+            <Button
+              variant="default"
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Kembali</span>
+            </Button>
+          </div>
+        </div>
+      </header>
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <div className="space-y-6 sm:space-y-8">
@@ -161,24 +183,19 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 className="pl-10"
               />
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Show:</span>
-                <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-                  <SelectTrigger className="w-16">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                    <SelectItem value="100">100</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button onClick={() => navigate("/")} variant="secondary" className="w-full sm:w-auto">
-                Kembali ke Dashboard
-              </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Show:</span>
+              <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+                <SelectTrigger className="w-16">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
