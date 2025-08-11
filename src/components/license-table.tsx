@@ -424,7 +424,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             Tambah Lisensi
           </Button>
           <Button
-            onClick={() => navigate('/license-prices')}
+            onClick={() => navigate('/prices')}
             variant="warning"
             className="flex items-center justify-center gap-2"
           >
@@ -433,17 +433,13 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center justify-center gap-2">
+              <Button variant="default" className="flex items-center justify-center gap-2">
                 <MoreVertical className="w-4 h-4" />
                 Excel
                 <ChevronDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={handleDownloadTemplate}>
-                <Download className="w-4 h-4 mr-2" />
-                Download Template
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleImport}>
                 <Upload className="w-4 h-4 mr-2" />
                 Import Data
@@ -632,7 +628,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">
                           <Button
-                            variant="outline"
+                            variant="success"
                             size="sm"
                             onClick={() => toggleRow(index)}
                           >
@@ -643,14 +639,14 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                             )}
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="warning"
                             size="sm"
                             onClick={() => handleAction("Edit", license)}
                           >
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="destructive"
                             size="sm"
                             onClick={() => handleAction("Delete", license)}
                           >

@@ -133,7 +133,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
             {/* Email Management */}
             <EmailManagement>
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
                 className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
               >
