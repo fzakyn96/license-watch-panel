@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -219,7 +220,12 @@ export const AddLicense = () => {
                       <Calendar
                         mode="single"
                         selected={license.start_date ? new Date(license.start_date) : undefined}
-                        onSelect={(date) => handleInputChange('start_date', date?.toISOString() || '')}
+                        onSelect={(date) => {
+                          handleInputChange('start_date', date?.toISOString() || '');
+                          // Auto close popover after selection
+                          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+                        }}
+                        className="pointer-events-auto"
                       />
                     </PopoverContent>
                   </Popover>
@@ -244,7 +250,12 @@ export const AddLicense = () => {
                       <Calendar
                         mode="single"
                         selected={license.end_date ? new Date(license.end_date) : undefined}
-                        onSelect={(date) => handleInputChange('end_date', date?.toISOString() || '')}
+                        onSelect={(date) => {
+                          handleInputChange('end_date', date?.toISOString() || '');
+                          // Auto close popover after selection
+                          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+                        }}
+                        className="pointer-events-auto"
                       />
                     </PopoverContent>
                   </Popover>
@@ -325,11 +336,13 @@ export const AddLicense = () => {
               {/* Catatan */}
               <div>
                 <Label htmlFor="description">Catatan</Label>
-                <Input
+                <Textarea
                   id="description"
                   value={license.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   className="mt-1"
+                  rows={4}
+                  placeholder="Masukkan catatan atau keterangan tambahan..."
                 />
               </div>
             </div>
