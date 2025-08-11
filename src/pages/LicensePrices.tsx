@@ -11,9 +11,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight, Loader2, Shield } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
+import * as XLSX from 'xlsx';
 
 interface License {
   uuid: string;
@@ -107,6 +108,43 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
     }).format(amount);
   };
 
+  const handleExportToExcel = async () => {
+    try {
+      const response = await apiFetch(`http://localhost:8080/licenses/get?name=`);
+      const data: ApiResponse = await response.json();
+
+      if (data.status === 200) {
+        const exportData = data.data.docs.map((license, index) => ({
+          'No': index + 1,
+          'Nama Lisensi': license.name,
+          'Harga Satuan': license.harga_satuan,
+          'Tanggal Awal': formatDate(license.start_date),
+          'Tanggal Berakhir': formatDate(license.end_date),
+          'Deskripsi': license.description
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Harga Lisensi");
+
+        const today = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(workbook, `Harga_Lisensi_${today}.xlsx`);
+
+        toast({
+          title: "Berhasil",
+          description: "Data berhasil diekspor ke Excel",
+          variant: "default"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error", 
+        description: "Gagal mengekspor data ke Excel",
+        variant: "destructive"
+      });
+    }
+  };
+
   const getPageNumbers = (current: number, total: number) => {
     const pages = [];
     const delta = 2;
@@ -169,6 +207,16 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
               <p className="text-sm sm:text-base text-muted-foreground">
                 Daftar harga dan informasi lisensi aset perusahaan
               </p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleExportToExcel}
+                variant="success"
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export Excel
+              </Button>
             </div>
           </div>
 
