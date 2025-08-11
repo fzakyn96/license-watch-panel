@@ -110,31 +110,35 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
   };
 
   return (
-    <header className="bg-card border-b border-border shadow-sm">
+    <header className="bg-card border-b border-border shadow-sm sticky top-0 z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
-              <Shield className="w-6 h-6 text-primary-foreground" />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg">
+              <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground" />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">Lisensi Aset</h1>
-              <p className="text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
+            <div className="hidden sm:block">
+              <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
+            </div>
+            <div className="sm:hidden">
+              <h1 className="text-base font-bold text-foreground">Lisensi Aset</h1>
             </div>
           </div>
 
           {/* Navigation items */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3 sm:space-x-6">
             {/* Notification toggle */}
-            <div className="flex items-center space-x-3">
-              <Bell className={`w-5 h-5 ${notificationsEnabled ? 'text-primary' : 'text-muted-foreground'}`} />
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Bell className={`w-4 h-4 sm:w-5 sm:h-5 ${notificationsEnabled ? 'text-primary' : 'text-muted-foreground'}`} />
               <Switch
                 checked={notificationsEnabled}
                 onCheckedChange={handleNotificationToggle}
                 aria-label="Toggle notifications"
+                className="scale-75 sm:scale-100"
               />
-              <span className="text-sm text-muted-foreground">
+              <span className="hidden sm:inline text-sm text-muted-foreground">
                 {notificationsEnabled ? "Aktif" : "Nonaktif"}
               </span>
             </div>
@@ -144,10 +148,11 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
               variant="destructive"
               size="sm"
               onClick={onLogout}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
             >
-              <LogOut className="w-4 h-4" />
-              <span>Logout</span>
+              <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Logout</span>
+              <span className="sm:hidden">Exit</span>
             </Button>
           </div>
         </div>

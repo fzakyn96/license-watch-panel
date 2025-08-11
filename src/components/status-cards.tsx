@@ -99,16 +99,16 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {[1, 2, 3].map((index) => (
           <Card key={index} className="overflow-hidden animate-pulse">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="h-4 bg-muted rounded w-24"></div>
-              <div className="h-10 w-10 bg-muted rounded-lg"></div>
+              <div className="h-4 bg-muted rounded w-20 sm:w-24"></div>
+              <div className="h-8 w-8 sm:h-10 sm:w-10 bg-muted rounded-lg"></div>
             </CardHeader>
             <CardContent>
-              <div className="h-8 bg-muted rounded w-16 mb-2"></div>
-              <div className="h-3 bg-muted rounded w-32"></div>
+              <div className="h-6 sm:h-8 bg-muted rounded w-12 sm:w-16 mb-2"></div>
+              <div className="h-3 bg-muted rounded w-24 sm:w-32"></div>
             </CardContent>
           </Card>
         ))}
@@ -118,29 +118,31 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
 
   if (error) {
     return (
-      <Card className="p-6 border-destructive">
+      <Card className="p-4 sm:p-6 border-destructive mb-6 sm:mb-8">
         <div className="flex items-center space-x-2 text-destructive">
-          <AlertCircle className="w-6 h-6" />
-          <p>{error}</p>
+          <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6" />
+          <p className="text-sm sm:text-base">{error}</p>
         </div>
       </Card>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
       {statusData.map((status, index) => (
         <Card key={index} className="overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">
               {status.title}
             </CardTitle>
-            <div className={`p-2 rounded-lg ${status.bgColor} ${status.color}`}>
-              {status.icon}
+            <div className={`p-1.5 sm:p-2 rounded-lg ${status.bgColor} ${status.color}`}>
+              <div className="w-6 h-6 sm:w-8 sm:h-8">
+                {status.icon}
+              </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">
+            <div className="text-2xl sm:text-3xl font-bold text-foreground">
               {status.count}
             </div>
             <p className="text-xs text-muted-foreground mt-1">

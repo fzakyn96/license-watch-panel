@@ -18,13 +18,13 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     <div className="min-h-screen bg-background">
       <DashboardHeader onLogout={onLogout} />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="space-y-6 sm:space-y-8">
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
               Dashboard Monitoring Lisensi
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Pantau status dan kelola lisensi aset perusahaan Anda
             </p>
           </div>
@@ -32,7 +32,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
           <StatusCards ref={statusCardsRef} />
           
           <div>
-            <h3 className="text-xl font-semibold text-foreground mb-4">
+            <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-4">
               Daftar Lisensi Aset
             </h3>
             <LicenseTable onDataChange={handleDataChange} />

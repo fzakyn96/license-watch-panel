@@ -152,22 +152,22 @@ export const AddLicense = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="space-y-6 sm:space-y-8">
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
               Tambah Lisensi
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Tambahkan data lisensi baru
             </p>
           </div>
         </div>
       </main>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-card p-6 rounded-lg border border-border">
+          <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
             {errors.length > 0 && (
               <div className="bg-red-50 text-red-500 p-3 rounded-md mb-4">
                 <ul className="list-disc list-inside">
@@ -178,17 +178,20 @@ export const AddLicense = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
+              {/* Nama Aset - Full width */}
               <div>
                 <Label htmlFor="name">Nama Aset</Label>
                 <Input
                   id="name"
                   value={license.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
+                  className="mt-1"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Tanggal - Stack on mobile, side by side on larger screens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label>Tanggal Mulai</Label>
                   <Popover>
@@ -196,7 +199,7 @@ export const AddLicense = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal",
+                          "w-full justify-start text-left font-normal mt-1",
                           !license.start_date && "text-muted-foreground"
                         )}
                       >
@@ -221,7 +224,7 @@ export const AddLicense = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal",
+                          "w-full justify-start text-left font-normal mt-1",
                           !license.end_date && "text-muted-foreground"
                         )}
                       >
@@ -240,7 +243,8 @@ export const AddLicense = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Volume & Satuan */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="volume">Volume</Label>
                   <Input
@@ -248,6 +252,7 @@ export const AddLicense = () => {
                     type="number"
                     value={license.volume}
                     onChange={(e) => handleInputChange('volume', Number(e.target.value))}
+                    className="mt-1"
                   />
                 </div>
 
@@ -257,10 +262,12 @@ export const AddLicense = () => {
                     id="satuan"
                     value={license.satuan}
                     onChange={(e) => handleInputChange('satuan', e.target.value)}
+                    className="mt-1"
                   />
                 </div>
               </div>
 
+              {/* Harga Satuan - Full width on mobile */}
               <div>
                 <Label htmlFor="harga_satuan">Harga Satuan</Label>
                 <Input
@@ -268,16 +275,19 @@ export const AddLicense = () => {
                   type="number"
                   value={license.harga_satuan}
                   onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
+                  className="mt-1"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Username & Password */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="username">Userame</Label>
+                  <Label htmlFor="username">Username</Label>
                   <Input
                     id="username"
                     value={license.username}
                     onChange={(e) => handleInputChange('username', e.target.value)}
+                    className="mt-1"
                   />
                 </div>
 
@@ -288,39 +298,51 @@ export const AddLicense = () => {
                     type="password"
                     value={license.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
+                    className="mt-1"
                   />
                 </div>
               </div>
 
+              {/* Lokasi */}
               <div>
                 <Label htmlFor="lokasi_lisensi">Lokasi</Label>
                 <Input
                   id="lokasi_lisensi"
                   value={license.lokasi_lisensi}
                   onChange={(e) => handleInputChange('lokasi_lisensi', e.target.value)}
+                  className="mt-1"
                 />
               </div>
 
+              {/* Catatan */}
               <div>
                 <Label htmlFor="description">Catatan</Label>
                 <Input
                   id="description"
                   value={license.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
+                  className="mt-1"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-4">
+          {/* Action Buttons - Stack on mobile */}
+          <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
             <Button
               type="button"
               variant="destructive"
               onClick={() => navigate('/')}
+              className="w-full sm:w-auto order-2 sm:order-1"
             >
               Batal
             </Button>
-            <Button type="submit">Simpan</Button>
+            <Button 
+              type="submit"
+              className="w-full sm:w-auto order-1 sm:order-2"
+            >
+              Simpan
+            </Button>
           </div>
         </form>
       </div>

@@ -44,8 +44,10 @@ export const EditLicense = () => {
         const response = await apiFetch(`http://localhost:8080/licenses/find?uuid=${uuid}`);
         const data = await response.json();
 
-        if (data.status === 200) {
-          setFormData(data.data);
+        if (data.status === 200 && data.data && data.data.length > 0) {
+          // Ambil data pertama dari array dan exclude history_licenses
+          const { history_licenses, ...licenseData } = data.data[0];
+          setFormData(licenseData);
         } else {
           throw new Error('Gagal memuat data lisensi');
         }
@@ -173,35 +175,38 @@ export const EditLicense = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="space-y-6 sm:space-y-8">
           <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
               Edit Lisensi
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Edit data lisensi yang sudah ada
             </p>
           </div>
         </div>
       </main>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-card p-6 rounded-lg border border-border">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+          <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
+              {/* Nama Aset - Full width on mobile */}
+              <div className="col-span-1">
                 <Label htmlFor="name">Nama Aset</Label>
                 <Input
                   id="name"
                   value={formData?.name || ''}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   aria-invalid={!!errors.name}
+                  className="mt-1"
                 />
                 {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Tanggal - Stack on mobile, side by side on larger screens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label>Tanggal Mulai</Label>
                   <Popover>
@@ -209,7 +214,7 @@ export const EditLicense = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal",
+                          "w-full justify-start text-left font-normal mt-1",
                           !formData?.start_date && "text-muted-foreground"
                         )}
                       >
@@ -235,7 +240,7 @@ export const EditLicense = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal",
+                          "w-full justify-start text-left font-normal mt-1",
                           !formData?.end_date && "text-muted-foreground"
                         )}
                       >
@@ -255,7 +260,8 @@ export const EditLicense = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Volume & Satuan */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="volume">Volume</Label>
                   <Input
@@ -264,6 +270,7 @@ export const EditLicense = () => {
                     value={formData?.volume || ''}
                     onChange={(e) => handleInputChange('volume', Number(e.target.value))}
                     aria-invalid={!!errors.volume}
+                    className="mt-1"
                   />
                   {errors.volume && <p className="text-sm text-red-500 mt-1">{errors.volume}</p>}
                 </div>
@@ -275,34 +282,41 @@ export const EditLicense = () => {
                     value={formData?.satuan || ''}
                     onChange={(e) => handleInputChange('satuan', e.target.value)}
                     aria-invalid={!!errors.satuan}
+                    className="mt-1"
                   />
                   {errors.satuan && <p className="text-sm text-red-500 mt-1">{errors.satuan}</p>}
                 </div>
               </div>
 
-              <div>
-                <Label htmlFor="harga_satuan">Harga Satuan</Label>
-                <Input
-                  id="harga_satuan"
-                  type="number"
-                  value={formData?.harga_satuan || ''}
-                  onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
-                  aria-invalid={!!errors.harga_satuan}
-                />
-                {errors.harga_satuan && <p className="text-sm text-red-500 mt-1">{errors.harga_satuan}</p>}
+              {/* Harga Satuan & Total Harga */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="harga_satuan">Harga Satuan</Label>
+                  <Input
+                    id="harga_satuan"
+                    type="number"
+                    value={formData?.harga_satuan || ''}
+                    onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
+                    aria-invalid={!!errors.harga_satuan}
+                    className="mt-1"
+                  />
+                  {errors.harga_satuan && <p className="text-sm text-red-500 mt-1">{errors.harga_satuan}</p>}
+                </div>
+
+                <div>
+                  <Label htmlFor="jumlah">Total Harga</Label>
+                  <Input
+                    id="jumlah"
+                    type="number"
+                    value={formData?.jumlah || 0}
+                    disabled
+                    className="mt-1 bg-muted"
+                  />
+                </div>
               </div>
 
-              <div>
-                <Label htmlFor="jumlah">Total Harga</Label>
-                <Input
-                  id="jumlah"
-                  type="number"
-                  value={formData?.jumlah || 0}
-                  disabled
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
+              {/* Username & Password */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="username">Username</Label>
                   <Input
@@ -310,6 +324,7 @@ export const EditLicense = () => {
                     value={formData?.username || ''}
                     onChange={(e) => handleInputChange('username', e.target.value)}
                     aria-invalid={!!errors.username}
+                    className="mt-1"
                   />
                   {errors.username && <p className="text-sm text-red-500 mt-1">{errors.username}</p>}
                 </div>
@@ -322,40 +337,52 @@ export const EditLicense = () => {
                     value={formData?.password || ''}
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     aria-invalid={!!errors.password}
+                    className="mt-1"
                   />
                   {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
                 </div>
               </div>
 
+              {/* Lokasi */}
               <div>
                 <Label htmlFor="lokasi_lisensi">Lokasi</Label>
                 <Input
                   id="lokasi_lisensi"
                   value={formData?.lokasi_lisensi || ''}
                   onChange={(e) => handleInputChange('lokasi_lisensi', e.target.value)}
+                  className="mt-1"
                 />
               </div>
 
+              {/* Catatan */}
               <div>
                 <Label htmlFor="description">Catatan</Label>
                 <Input
                   id="description"
                   value={formData?.description || ''}
                   onChange={(e) => handleInputChange('description', e.target.value)}
+                  className="mt-1"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-4">
+          {/* Action Buttons - Stack on mobile */}
+          <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
             <Button
               type="button"
               variant="destructive"
               onClick={() => navigate('/')}
+              className="w-full sm:w-auto order-2 sm:order-1"
             >
               Batal
             </Button>
-            <Button type="submit">Simpan</Button>
+            <Button 
+              type="submit"
+              className="w-full sm:w-auto order-1 sm:order-2"
+            >
+              Simpan
+            </Button>
           </div>
         </form>
       </div>
