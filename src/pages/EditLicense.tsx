@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronLeft, Shield } from "lucide-react";
+import { CalendarIcon, ChevronLeft, Shield, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -108,6 +108,28 @@ export const EditLicense = () => {
     setFormData(newFormData);
   };
 
+  const getLicenseStatus = (endDate: string) => {
+    const today = new Date();
+    const end = new Date(endDate);
+    const diffDays = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return {
+      text: 'Sudah Kadaluarsa',
+      color: 'bg-red-100 text-red-700 border-red-200',
+      icon: XCircle
+    };
+    if (diffDays <= 120) return {
+      text: 'Akan Kadaluarsa',
+      color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+      icon: AlertCircle
+    };
+    return {
+      text: 'Aman',
+      color: 'bg-green-100 text-green-700 border-green-200',
+      icon: CheckCircle2
+    };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -186,13 +208,30 @@ export const EditLicense = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <div className="space-y-6 sm:space-y-8">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-              Edit Lisensi
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              Edit data lisensi yang sudah ada
-            </p>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
+                Edit Lisensi
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Edit data lisensi yang sudah ada
+              </p>
+            </div>
+            {formData?.end_date && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Status:</span>
+                {(() => {
+                  const status = getLicenseStatus(formData.end_date);
+                  const StatusIcon = status.icon;
+                  return (
+                    <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${status.color}`}>
+                      <StatusIcon className="w-4 h-4 mr-1.5" />
+                      {status.text}
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
           </div>
         </div>
       </main>

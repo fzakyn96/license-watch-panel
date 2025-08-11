@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { useTheme } from "next-themes";
@@ -108,6 +108,28 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
+  };
+
+  const getLicenseStatus = (endDate: string) => {
+    const today = new Date();
+    const end = new Date(endDate);
+    const diffDays = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return {
+      text: 'Sudah Kadaluarsa',
+      color: 'bg-red-100 text-red-700 border-red-200',
+      icon: XCircle
+    };
+    if (diffDays <= 120) return {
+      text: 'Akan Kadaluarsa',
+      color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+      icon: AlertCircle
+    };
+    return {
+      text: 'Aman',
+      color: 'bg-green-100 text-green-700 border-green-200',
+      icon: CheckCircle2
+    };
   };
 
   const handleExportToExcel = async () => {
@@ -255,49 +277,61 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
           </div>
 
           {/* Table */}
-          <div className="border rounded-lg">
+          <div className="bg-card rounded-lg border border-border overflow-hidden">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Nama Lisensi</TableHead>
-                  <TableHead>Harga Satuan</TableHead>
-                  <TableHead>Tanggal Awal</TableHead>
-                  <TableHead>Tanggal Berakhir</TableHead>
-                  <TableHead>Deskripsi</TableHead>
+                <TableRow className="bg-muted/50">
+                  <TableHead className="font-semibold">Nama Lisensi</TableHead>
+                  <TableHead className="font-semibold">Harga Satuan</TableHead>
+                  <TableHead className="font-semibold">Tanggal Awal</TableHead>
+                  <TableHead className="font-semibold">Tanggal Berakhir</TableHead>
+                  <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold">Deskripsi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-32 text-center">
+                    <TableCell colSpan={6} className="h-32 text-center">
                       <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
                       <p>Memuat data...</p>
                     </TableCell>
                   </TableRow>
                 ) : licenses.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-32 text-center">
+                    <TableCell colSpan={6} className="h-32 text-center">
                       <p>Tidak ada data yang ditemukan</p>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  licenses.map((license) => (
-                    <TableRow key={license.uuid}>
-                      <TableCell className="font-medium">{license.name}</TableCell>
-                      <TableCell className="text-right whitespace-nowrap">
-                        {formatCurrency(license.harga_satuan)}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {formatDate(license.start_date)}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {formatDate(license.end_date)}
-                      </TableCell>
-                      <TableCell className="max-w-xs truncate">
-                        {license.description}
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  licenses.map((license) => {
+                    const status = getLicenseStatus(license.end_date);
+                    const StatusIcon = status.icon;
+                    
+                    return (
+                      <TableRow key={license.uuid} className="hover:bg-muted/30 transition-colors">
+                        <TableCell className="font-medium">{license.name}</TableCell>
+                        <TableCell className="text-right whitespace-nowrap">
+                          {formatCurrency(license.harga_satuan)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {formatDate(license.start_date)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {formatDate(license.end_date)}
+                        </TableCell>
+                        <TableCell>
+                          <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${status.color}`}>
+                            <StatusIcon className="w-3 h-3 mr-1" />
+                            {status.text}
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          {license.description}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
