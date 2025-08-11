@@ -45,6 +45,7 @@ const App = () => {
 
 
   const handleLogin = () => {
+    console.log("handleLogin called - setting isLoggedIn to true");
     setIsLoggedIn(true);
   };
 
@@ -112,7 +113,9 @@ const App = () => {
         variant: "success",
       });
 
+      console.log("About to call onLogin callback");
       onLogin();
+      console.log("onLogin callback completed");
     } catch (error) {
       console.error("Iframe login error:", error);
       toast({
