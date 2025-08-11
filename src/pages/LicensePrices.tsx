@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download, CheckCircle2, AlertCircle, XCircle, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { useTheme } from "next-themes";
@@ -49,6 +49,8 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState("10");
   const [totalPages, setTotalPages] = useState(1);
+  const [sortField, setSortField] = useState<string>("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const { toast } = useToast();
 
   const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
@@ -57,6 +59,10 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
       let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
       if (searchQuery) {
         url += `${encodeURIComponent(searchQuery)}`;
+      }
+      
+      if (sortField) {
+        url += `&sortBy=${sortField}&sortOrder=${sortDirection}`;
       }
 
       const response = await apiFetch(url);
@@ -81,7 +87,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
 
   useEffect(() => {
     fetchLicenses(currentPage, parseInt(itemsPerPage));
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage, sortField, sortDirection]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -167,6 +173,25 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
         variant: "destructive"
       });
     }
+  };
+
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+    setCurrentPage(1);
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="w-4 h-4 ml-1 opacity-50" />;
+    }
+    return sortDirection === "asc" ? 
+      <ArrowUp className="w-4 h-4 ml-1" /> : 
+      <ArrowDown className="w-4 h-4 ml-1" />;
   };
 
   const getPageNumbers = (current: number, total: number) => {
@@ -281,11 +306,42 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
             <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="font-semibold">Nama Lisensi</TableHead>
-                  <TableHead className="font-semibold">Harga Satuan</TableHead>
-                  <TableHead className="font-semibold">Tanggal Awal</TableHead>
-                  <TableHead className="font-semibold">Tanggal Berakhir</TableHead>
-                  {/* <TableHead className="font-semibold">Status</TableHead> */}
+                  <TableHead 
+                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
+                    onClick={() => handleSort('name')}
+                  >
+                    <div className="flex items-center">
+                      Nama Lisensi
+                      {getSortIcon('name')}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
+                    onClick={() => handleSort('harga_satuan')}
+                  >
+                    <div className="flex items-center">
+                      Harga Satuan
+                      {getSortIcon('harga_satuan')}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
+                    onClick={() => handleSort('start_date')}
+                  >
+                    <div className="flex items-center">
+                      Tanggal Awal
+                      {getSortIcon('start_date')}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
+                    onClick={() => handleSort('end_date')}
+                  >
+                    <div className="flex items-center">
+                      Tanggal Berakhir
+                      {getSortIcon('end_date')}
+                    </div>
+                  </TableHead>
                   <TableHead className="font-semibold">Catatan</TableHead>
                 </TableRow>
               </TableHeader>
