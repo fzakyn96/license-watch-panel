@@ -137,7 +137,7 @@ export const AddLicense = () => {
             <img 
               src={theme === 'dark' ? '/logo-dark.png' : '/logo-white.png'}
               alt="Lisensi Aset Logo"
-              className="h-8 w-auto sm:h-12 object-contain"
+              className="h-8 w-auto sm:h-8 object-contain"
             />
             <div className="hidden sm:block">
               <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>

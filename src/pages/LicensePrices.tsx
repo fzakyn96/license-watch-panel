@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
+import { useTheme } from "next-themes";
 import * as XLSX from 'xlsx';
 
 interface License {
@@ -41,6 +42,7 @@ interface LicensePricesProps {
 
 const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [licenses, setLicenses] = useState<License[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -138,7 +140,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
       }
     } catch (error) {
       toast({
-        title: "Error", 
+        title: "Error",
         description: "Gagal mengekspor data ke Excel",
         variant: "destructive"
       });
@@ -176,13 +178,18 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
-                <Shield className="w-6 h-6 text-primary-foreground" />
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <img
+                src={theme === 'dark' ? '/logo-dark.png' : '/logo-white.png'}
+                alt="Lisensi Aset Logo"
+                className="h-8 w-auto sm:h-8 object-contain"
+              />
+              <div className="hidden sm:block">
+                <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
               </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">Lisensi Aset</h1>
-                <p className="text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
+              <div className="sm:hidden">
+                <h1 className="text-base font-bold text-foreground">Lisensi Aset</h1>
               </div>
             </div>
             <Button
@@ -196,7 +203,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
           </div>
         </div>
       </header>
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <div className="space-y-6 sm:space-y-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

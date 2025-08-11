@@ -91,7 +91,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
               <img 
                 src={theme === 'dark' ? '/logo-dark.png' : '/logo-white.png'}
                 alt="Lisensi Aset Logo"
-                className="h-16 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
             </div>
             <div>
