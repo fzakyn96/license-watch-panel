@@ -88,7 +88,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
       
       <div className="relative z-10 w-full max-w-md p-4">
         <Card className="backdrop-blur-sm bg-card/95 border border-border/50 shadow-2xl">
-          <CardHeader className="space-y-4 text-center">
+          <CardHeader className="space-y-2 text-center">
             {/* Logo */}
             <div className="flex justify-center mb-4">
               <img 
@@ -98,8 +98,8 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
               />
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold">Login</CardTitle>
-              <CardDescription className="text-muted-foreground mt-2">
+              {/* <CardTitle className="text-2xl font-bold">Login</CardTitle> */}
+              <CardDescription className="text-muted-foreground">
                 Masuk ke sistem monitoring lisensi aset
               </CardDescription>
             </div>
