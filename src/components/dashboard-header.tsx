@@ -165,16 +165,13 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
               variant="ghost"
               size="sm"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
+              className="px-2 sm:px-3 py-1 sm:py-2"
             >
               {theme === "dark" ? (
-                <Sun className="w-3 h-3 sm:w-4 sm:h-4" />
+                <Sun className="w-4 h-4" />
               ) : (
-                <Moon className="w-3 h-3 sm:w-4 sm:h-4" />
+                <Moon className="w-4 h-4" />
               )}
-              <span className="hidden sm:inline">
-                {theme === "dark" ? "Light" : "Dark"}
-              </span>
             </Button>
 
             {/* Logout button */}
