@@ -43,7 +43,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
     try {
       setLoading(true);
       const response = await apiFetch('http://localhost:8080/email/get', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
