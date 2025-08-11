@@ -656,7 +656,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                 const status = getLicenseStatus(license.end_date);
                 return (
                   <>
-                    <TableRow key={index} className="hover:bg-muted/30">
+                    <TableRow key={license.uuid} className="hover:bg-muted/30">
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">
                           <Button
@@ -707,7 +707,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                       <TableCell className="text-right whitespace-nowrap">{formatCurrency(license.jumlah)}</TableCell>
                     </TableRow>
                     {expandedRows[index] && (
-                      <TableRow className="bg-muted/5">
+                      <TableRow key={`${license.uuid}-expanded`} className="bg-muted/5">
                         <TableCell colSpan={9} className="p-4">
                           <div className="grid grid-cols-2 gap-4">
                             <div>

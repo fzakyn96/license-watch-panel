@@ -60,16 +60,40 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
       if (searchQuery) {
         url += `${encodeURIComponent(searchQuery)}`;
       }
-      
-      if (sortField) {
-        url += `&sortBy=${sortField}&sortOrder=${sortDirection}`;
-      }
 
       const response = await apiFetch(url);
       const data: ApiResponse = await response.json();
 
       if (data.status === 200) {
-        setLicenses(data.data.docs);
+        let sortedLicenses = data.data.docs;
+        
+        // Apply client-side sorting if sort is enabled
+        if (sortField) {
+          sortedLicenses = [...sortedLicenses].sort((a, b) => {
+            let aValue = a[sortField as keyof License];
+            let bValue = b[sortField as keyof License];
+            
+            // Handle numeric fields
+            if (sortField === 'harga_satuan') {
+              aValue = Number(aValue);
+              bValue = Number(bValue);
+            }
+            
+            // Handle date fields
+            if (sortField === 'start_date' || sortField === 'end_date') {
+              aValue = new Date(aValue as string).getTime();
+              bValue = new Date(bValue as string).getTime();
+            }
+            
+            if (sortDirection === 'asc') {
+              return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+            } else {
+              return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+            }
+          });
+        }
+        
+        setLicenses(sortedLicenses);
         setTotalPages(data.data.pages);
       } else {
         throw new Error('Gagal memuat data lisensi');
