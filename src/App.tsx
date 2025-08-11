@@ -27,13 +27,6 @@ interface ProtectedRouteProps {
   isAuthenticated: boolean;
 }
 
-type LoginResponse = {
-  name: string;
-  group: string;
-  token: string;
-  expires: number; // seconds
-};
-
 type IframeLoginResponse = {
   data: string;
 };
@@ -108,17 +101,17 @@ const App = () => {
 
     // Simpan token dari iframe login response
     setCookie(AUTH_TOKEN_KEY, data.data, { expires: new Date(expiresAt), path: "/" });
-    setCookie(AUTH_NAME_KEY, "Iframe User", { expires: new Date(expiresAt), path: "/" });
-    setCookie(AUTH_GROUP_KEY, "iframe", { expires: new Date(expiresAt), path: "/" });
+    // setCookie(AUTH_NAME_KEY, "Iframe User", { expires: new Date(expiresAt), path: "/" });
+    // setCookie(AUTH_GROUP_KEY, "iframe", { expires: new Date(expiresAt), path: "/" });
     setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
 
     toast({
       title: "Login berhasil",
-      description: `Selamat datang, Iframe User`,
+      description: `Selamat datang!`,
       variant: "success",
     });
 
-    onLogin();
+    // onLogin();
   }
 
   // Auto-logout saat token kadaluarsa
