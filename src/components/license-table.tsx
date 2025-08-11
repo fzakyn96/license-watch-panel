@@ -413,15 +413,28 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   };
 
   const getPageNumbers = (current: number, total: number) => {
-    const maxPages = 5; // Show up to 5 page buttons
-    let startPage = Math.max(1, current - Math.floor(maxPages / 2));
-    let endPage = Math.min(total, startPage + maxPages - 1);
+    const pages = [];
+    const delta = 2;
 
-    if (endPage - startPage + 1 < maxPages) {
-      startPage = Math.max(1, endPage - maxPages + 1);
+    pages.push(1);
+
+    if (current - delta > 2) {
+      pages.push("...");
     }
 
-    return range(startPage, endPage + 1);
+    for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+      pages.push(i);
+    }
+
+    if (current + delta < total - 1) {
+      pages.push("...");
+    }
+
+    if (total > 1) {
+      pages.push(total);
+    }
+
+    return pages;
   };
 
   return (
@@ -761,12 +774,13 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
-          {getPageNumbers(currentPage, totalPages).map((page) => (
+          {getPageNumbers(currentPage, totalPages).map((page, index) => (
             <Button
-              key={page}
+              key={index}
               variant={currentPage === page ? "default" : "outline"}
               size="sm"
-              onClick={() => setCurrentPage(page)}
+              onClick={() => typeof page === 'number' && setCurrentPage(page)}
+              disabled={page === "..."}
             >
               {page}
             </Button>
