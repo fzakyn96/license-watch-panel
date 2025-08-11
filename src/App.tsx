@@ -41,6 +41,7 @@ const ProtectedRoute = ({ children, isAuthenticated }: ProtectedRouteProps) => {
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => isAuthenticated());
+  const [iframeLoginFailed, setIframeLoginFailed] = useState(false);
   const { toast } = useToast();
 
 
@@ -118,6 +119,7 @@ const App = () => {
       console.log("onLogin callback completed");
     } catch (error) {
       console.error("Iframe login error:", error);
+      setIframeLoginFailed(true); // Prevent retry loop
       toast({
         title: "Login gagal",
         description: error instanceof Error ? error.message : "Terjadi kesalahan saat login iframe",
@@ -127,7 +129,7 @@ const App = () => {
   }
 
   // Auto-logout saat token kadaluarsa
-const attemptedRef = useRef(false);
+  const attemptedRef = useRef(false);
   useEffect(() => {
     let timer: number | undefined;
 
@@ -143,7 +145,7 @@ const attemptedRef = useRef(false);
       }
     }
 
-    if (isInIframe() && !isLoggedIn && !attemptedRef.current) {
+    if (isInIframe() && !isLoggedIn && !attemptedRef.current && !iframeLoginFailed) {
       attemptedRef.current = true;
       void loginIframe({ onLogin: handleLogin });
     }
