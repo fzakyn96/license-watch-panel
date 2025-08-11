@@ -192,13 +192,13 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       
       // Fetch all data without pagination for export
       const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/get?name=`);
+      const data = await response.json();
       
-      if (!response.ok) {
+      if (data.status !== 200) {
         throw new Error('Gagal mengambil data untuk export');
       }
       
-      const data = await response.json();
-      const allLicenses = data.data || [];
+      const allLicenses = data.data.docs || [];
       
       const exportData = allLicenses.map((license: License) => ({
         'Nama Aset': license.name,
