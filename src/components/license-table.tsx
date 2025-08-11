@@ -323,6 +323,7 @@ export const LicenseTable = () => {
       });
 
       if (response.ok) {
+        navigate('/');
         toast({
           title: "Import berhasil",
           description: "Data lisensi telah berhasil diimport"
@@ -330,10 +331,6 @@ export const LicenseTable = () => {
         setIsImportDialogOpen(false);
         setSelectedFile(null);
         fetchLicenses(currentPage, parseInt(itemsPerPage));
-        // Trigger status cards update
-        // if (onDataChange) {
-        //   onDataChange();
-        // }
       } else {
         throw new Error('Import gagal');
       }
