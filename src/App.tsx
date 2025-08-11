@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setCookie } from "@/lib/cookies";
 import { AUTH_TOKEN_KEY, AUTH_NAME_KEY, AUTH_GROUP_KEY, AUTH_EXPIRES_AT_KEY } from "@/lib/auth";
-
+import { useRef } from "react";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { EditLicense } from "./pages/EditLicense";
@@ -124,6 +124,7 @@ const App = () => {
   }
 
   // Auto-logout saat token kadaluarsa
+const attemptedRef = useRef(false);
   useEffect(() => {
     let timer: number | undefined;
 
@@ -139,8 +140,9 @@ const App = () => {
       }
     }
 
-    if (isInIframe() && !isLoggedIn) {
-      loginIframe({ onLogin: handleLogin });
+    if (isInIframe() && !isLoggedIn && !attemptedRef.current) {
+      attemptedRef.current = true;
+      void loginIframe({ onLogin: handleLogin });
     }
 
     return () => {
