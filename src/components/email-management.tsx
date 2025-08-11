@@ -48,11 +48,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          site_name: "http://localhost:8181",
-          is_revoked: false
-        })
+        }
       });
 
       console.log('Response received:', response);
