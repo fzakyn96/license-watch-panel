@@ -132,7 +132,7 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
       {statusData.map((status, index) => (
         <Card key={index} className="overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm sm:text-base lg:text-lg font-semibold text-muted-foreground">
               {status.title}
             </CardTitle>
             <div className={`p-1.5 sm:p-2 rounded-lg ${status.bgColor} ${status.color}`}>

@@ -186,9 +186,21 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     }).format(amount);
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
     try {
-      const exportData = licenses.map(license => ({
+      setIsLoading(true);
+      
+      // Fetch all data without pagination for export
+      const response = await apiFetch('http://localhost:8080/license/get?name=');
+      const data = await response.json();
+      
+      if (data.status !== 200) {
+        throw new Error('Gagal mengambil data untuk export');
+      }
+      
+      const allLicenses = data.data || [];
+      
+      const exportData = allLicenses.map((license: License) => ({
         'Nama Aset': license.name,
         'Tanggal Mulai': formatDate(license.start_date),
         'Tanggal Berakhir': formatDate(license.end_date),
@@ -238,7 +250,9 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         };
       }
 
-      XLSX.writeFile(wb, 'Data_Lisensi.xlsx');
+      const today = new Date();
+      const dateStr = today.toISOString().split('T')[0];
+      XLSX.writeFile(wb, `Data_Lisensi_${dateStr}.xlsx`);
 
       toast({
         title: "Export berhasil",
@@ -250,6 +264,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         description: "Terjadi kesalahan saat mengekspor data",
         variant: "destructive"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
