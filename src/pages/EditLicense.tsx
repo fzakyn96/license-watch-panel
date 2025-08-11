@@ -41,14 +41,7 @@ export const EditLicense = () => {
   useEffect(() => {
     const fetchLicense = async () => {
       try {
-        const response = await apiFetch('http://localhost:8080/licenses/find', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ uuid })
-        });
-        
+        const response = await apiFetch(`http://localhost:8080/licenses/find?uuid=${uuid}`);
         const data = await response.json();
 
         if (data.status === 200) {

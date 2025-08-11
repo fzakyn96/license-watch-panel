@@ -33,7 +33,8 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronLeft,
-  Loader2
+  Loader2,
+  PlusIcon
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -257,7 +258,7 @@ export const LicenseTable = () => {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedLicense, setSelectedLicense] = useState<License | null>(null);
-  
+
   const handleAction = (action: string, license: License) => {
     if (action === "Delete") {
       setSelectedLicense(license);
@@ -269,7 +270,7 @@ export const LicenseTable = () => {
 
   const handleDelete = async () => {
     if (!selectedLicense) return;
-    
+
     try {
       const response = await apiFetch(`http://localhost:8080/licenses/delete`, {
         method: 'DELETE',
@@ -313,7 +314,7 @@ export const LicenseTable = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const username = getCookie('username') || '';
+      const username = getCookie('auth_name') || '';
       formData.append('last_user_input', username);
 
       const response = await apiFetch('http://localhost:8080/licenses/upload', {
@@ -386,11 +387,11 @@ export const LicenseTable = () => {
     const maxPages = 5; // Show up to 5 page buttons
     let startPage = Math.max(1, current - Math.floor(maxPages / 2));
     let endPage = Math.min(total, startPage + maxPages - 1);
-  
+
     if (endPage - startPage + 1 < maxPages) {
       startPage = Math.max(1, endPage - maxPages + 1);
     }
-  
+
     return range(startPage, endPage + 1);
   };
 
@@ -425,6 +426,13 @@ export const LicenseTable = () => {
         </div>
 
         <div className="flex gap-2">
+          <Button
+            onClick={() => navigate('/add')}
+            className="flex items-center gap-2"
+          >
+            <PlusIcon className="w-4 h-4" />
+            Tambah Lisensi
+          </Button>
           <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" onClick={handleImport}>
@@ -691,33 +699,33 @@ export const LicenseTable = () => {
       {/* Pagination */}
       {!isLoading && licenses.length > 0 && (
         <div className="flex justify-center items-center gap-2 mt-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </Button>
-        {getPageNumbers(currentPage, totalPages).map((page) => (
           <Button
-            key={page}
-            variant={currentPage === page ? "default" : "outline"}
+            variant="outline"
             size="sm"
-            onClick={() => setCurrentPage(page)}
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
           >
-            {page}
+            <ChevronLeft className="w-4 h-4" />
           </Button>
-        ))}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-          disabled={currentPage === totalPages}
-        >
-          <ChevronRight className="w-4 h-4" />
-        </Button>
-      </div>
+          {getPageNumbers(currentPage, totalPages).map((page) => (
+            <Button
+              key={page}
+              variant={currentPage === page ? "default" : "outline"}
+              size="sm"
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </Button>
+          ))}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
       )}
     </div>
   );

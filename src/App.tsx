@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { EditLicense } from "./pages/EditLicense";
+import { AddLicense } from "./pages/AddLicense";
 import { getAuth, isAuthenticated, logout as authLogout } from "@/lib/auth";
 
 const queryClient = new QueryClient();
@@ -81,6 +82,11 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route path="/add" element={
+              <ProtectedRoute isAuthenticated={isLoggedIn}>
+                <AddLicense />
+              </ProtectedRoute>
+            } />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

@@ -21,9 +21,33 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
     try {
       const response = await apiFetch('http://localhost:8080/cron/running');
       const data = await response.json();
-      
-      if (response.status === 200) {
+
+      if (data.status === 404) {
+        const createResponse = await apiFetch('http://localhost:8080/cron/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: "sendEmail",
+            time_schedule: "0 9,15 * * 1-5",
+            is_running: true
+          })
+        });
+
+        if (createResponse.ok) {
+          setNotificationsEnabled(true);
+          toast({
+            title: "Notifikasi diaktifkan",
+            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
+          });
+        }
+      }
+      if (data.status === 200 && data.data[0].is_running === true) {
         setNotificationsEnabled(true);
+      }
+      if (data.status === 200 && data.data[0].is_running === false) {
+        setNotificationsEnabled(false);
       }
     } catch (error) {
       console.error('Error checking notification status:', error);
@@ -32,75 +56,47 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
 
   const handleNotificationToggle = async (enabled: boolean) => {
     try {
+      const response = await apiFetch('http://localhost:8080/cron/running');
+      const data = await response.json();
       if (enabled) {
-        const response = await apiFetch('http://localhost:8080/cron/running');
-        const data = await response.json();
+        const uuid = data.data[0].uuid;
+        const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            uuid: uuid,
+            is_running: true
+          })
+        });
 
-        if (data.status === 404) {
-          const createResponse = await apiFetch('http://localhost:8080/cron/create', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: "sendEmail",
-              time_schedule: "0 9,15 * * 1-5",
-              is_running: true
-            })
+        if (switchResponse.ok) {
+          setNotificationsEnabled(true);
+          toast({
+            title: "Notifikasi diaktifkan",
+            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
           });
-
-          if (createResponse.ok) {
-            setNotificationsEnabled(true);
-            toast({
-              title: "Notifikasi diaktifkan",
-              description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
-            });
-          }
-        } else if (data.status === 200 && data.data.length > 0) {
-          const uuid = data.data[0].uuid;
-          const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              uuid: uuid,
-              is_running: true
-            })
-          });
-
-          if (switchResponse.ok) {
-            setNotificationsEnabled(true);
-            toast({
-              title: "Notifikasi diaktifkan",
-              description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
-            });
-          }
         }
       } else {
-        const response = await apiFetch('http://localhost:8080/cron/running');
-        const data = await response.json();
+        const uuid = data.data[0].uuid;
+        const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            uuid: uuid,
+            is_running: false
+          })
+        });
 
-        if (data.status === 200 && data.data.length > 0) {
-          const uuid = data.data[0].uuid;
-          const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              uuid: uuid,
-              is_running: false
-            })
+        if (switchResponse.ok) {
+          setNotificationsEnabled(false);
+          toast({
+            title: "Notifikasi dinonaktifkan",
+            description: "Notifikasi telah dinonaktifkan"
           });
-
-          if (switchResponse.ok) {
-            setNotificationsEnabled(false);
-            toast({
-              title: "Notifikasi dinonaktifkan",
-              description: "Notifikasi telah dinonaktifkan"
-            });
-          }
         }
       }
     } catch (error) {
@@ -145,7 +141,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
 
             {/* Logout button */}
             <Button
-              variant="outline"
+              variant="destructive"
               size="sm"
               onClick={onLogout}
               className="flex items-center space-x-2"
