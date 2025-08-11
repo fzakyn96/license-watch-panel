@@ -5,8 +5,8 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_LIMIT = 3
+const TOAST_REMOVE_DELAY = 4000
 
 type ToasterToast = ToastProps & {
   id: string
@@ -167,6 +167,23 @@ function toast({ ...props }: Toast) {
     update,
   }
 }
+
+// Helper functions for different toast types
+toast.success = (props: Omit<Toast, "variant">) => {
+  return toast({ ...props, variant: "success" });
+};
+
+toast.error = (props: Omit<Toast, "variant">) => {
+  return toast({ ...props, variant: "destructive" });
+};
+
+toast.warning = (props: Omit<Toast, "variant">) => {
+  return toast({ ...props, variant: "warning" });
+};
+
+toast.info = (props: Omit<Toast, "variant">) => {
+  return toast({ ...props, variant: "default" });
+};
 
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
