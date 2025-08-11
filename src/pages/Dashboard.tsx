@@ -25,7 +25,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
               Dashboard Monitoring Lisensi
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground">
-              Pantau status dan kelola lisensi aset perusahaan Anda
+              Pantau status dan kelola lisensi aset
             </p>
           </div>
           
