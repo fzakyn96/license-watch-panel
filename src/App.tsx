@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import { EditLicense } from "./pages/EditLicense";
 import { AddLicense } from "./pages/AddLicense";
+import LicensePrices from "./pages/LicensePrices";
 import { getAuth, isAuthenticated, logout as authLogout } from "@/lib/auth";
 
 const queryClient = new QueryClient();
@@ -85,6 +86,11 @@ const App = () => {
             <Route path="/add" element={
               <ProtectedRoute isAuthenticated={isLoggedIn}>
                 <AddLicense />
+              </ProtectedRoute>
+            } />
+            <Route path="/prices" element={
+              <ProtectedRoute isAuthenticated={isLoggedIn}>
+                <LicensePrices onLogout={handleLogout} />
               </ProtectedRoute>
             } />
           </Routes>

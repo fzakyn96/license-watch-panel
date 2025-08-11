@@ -7,6 +7,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { getCookie } from "@/lib/cookies";
 import {
@@ -34,7 +40,9 @@ import {
   ChevronRight,
   ChevronLeft,
   Loader2,
-  PlusIcon
+  PlusIcon,
+  MoreVertical,
+  DollarSign
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -435,13 +443,33 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             <PlusIcon className="w-4 h-4" />
             Tambah Lisensi
           </Button>
-          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm" onClick={handleImport}>
+          <Button
+            onClick={() => navigate('/prices')}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <DollarSign className="w-4 h-4" />
+            Harga Lisensi
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <MoreVertical className="w-4 h-4 mr-2" />
+                Excel
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={handleImport}>
                 <Upload className="w-4 h-4 mr-2" />
                 Import Excel
-              </Button>
-            </DialogTrigger>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExport}>
+                <Download className="w-4 h-4 mr-2" />
+                Export Excel
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
@@ -500,10 +528,6 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               </div>
             </DialogContent>
           </Dialog>
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="w-4 h-4 mr-2" />
-            Export Excel
-          </Button>
         </div>
       </div>
 
