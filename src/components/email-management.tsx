@@ -54,6 +54,14 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
       
       if (data.status === 200) {
         setEmailRecipients(data.data);
+        
+        // Show toast if no email recipients found
+        if (!data.data || data.data.length === 0) {
+          toast({
+            title: "Info",
+            description: "Tidak ada penerima email ditemukan"
+          });
+        }
       } else {
         setEmailRecipients([]);
         toast({
