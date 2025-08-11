@@ -146,6 +146,20 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
               </Button>
             </EmailManagement>
 
+            {/* Notification toggle */}
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Bell className={`w-4 h-4 sm:w-5 sm:h-5 ${notificationsEnabled ? 'text-primary' : 'text-muted-foreground'}`} />
+              <Switch
+                checked={notificationsEnabled}
+                onCheckedChange={handleNotificationToggle}
+                aria-label="Toggle notifications"
+                className="scale-75 sm:scale-100"
+              />
+              <span className="hidden sm:inline text-sm text-muted-foreground">
+                {notificationsEnabled ? "Aktif" : "Nonaktif"}
+              </span>
+            </div>
+
             {/* Theme toggle */}
             <Button
               variant="ghost"
@@ -162,20 +176,6 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
                 {theme === "dark" ? "Light" : "Dark"}
               </span>
             </Button>
-
-            {/* Notification toggle */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Bell className={`w-4 h-4 sm:w-5 sm:h-5 ${notificationsEnabled ? 'text-primary' : 'text-muted-foreground'}`} />
-              <Switch
-                checked={notificationsEnabled}
-                onCheckedChange={handleNotificationToggle}
-                aria-label="Toggle notifications"
-                className="scale-75 sm:scale-100"
-              />
-              <span className="hidden sm:inline text-sm text-muted-foreground">
-                {notificationsEnabled ? "Aktif" : "Nonaktif"}
-              </span>
-            </div>
 
             {/* Logout button */}
             <Button
