@@ -37,7 +37,7 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
 
   const fetchStatusData = async () => {
     try {
-      const response = await apiFetch('http://localhost:8080/home/get');
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/home/get`);
       const result = await response.json();
 
       if (result.status === 200 && result.data) {

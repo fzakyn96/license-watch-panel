@@ -100,7 +100,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
     try {
       setIsLoading(true);
-      let url = `http://localhost:8080/licenses/get?page=${page}&paginate=${paginate}&name=`;
+      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
       if (searchQuery) {
         url += `${encodeURIComponent(searchQuery)}`;
       }
@@ -191,7 +191,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       setIsLoading(true);
       
       // Fetch all data without pagination for export
-      const response = await apiFetch('http://localhost:8080/license/get?name=');
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/get?name=`);
       const data = await response.json();
       
       if (data.status !== 200) {
@@ -300,7 +300,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     if (!selectedLicense) return;
 
     try {
-      const response = await apiFetch(`http://localhost:8080/licenses/delete`, {
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -345,7 +345,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       const username = getCookie('auth_name') || '';
       formData.append('last_user_input', username);
 
-      const response = await apiFetch('http://localhost:8080/licenses/upload', {
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/upload`, {
         method: 'POST',
         body: formData
       });
@@ -430,10 +430,10 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             Daftar Lisensi Aset
           </h3>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <Button
             onClick={() => navigate('/add')}
-            className="flex items-center justify-center gap-2"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto"
             variant="success"
           >
             <PlusIcon className="w-4 h-4" />
@@ -442,14 +442,14 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
           <Button
             onClick={() => navigate('/prices')}
             variant="warning"
-            className="flex items-center justify-center gap-2"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <DollarSign className="w-4 h-4" />
             Harga Lisensi
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="default" className="flex items-center justify-center gap-2">
+              <Button variant="default" className="flex items-center justify-center gap-2 w-full sm:w-auto">
                 <MoreVertical className="w-4 h-4" />
                 Excel
                 <ChevronDown className="w-4 h-4" />

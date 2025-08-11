@@ -52,7 +52,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
     try {
       setIsLoading(true);
-      let url = `http://localhost:8080/licenses/get?page=${page}&paginate=${paginate}&name=`;
+      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
       if (searchQuery) {
         url += `${encodeURIComponent(searchQuery)}`;
       }
@@ -110,7 +110,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
 
   const handleExportToExcel = async () => {
     try {
-      const response = await apiFetch(`http://localhost:8080/licenses/get?name=`);
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/get?name=`);
       const data: ApiResponse = await response.json();
 
       if (data.status === 200) {

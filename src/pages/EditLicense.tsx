@@ -43,7 +43,7 @@ export const EditLicense = () => {
   useEffect(() => {
     const fetchLicense = async () => {
       try {
-        const response = await apiFetch(`http://localhost:8080/licenses/find?uuid=${uuid}`);
+        const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/find?uuid=${uuid}`);
         const data = await response.json();
 
         if (data.status === 200 && data.data && data.data.length > 0) {
@@ -120,7 +120,7 @@ export const EditLicense = () => {
         updatedAt: new Date().toISOString()
       };
 
-      const response = await apiFetch('http://localhost:8080/licenses/update', {
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

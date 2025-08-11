@@ -43,7 +43,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
     try {
       setLoading(true);
       
-      const response = await apiFetch('http://localhost:8080/email/get', {
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/email/get`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
     }
 
     try {
-      const response = await apiFetch('http://localhost:8080/email/create', {
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/email/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
     }
 
     try {
-      const response = await apiFetch('http://localhost:8080/email/update', {
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/email/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
 
   const handleDeleteRecipient = async (uuid: string) => {
     try {
-      const response = await apiFetch('http://localhost:8080/email/delete', {
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/email/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

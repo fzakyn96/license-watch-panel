@@ -22,11 +22,11 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
 
   const checkNotificationStatus = async () => {
     try {
-      const response = await apiFetch('http://localhost:8080/cron/running');
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
       const data = await response.json();
 
       if (data.status === 404) {
-        const createResponse = await apiFetch('http://localhost:8080/cron/create', {
+        const createResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -59,11 +59,11 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
 
   const handleNotificationToggle = async (enabled: boolean) => {
     try {
-      const response = await apiFetch('http://localhost:8080/cron/running');
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
       const data = await response.json();
       if (enabled) {
         const uuid = data.data[0].uuid;
-        const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
+        const switchResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/switch`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
         }
       } else {
         const uuid = data.data[0].uuid;
-        const switchResponse = await apiFetch('http://localhost:8080/cron/switch', {
+        const switchResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/switch`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

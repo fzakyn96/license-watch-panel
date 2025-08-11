@@ -104,7 +104,7 @@ export const AddLicense = () => {
         last_user_input: name
       };
 
-      await apiFetch('http://localhost:8080/licenses/create', {
+      await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
