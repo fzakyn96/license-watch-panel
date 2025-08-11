@@ -193,7 +193,6 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         body: JSON.stringify({ uuid })
       });
 
-      const data = await response.json();
       if (response.ok) {
         toast({
           title: "Berhasil",
@@ -201,9 +200,18 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         });
         fetchEmailRecipients();
       } else {
+        // Only try to parse JSON if response has content
+        let errorMessage = "Gagal menghapus penerima email";
+        try {
+          const data = await response.json();
+          errorMessage = data.data || errorMessage;
+        } catch {
+          // Response doesn't have JSON content, use default message
+        }
+        
         toast({
           title: "Error",
-          description: data.data || "Gagal menghapus penerima email",
+          description: errorMessage,
           variant: "destructive"
         });
       }
