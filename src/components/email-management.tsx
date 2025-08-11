@@ -42,7 +42,6 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
   const fetchEmailRecipients = async () => {
     try {
       setLoading(true);
-      console.log('Fetching email recipients...');
       
       const response = await apiFetch('http://localhost:8080/email/get', {
         method: 'GET',
@@ -51,19 +50,11 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         }
       });
 
-      console.log('Response received:', response);
       const data = await response.json();
-      console.log('Data parsed:', data);
       
       if (data.status === 200) {
-        console.log('Setting email recipients:', data.data);
         setEmailRecipients(data.data);
-        toast({
-          title: "Berhasil",
-          description: "Data penerima email berhasil dimuat"
-        });
       } else {
-        console.log('API returned non-200 status:', data.status);
         setEmailRecipients([]);
         toast({
           title: "Error",
@@ -72,7 +63,6 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         });
       }
     } catch (error) {
-      console.error('Error fetching email recipients:', error);
       toast({
         title: "Error",
         description: "Gagal memuat data penerima email: " + (error instanceof Error ? error.message : 'Unknown error'),
@@ -193,21 +183,18 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         body: JSON.stringify({ uuid })
       });
 
-      if (response.ok) {
+      if (response.status === 204) {
         toast({
           title: "Berhasil",
           description: "Penerima email berhasil dihapus"
         });
         fetchEmailRecipients();
       } else {
-        // Only try to parse JSON if response has content
         let errorMessage = "Gagal menghapus penerima email";
         try {
           const data = await response.json();
           errorMessage = data.data || errorMessage;
-        } catch {
-          // Response doesn't have JSON content, use default message
-        }
+        } catch { }
         
         toast({
           title: "Error",
