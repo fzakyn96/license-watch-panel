@@ -22,6 +22,7 @@ interface License {
   volume: number;
   satuan: string;
   harga_satuan: number;
+  jumlah: number;
   username: string;
   password: string;
   lokasi_lisensi: string;
@@ -36,6 +37,7 @@ const emptyLicense: License = {
   volume: 0,
   satuan: "",
   harga_satuan: 0,
+  jumlah: 0,
   username: "",
   password: "",
   lokasi_lisensi: "",
@@ -48,29 +50,41 @@ export const AddLicense = () => {
   const { toast } = useToast();
   const { theme } = useTheme();
   const [license, setLicense] = useState<License>(emptyLicense);
-  const [errors, setErrors] = useState<string[]>([]);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
-    const newErrors: string[] = [];
-    
-    if (!license.name) newErrors.push("Nama Aset wajib diisi");
-    if (!license.start_date) newErrors.push("Tanggal Mulai wajib diisi");
-    if (!license.end_date) newErrors.push("Tanggal Berakhir wajib diisi");
-    if (!license.volume || license.volume <= 0) newErrors.push("Volume harus lebih besar dari 0");
-    if (!license.satuan) newErrors.push("Satuan wajib diisi");
-    if (!license.harga_satuan || license.harga_satuan < 0) newErrors.push("Harga Satuan tidak boleh negatif");
-    if (!license.username) newErrors.push("Username wajib diisi");
-    if (!license.password) newErrors.push("Password wajib diisi");
-    
+    const newErrors: { [key: string]: string } = {};
+    const requiredFields = ['name', 'start_date', 'end_date', 'volume', 'satuan', 'harga_satuan', 'username', 'password'];
+
+    requiredFields.forEach(field => {
+      if (!license[field]) {
+        newErrors[field] = 'Field ini wajib diisi';
+      }
+    });
+
+    if (license.volume && license.volume <= 0) {
+      newErrors.volume = 'Volume harus lebih besar dari 0';
+    }
+
+    if (license.harga_satuan && license.harga_satuan < 0) {
+      newErrors.harga_satuan = 'Harga satuan tidak boleh negatif';
+    }
+
     setErrors(newErrors);
-    return newErrors.length === 0;
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleInputChange = (field: keyof License, value: string | number) => {
-    setLicense(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    const newLicense = { ...license, [field]: value };
+
+    // Kalkulasi otomatis total harga
+    if (field === 'volume' || field === 'harga_satuan') {
+      const volume = field === 'volume' ? Number(value) : license.volume;
+      const hargaSatuan = field === 'harga_satuan' ? Number(value) : license.harga_satuan;
+      newLicense.jumlah = volume * hargaSatuan;
+    }
+
+    setLicense(newLicense);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -177,15 +191,6 @@ export const AddLicense = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
-            {errors.length > 0 && (
-              <div className="bg-red-50 text-red-500 p-3 rounded-md mb-4">
-                <ul className="list-disc list-inside">
-                  {errors.map((error, i) => (
-                    <li key={i}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
 
             <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {/* Nama Aset - Full width */}
@@ -195,8 +200,10 @@ export const AddLicense = () => {
                   id="name"
                   value={license.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
+                  aria-invalid={!!errors.name}
                   className="mt-1"
                 />
+                {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
               </div>
 
               {/* Tanggal - Stack on mobile, side by side on larger screens */}
@@ -229,6 +236,7 @@ export const AddLicense = () => {
                       />
                     </PopoverContent>
                   </Popover>
+                  {errors.start_date && <p className="text-sm text-red-500 mt-1">{errors.start_date}</p>}
                 </div>
 
                 <div>
@@ -259,6 +267,7 @@ export const AddLicense = () => {
                       />
                     </PopoverContent>
                   </Popover>
+                  {errors.end_date && <p className="text-sm text-red-500 mt-1">{errors.end_date}</p>}
                 </div>
               </div>
 
@@ -271,8 +280,10 @@ export const AddLicense = () => {
                     type="number"
                     value={license.volume}
                     onChange={(e) => handleInputChange('volume', Number(e.target.value))}
+                    aria-invalid={!!errors.volume}
                     className="mt-1"
                   />
+                  {errors.volume && <p className="text-sm text-red-500 mt-1">{errors.volume}</p>}
                 </div>
 
                 <div>
@@ -281,21 +292,38 @@ export const AddLicense = () => {
                     id="satuan"
                     value={license.satuan}
                     onChange={(e) => handleInputChange('satuan', e.target.value)}
+                    aria-invalid={!!errors.satuan}
                     className="mt-1"
                   />
+                  {errors.satuan && <p className="text-sm text-red-500 mt-1">{errors.satuan}</p>}
                 </div>
               </div>
 
-              {/* Harga Satuan - Full width on mobile */}
-              <div>
-                <Label htmlFor="harga_satuan">Harga Satuan</Label>
-                <Input
-                  id="harga_satuan"
-                  type="number"
-                  value={license.harga_satuan}
-                  onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
-                  className="mt-1"
-                />
+              {/* Harga Satuan & Total Harga */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="harga_satuan">Harga Satuan</Label>
+                  <Input
+                    id="harga_satuan"
+                    type="number"
+                    value={license.harga_satuan}
+                    onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
+                    aria-invalid={!!errors.harga_satuan}
+                    className="mt-1"
+                  />
+                  {errors.harga_satuan && <p className="text-sm text-red-500 mt-1">{errors.harga_satuan}</p>}
+                </div>
+
+                <div>
+                  <Label htmlFor="jumlah">Total Harga</Label>
+                  <Input
+                    id="jumlah"
+                    type="number"
+                    value={license.jumlah || 0}
+                    disabled
+                    className="mt-1 bg-muted"
+                  />
+                </div>
               </div>
 
               {/* Username & Password */}
@@ -306,8 +334,10 @@ export const AddLicense = () => {
                     id="username"
                     value={license.username}
                     onChange={(e) => handleInputChange('username', e.target.value)}
+                    aria-invalid={!!errors.username}
                     className="mt-1"
                   />
+                  {errors.username && <p className="text-sm text-red-500 mt-1">{errors.username}</p>}
                 </div>
 
                 <div>
@@ -317,8 +347,10 @@ export const AddLicense = () => {
                     type="password"
                     value={license.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
+                    aria-invalid={!!errors.password}
                     className="mt-1"
                   />
+                  {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
                 </div>
               </div>
 
