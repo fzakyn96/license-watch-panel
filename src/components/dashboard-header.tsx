@@ -123,12 +123,9 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
               alt="Lisensi Aset Logo"
               className="h-8 w-auto sm:h-8 object-contain"
             />
-            <div className="hidden sm:block">
+            <div className="hidden lg:block">
               <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
               <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
-            </div>
-            <div className="sm:hidden">
-              <h1 className="text-base font-bold text-foreground">Lisensi Aset</h1>
             </div>
           </div>
 
