@@ -285,8 +285,8 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                   <TableHead className="font-semibold">Harga Satuan</TableHead>
                   <TableHead className="font-semibold">Tanggal Awal</TableHead>
                   <TableHead className="font-semibold">Tanggal Berakhir</TableHead>
-                  <TableHead className="font-semibold">Status</TableHead>
-                  <TableHead className="font-semibold">Deskripsi</TableHead>
+                  {/* <TableHead className="font-semibold">Status</TableHead> */}
+                  <TableHead className="font-semibold">Catatan</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -320,12 +320,12 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                         <TableCell className="whitespace-nowrap">
                           {formatDate(license.end_date)}
                         </TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                           <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${status.color}`}>
                             <StatusIcon className="w-3 h-3 mr-1" />
                             {status.text}
                           </div>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell className="max-w-xs truncate">
                           {license.description}
                         </TableCell>
