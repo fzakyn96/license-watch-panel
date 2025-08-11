@@ -69,56 +69,65 @@ const App = () => {
   };
 
   const loginIframe = async ({ onLogin }: LoginFormProps) => {
-    const createRes = await fetch(`${import.meta.env.VITE_BASE_URL}/iframe-client/create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        "site_name": "https://google.com",
-        "is_revoked": false,
-        // "redirect": "https://digio.pgn.co.id/digio" //jika diisi dari button
-      })
-    });
+    try {
+      const createRes = await fetch(`${import.meta.env.VITE_BASE_URL}/iframe-client/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          "site_name": "https://google.com",
+          "is_revoked": false,
+          // "redirect": "https://digio.pgn.co.id/digio" //jika diisi dari button
+        })
+      });
 
-    if (!createRes.ok) {
-      throw new Error("Gagal membuat iframe client");
+      if (!createRes.ok) {
+        throw new Error("Gagal membuat iframe client");
+      }
+
+      const createData = await createRes.json();
+      const uuid = createData.data.uuid;
+
+      if (!uuid) {
+        throw new Error("UUID tidak ditemukan dalam response");
+      }
+
+      // Iframe login flow: Step 2 - Login with UUID
+      const loginRes = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/iframeLogin?uuid=${uuid}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!loginRes.ok) {
+        const text = await loginRes.text();
+        throw new Error(text || "Iframe login gagal");
+      }
+
+      const data = (await loginRes.json()) as IframeLoginResponse;
+      console.log("Iframe login success:", data.data);
+
+      const expiresAt = Date.now() + 3600 * 1000; // epoch ms
+
+      // Simpan token dari iframe login response
+      setCookie(AUTH_TOKEN_KEY, data.data, { expires: new Date(expiresAt), path: "/" });
+      setCookie(AUTH_NAME_KEY, "Iframe User", { expires: new Date(expiresAt), path: "/" });
+      setCookie(AUTH_GROUP_KEY, "iframe", { expires: new Date(expiresAt), path: "/" });
+      setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
+
+      toast({
+        title: "Login berhasil",
+        description: `Selamat datang, Iframe User`,
+        variant: "success",
+      });
+
+      onLogin();
+    } catch (error) {
+      console.error("Iframe login error:", error);
+      toast({
+        title: "Login gagal",
+        description: error instanceof Error ? error.message : "Terjadi kesalahan saat login iframe",
+        variant: "destructive",
+      });
     }
-
-    const createData = await createRes.json();
-    const uuid = createData.data.uuid;
-
-    if (!uuid) {
-      throw new Error("UUID tidak ditemukan dalam response");
-    }
-
-    // Iframe login flow: Step 2 - Login with UUID
-    const loginRes = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/iframeLogin?uuid=${uuid}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!loginRes.ok) {
-      const text = await loginRes.text();
-      throw new Error(text || "Iframe login gagal");
-    }
-
-    const data = (await loginRes.json()) as IframeLoginResponse;
-    console.log(data.data);
-
-    const expiresAt = Date.now() + 3600 * 1000; // epoch ms
-
-    // Simpan token dari iframe login response
-    setCookie(AUTH_TOKEN_KEY, data.data, { expires: new Date(expiresAt), path: "/" });
-    setCookie(AUTH_NAME_KEY, "Iframe User", { expires: new Date(expiresAt), path: "/" });
-    setCookie(AUTH_GROUP_KEY, "iframe", { expires: new Date(expiresAt), path: "/" });
-    setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
-
-    toast({
-      title: "Login berhasil",
-      description: `Selamat datang, Iframe User`,
-      variant: "success",
-    });
-
-    onLogin();
   }
 
   // Auto-logout saat token kadaluarsa
@@ -137,7 +146,7 @@ const App = () => {
       }
     }
 
-    if (isInIframe()) {
+    if (isInIframe() && !isLoggedIn) {
       loginIframe({ onLogin: handleLogin });
     }
 
