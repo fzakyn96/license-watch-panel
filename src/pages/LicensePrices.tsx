@@ -135,7 +135,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
         toast({
           title: "Berhasil",
           description: "Data berhasil diekspor ke Excel",
-          variant: "default"
+          variant: "success"
         });
       }
     } catch (error) {

@@ -42,7 +42,8 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
           setNotificationsEnabled(true);
           toast({
             title: "Notifikasi diaktifkan",
-            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
+            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
+            variant: "success"
           });
         }
       }
@@ -78,7 +79,8 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
           setNotificationsEnabled(true);
           toast({
             title: "Notifikasi diaktifkan",
-            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa"
+            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
+            variant: "success"
           });
         }
       } else {
@@ -98,7 +100,8 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
           setNotificationsEnabled(false);
           toast({
             title: "Notifikasi dinonaktifkan",
-            description: "Notifikasi telah dinonaktifkan"
+            description: "Notifikasi telah dinonaktifkan",
+            variant: "destructive"
           });
         }
       }

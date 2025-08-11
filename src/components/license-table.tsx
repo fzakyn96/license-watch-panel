@@ -257,6 +257,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       toast({
         title: "Export berhasil",
         description: "Data lisensi telah diekspor ke file Excel",
+        variant: "success"
       });
     } catch (error) {
       toast({
@@ -311,7 +312,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       if (response.ok) {
         toast({
           title: "Berhasil",
-          description: "Data lisensi berhasil dihapus"
+          description: "Data lisensi berhasil dihapus",
+          variant: "success"
         });
         setIsDeleteDialogOpen(false);
         fetchLicenses(currentPage, parseInt(itemsPerPage));
@@ -354,7 +356,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         navigate('/');
         toast({
           title: "Import berhasil",
-          description: "Data lisensi telah berhasil diimport"
+          description: "Data lisensi telah berhasil diimport",
+          variant: "success"
         });
         setIsImportDialogOpen(false);
         setSelectedFile(null);

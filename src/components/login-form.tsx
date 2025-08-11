@@ -55,6 +55,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
       toast({
         title: "Login berhasil",
         description: `Selamat datang, ${data.name}`,
+        variant: "success",
       });
 
       onLogin();

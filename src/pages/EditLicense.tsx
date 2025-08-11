@@ -131,7 +131,8 @@ export const EditLicense = () => {
       if (response.ok) {
         toast({
           title: "Berhasil",
-          description: "Data lisensi berhasil diperbarui"
+          description: "Data lisensi berhasil diperbarui",
+          variant: "success"
         });
         navigate('/');
       } else {

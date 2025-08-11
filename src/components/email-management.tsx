@@ -59,14 +59,16 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         if (!data.data || data.data.length === 0) {
           toast({
             title: "Info",
-            description: "Tidak ada penerima email ditemukan"
+            description: "Tidak ada penerima email ditemukan",
+            variant: "warning"
           });
         }
       } else if (data.status === 404) {
         setEmailRecipients([]);
         toast({
           title: "Info",
-          description: "Belum ada data penerima email"
+          description: "Belum ada data penerima email",
+          variant: "warning"
         });
       } else {
         setEmailRecipients([]);
@@ -116,7 +118,8 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
       if (data.status === 201) {
         toast({
           title: "Berhasil",
-          description: "Penerima email berhasil ditambahkan"
+          description: "Penerima email berhasil ditambahkan",
+          variant: "success"
         });
         setFormData({ name: "", email: "", email_type: "to" });
         setIsAddDialogOpen(false);
@@ -163,7 +166,8 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
       if (data.status === 200) {
         toast({
           title: "Berhasil",
-          description: "Penerima email berhasil diperbarui"
+          description: "Penerima email berhasil diperbarui",
+          variant: "success"
         });
         setFormData({ name: "", email: "", email_type: "to" });
         setEditingRecipient(null);
@@ -199,7 +203,8 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
       if (response.status === 204) {
         toast({
           title: "Berhasil",
-          description: "Penerima email berhasil dihapus"
+          description: "Penerima email berhasil dihapus",
+          variant: "success"
         });
         fetchEmailRecipients();
       } else {

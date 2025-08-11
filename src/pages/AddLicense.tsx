@@ -114,7 +114,8 @@ export const AddLicense = () => {
 
       toast({
         title: "Berhasil",
-        description: "Data lisensi berhasil ditambahkan"
+        description: "Data lisensi berhasil ditambahkan",
+        variant: "success"
       });
       navigate('/');
     } catch (error) {
