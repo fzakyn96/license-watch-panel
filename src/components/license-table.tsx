@@ -70,7 +70,11 @@ interface ApiResponse {
   };
 }
 
-export const LicenseTable = () => {
+interface LicenseTableProps {
+  onDataChange?: () => void;
+}
+
+export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [licenses, setLicenses] = useState<License[]>([]);
@@ -331,6 +335,7 @@ export const LicenseTable = () => {
         setIsImportDialogOpen(false);
         setSelectedFile(null);
         fetchLicenses(currentPage, parseInt(itemsPerPage));
+        onDataChange?.();
       } else {
         throw new Error('Import gagal');
       }

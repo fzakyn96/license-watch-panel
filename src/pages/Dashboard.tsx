@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { StatusCards } from "@/components/status-cards";
 import { LicenseTable } from "@/components/license-table";
@@ -7,6 +8,12 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ onLogout }: DashboardProps) => {
+  const statusCardsRef = useRef<{ refreshData: () => void } | null>(null);
+
+  const handleDataChange = () => {
+    statusCardsRef.current?.refreshData();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <DashboardHeader onLogout={onLogout} />
@@ -22,13 +29,13 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
             </p>
           </div>
           
-          <StatusCards />
+          <StatusCards ref={statusCardsRef} />
           
           <div>
             <h3 className="text-xl font-semibold text-foreground mb-4">
               Daftar Lisensi Aset
             </h3>
-            <LicenseTable />
+            <LicenseTable onDataChange={handleDataChange} />
           </div>
         </div>
       </main>

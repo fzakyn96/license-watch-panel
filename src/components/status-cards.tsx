@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, AlertTriangle, XCircle, AlertCircle } from "lucide-react";
 import { apiFetch } from "@/lib/auth";
@@ -19,11 +19,13 @@ interface StatusCard {
   bgColor: string;
 }
 
-interface StatusCardsProps {
-  onDataChange?: () => void;
+interface StatusCardsProps {}
+
+interface StatusCardsRef {
+  refreshData: () => void;
 }
 
-export const StatusCards = ({ onDataChange }: StatusCardsProps) => {
+export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, ref) => {
   const [statusData, setStatusData] = useState<StatusCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,6 +93,10 @@ export const StatusCards = ({ onDataChange }: StatusCardsProps) => {
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    refreshData: fetchStatusData
+  }));
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -145,4 +151,4 @@ export const StatusCards = ({ onDataChange }: StatusCardsProps) => {
       ))}
     </div>
   );
-};
+});
