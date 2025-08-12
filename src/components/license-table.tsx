@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import * as XLSX from 'xlsx';
 import {
   Dialog,
@@ -667,8 +667,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               licenses.map((license, index) => {
                 const status = getLicenseStatus(license.end_date);
                 return (
-                  <>
-                    <TableRow key={license.uuid} className="hover:bg-muted/30">
+                  <React.Fragment key={license.uuid}>
+                    <TableRow className="hover:bg-muted/30">
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">
                           <Button
@@ -719,7 +719,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                       <TableCell className="text-right whitespace-nowrap">{formatCurrency(license.jumlah)}</TableCell>
                     </TableRow>
                     {expandedRows[index] && (
-                      <TableRow key={`${license.uuid}-expanded`} className="bg-muted/5">
+                      <TableRow className="bg-muted/5">
                         <TableCell colSpan={9} className="p-4">
                           <div className="grid grid-cols-2 gap-4">
                             <div>
@@ -767,7 +767,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                         </TableCell>
                       </TableRow>
                     )}
-                  </>
+                  </React.Fragment>
                 );
               })
             )}
