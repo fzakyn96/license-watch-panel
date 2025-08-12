@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -261,6 +261,9 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
               <Mail className="w-5 h-5" />
               Kelola Penerima Email
             </DialogTitle>
+            <DialogDescription>
+              Kelola daftar penerima email untuk notifikasi sistem
+            </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
@@ -275,6 +278,9 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                 <DialogContent className="max-w-[95vw] w-full sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                   <DialogHeader>
                     <DialogTitle>Tambah Penerima Email</DialogTitle>
+                    <DialogDescription>
+                      Tambahkan penerima email baru untuk notifikasi
+                    </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div className="space-y-2">
@@ -419,6 +425,9 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         <DialogContent className="max-w-[95vw] w-full sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Edit Penerima Email</DialogTitle>
+            <DialogDescription>
+              Ubah informasi penerima email yang sudah ada
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
