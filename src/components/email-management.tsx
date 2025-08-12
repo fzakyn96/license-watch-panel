@@ -391,32 +391,33 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                                     <Trash2 className="w-4 h-4" />
                                   </Button>
                                 </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Hapus Penerima Email</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Apakah Anda yakin ingin menghapus penerima email "{recipient.name}"? 
-                                    Tindakan ini tidak dapat dibatalkan.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Batal</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDeleteRecipient(recipient.uuid)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    Hapus
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Hapus Penerima Email</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Apakah Anda yakin ingin menghapus penerima email "{recipient.name}"? 
+                                      Tindakan ini tidak dapat dibatalkan.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDeleteRecipient(recipient.uuid)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Hapus
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
 
             {/* Mobile Cards */}
@@ -542,20 +543,17 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-2">
               <Button 
                 variant="destructive" 
-                onClick={() => {
-                  setIsEditDialogOpen(false);
-                  setEditingRecipient(null);
-                  setFormData({ name: "", email: "", email_type: "to" });
-                }}
+                onClick={() => setIsEditDialogOpen(false)}
                 className="w-full sm:w-auto"
               >
                 Batal
               </Button>
               <Button 
+                variant="default" 
                 onClick={handleEditRecipient}
                 className="w-full sm:w-auto"
               >
-                Simpan Perubahan
+                Simpan
               </Button>
             </div>
           </div>
