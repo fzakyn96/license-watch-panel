@@ -15,6 +15,7 @@ import LicensePrices from "./pages/LicensePrices";
 import { getAuth, isAuthenticated, logout as authLogout } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryParams } from "@/hooks/use-query-params";
+import Footer from "@/components/footer";
 
 
 const queryClient = new QueryClient();
@@ -177,35 +178,40 @@ const AppContent = () => {
   }, [isLoggedIn, iframeLoginFailed]);
 
   return (
-    <Routes>
-      <Route path="/login" element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute isAuthenticated={isLoggedIn}>
-            <Dashboard onLogout={handleLogout} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/edit/:uuid"
-        element={
-          <ProtectedRoute isAuthenticated={isLoggedIn}>
-            <EditLicense />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="/add" element={
-        <ProtectedRoute isAuthenticated={isLoggedIn}>
-          <AddLicense />
-        </ProtectedRoute>
-      } />
-      <Route path="/prices" element={
-        <ProtectedRoute isAuthenticated={isLoggedIn}>
-          <LicensePrices onLogout={handleLogout} />
-        </ProtectedRoute>
-      } />
-    </Routes>
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-1">
+        <Routes>
+          <Route path="/login" element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute isAuthenticated={isLoggedIn}>
+                <Dashboard onLogout={handleLogout} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit/:uuid"
+            element={
+              <ProtectedRoute isAuthenticated={isLoggedIn}>
+                <EditLicense />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/add" element={
+            <ProtectedRoute isAuthenticated={isLoggedIn}>
+              <AddLicense />
+            </ProtectedRoute>
+          } />
+          <Route path="/prices" element={
+            <ProtectedRoute isAuthenticated={isLoggedIn}>
+              <LicensePrices onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </div>
+      <Footer />
+    </div>
   );
 };
 
