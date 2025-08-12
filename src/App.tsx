@@ -34,7 +34,6 @@ type IframeLoginResponse = {
 
 const ProtectedRoute = ({ children, isAuthenticated }: ProtectedRouteProps) => {
   if (!isAuthenticated) {
-    console.log("Not authenticated, redirecting to login");
     return <Navigate to="/login" replace />;
   }
 
@@ -65,11 +64,7 @@ const AppContent = () => {
 
 
   const handleLogin = () => {
-    console.log("handleLogin called - setting isLoggedIn to true");
-    console.log("Current isLoggedIn before update:", isLoggedIn);
-    console.log("isAuthenticated() check:", isAuthenticated());
     setIsLoggedIn(true);
-    console.log("setIsLoggedIn(true) called");
   };
 
   const handleLogout = () => {
@@ -114,7 +109,6 @@ const AppContent = () => {
       }
 
       const data = (await loginRes.json()) as IframeLoginResponse;
-      console.log("Iframe login success:", data.data);
 
       const expiresAt = Date.now() + 3600 * 1000; // epoch ms
 
