@@ -111,7 +111,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
                 <Input
                   id="username"
                   type="text"
-                  placeholder="usename-e"
+                  placeholder="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
