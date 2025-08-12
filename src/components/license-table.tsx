@@ -608,7 +608,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               Konfirmasi penghapusan data lisensi yang dipilih
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
+          <div className="py-4 text-center">
             <p>Apakah Anda yakin ingin menghapus lisensi "{selectedLicense?.name}"?</p>
             <p className="text-sm text-muted-foreground mt-1">Tindakan ini tidak dapat dibatalkan.</p>
           </div>
