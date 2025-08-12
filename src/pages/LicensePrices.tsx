@@ -36,6 +36,11 @@ interface ApiResponse {
   };
 }
 
+interface ExportPrice {
+  status: number;
+  data: License[];
+}
+
 interface LicensePricesProps {
   onLogout: () => void;
 }
@@ -165,10 +170,10 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const handleExportToExcel = async () => {
     try {
       const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/export`);
-      const data: ApiResponse = await response.json();
+      const data: ExportPrice = await response.json();
 
       if (data.status === 200) {
-        const exportData = data.data.docs.map((license, index) => ({
+        const exportData = data.data.map((license, index) => ({
           'No': index + 1,
           'Nama Lisensi': license.name,
           'Harga Satuan': license.harga_satuan,

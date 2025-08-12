@@ -232,11 +232,10 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
           description: "Tidak ada data yang bisa diekspor (data kosong)",
           variant: "warning"
         })
-      } else {
-        throw new Error('Gagal mengambil data untuk export');
       }
       
-      const allLicenses = data.data.docs || [];
+      const allLicenses = data.data || [];
+      console.log(allLicenses);
       
       const exportData = allLicenses.map((license: License) => ({
         'Nama Aset': license.name,
@@ -298,6 +297,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         variant: "success"
       });
     } catch (error) {
+      console.log(error);
       toast({
         title: "Export gagal",
         description: "Terjadi kesalahan saat mengekspor data",
