@@ -40,7 +40,7 @@ const NotFound = () => {
           <Button asChild className="hover-scale">
             <Link to="/" className="flex items-center gap-2">
               <Home className="w-4 h-4" />
-              Kembali ke Beranda
+              Kembali ke Dashboard
             </Link>
           </Button>
           
