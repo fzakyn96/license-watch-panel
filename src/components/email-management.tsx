@@ -242,9 +242,9 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
 
   const getEmailTypeColor = (type: string) => {
     switch (type) {
-      case "to": return "bg-primary text-primary-foreground";
-      case "cc": return "bg-secondary text-secondary-foreground";
-      case "bcc": return "bg-muted text-muted-foreground";
+      case "to": return "bg-success text-primary-foreground";
+      case "cc": return "bg-warning text-secondary-foreground";
+      case "bcc": return "bg-primary text-muted-foreground";
       default: return "bg-muted text-muted-foreground";
     }
   };
@@ -315,10 +315,10 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                       </Select>
                     </div>
                     <div className="flex justify-end gap-2">
-                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                      <Button variant="destructive" onClick={() => setIsAddDialogOpen(false)}>
                         Batal
                       </Button>
-                      <Button onClick={handleAddRecipient}>
+                      <Button variant="default" onClick={handleAddRecipient}>
                         Tambah
                       </Button>
                     </div>
@@ -363,7 +363,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
                             <Button
-                              variant="outline"
+                              variant="default"
                               size="sm"
                               onClick={() => openEditDialog(recipient)}
                             >
@@ -452,7 +452,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
             </div>
             <div className="flex justify-end gap-2">
               <Button 
-                variant="outline" 
+                variant="destructive" 
                 onClick={() => {
                   setIsEditDialogOpen(false);
                   setEditingRecipient(null);

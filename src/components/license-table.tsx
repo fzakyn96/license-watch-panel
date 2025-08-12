@@ -582,7 +582,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             <p className="text-sm text-muted-foreground mt-1">Tindakan ini tidak dapat dibatalkan.</p>
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Batal</Button>
+            <Button variant="default" onClick={() => setIsDeleteDialogOpen(false)}>Batal</Button>
             <Button variant="destructive" onClick={handleDelete}>Hapus</Button>
           </div>
         </DialogContent>
