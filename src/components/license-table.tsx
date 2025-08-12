@@ -109,7 +109,35 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       const data: ApiResponse = await response.json();
 
       if (data.status === 200) {
-        setLicenses(data.data.docs);
+        let sortedLicenses = data.data.docs;
+        
+        // Apply client-side sorting if sort is enabled
+        if (sortField) {
+          sortedLicenses = [...sortedLicenses].sort((a, b) => {
+            let aValue = a[sortField as keyof License];
+            let bValue = b[sortField as keyof License];
+            
+            // Handle numeric fields
+            if (sortField === 'volume' || sortField === 'harga_satuan' || sortField === 'jumlah') {
+              aValue = Number(aValue);
+              bValue = Number(bValue);
+            }
+            
+            // Handle date fields
+            if (sortField === 'start_date' || sortField === 'end_date') {
+              aValue = new Date(aValue as string).getTime();
+              bValue = new Date(bValue as string).getTime();
+            }
+            
+            if (sortOrder === 'asc') {
+              return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+            } else {
+              return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+            }
+          });
+        }
+        
+        setLicenses(sortedLicenses);
         setTotalPages(data.data.pages);
       } else {
         throw new Error('Gagal memuat data lisensi');
@@ -127,7 +155,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
   useEffect(() => {
     fetchLicenses(currentPage, parseInt(itemsPerPage));
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage, sortField, sortOrder]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -378,29 +406,13 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   };
 
   const handleSort = (field: string) => {
-    const newOrder = field === sortField && sortOrder === "asc" ? "desc" : "asc";
-    setSortField(field);
-    setSortOrder(newOrder);
-
-    const sortedLicenses = [...licenses].sort((a, b) => {
-      if (field === "volume" || field === "harga_satuan" || field === "jumlah") {
-        return sortOrder === "asc"
-          ? Number(a[field]) - Number(b[field])
-          : Number(b[field]) - Number(a[field]);
-      }
-
-      if (field === "start_date" || field === "end_date") {
-        return sortOrder === "asc"
-          ? new Date(a[field]).getTime() - new Date(b[field]).getTime()
-          : new Date(b[field]).getTime() - new Date(a[field]).getTime();
-      }
-
-      return sortOrder === "asc"
-        ? String(a[field]).localeCompare(String(b[field]))
-        : String(b[field]).localeCompare(String(a[field]));
-    });
-
-    setLicenses(sortedLicenses);
+    if (sortField === field) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+    setCurrentPage(1);
   };
 
   const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});

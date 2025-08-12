@@ -286,11 +286,11 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 Daftar harga dan informasi lisensi aset perusahaan
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               <Button
                 onClick={handleExportToExcel}
                 variant="success"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 w-full sm:w-auto"
               >
                 <Download className="w-4 h-4" />
                 Export Excel
@@ -299,8 +299,8 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
           </div>
 
           {/* Search and Controls */}
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div className="relative flex-1 max-w-sm">
+          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+            <div className="relative flex-1 max-w-sm w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Cari nama lisensi..."
@@ -309,7 +309,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 className="pl-10"
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full md:w-auto justify-end">
               <span className="text-sm text-muted-foreground">Tampilkan:</span>
               <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
                 <SelectTrigger className="w-16">

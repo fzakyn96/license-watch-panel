@@ -269,7 +269,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                 <DialogTrigger asChild>
                   <Button className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
-                    Tambah Penerima
+                    <span className="hidden sm:inline">Tambah Penerima</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[95vw] w-full sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
@@ -335,7 +335,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
               </Dialog>
             </div>
 
-            <div className="border rounded-lg overflow-x-auto max-h-[50vh]">
+            <div className="border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
               <Table className="min-w-full">
                 <TableHeader>
                   <TableRow>
