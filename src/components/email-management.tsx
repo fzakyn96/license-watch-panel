@@ -255,7 +255,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         <DialogTrigger asChild>
           {children}
         </DialogTrigger>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden">
+        <DialogContent className="max-w-[95vw] w-full sm:max-w-4xl max-h-[90vh] overflow-hidden p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Mail className="w-5 h-5" />
@@ -272,7 +272,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                     Tambah Penerima
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-[95vw] w-full sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                   <DialogHeader>
                     <DialogTitle>Tambah Penerima Email</DialogTitle>
                   </DialogHeader>
@@ -314,11 +314,19 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="flex justify-end gap-2">
-                      <Button variant="destructive" onClick={() => setIsAddDialogOpen(false)}>
+                    <div className="flex flex-col-reverse sm:flex-row justify-end gap-2">
+                      <Button 
+                        variant="destructive" 
+                        onClick={() => setIsAddDialogOpen(false)}
+                        className="w-full sm:w-auto"
+                      >
                         Batal
                       </Button>
-                      <Button variant="default" onClick={handleAddRecipient}>
+                      <Button 
+                        variant="default" 
+                        onClick={handleAddRecipient}
+                        className="w-full sm:w-auto"
+                      >
                         Tambah
                       </Button>
                     </div>
@@ -327,8 +335,8 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
               </Dialog>
             </div>
 
-            <div className="border rounded-lg overflow-auto max-h-[400px]">
-              <Table>
+            <div className="border rounded-lg overflow-x-auto max-h-[50vh]">
+              <Table className="min-w-full">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Nama</TableHead>
@@ -408,7 +416,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[95vw] w-full sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Edit Penerima Email</DialogTitle>
           </DialogHeader>
@@ -450,7 +458,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2">
               <Button 
                 variant="destructive" 
                 onClick={() => {
@@ -458,10 +466,14 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                   setEditingRecipient(null);
                   setFormData({ name: "", email: "", email_type: "to" });
                 }}
+                className="w-full sm:w-auto"
               >
                 Batal
               </Button>
-              <Button onClick={handleEditRecipient}>
+              <Button 
+                onClick={handleEditRecipient}
+                className="w-full sm:w-auto"
+              >
                 Simpan Perubahan
               </Button>
             </div>
