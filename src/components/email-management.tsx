@@ -261,7 +261,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
               <Mail className="w-5 h-5" />
               Kelola Penerima Email
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-left">
               Kelola daftar penerima email untuk notifikasi sistem
             </DialogDescription>
           </DialogHeader>
@@ -272,13 +272,14 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                 <DialogTrigger asChild>
                   <Button className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
+                    <span className="sm:hidden">Tambah</span>
                     <span className="hidden sm:inline">Tambah Penerima</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[95vw] w-full sm:max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                   <DialogHeader>
                     <DialogTitle>Tambah Penerima Email</DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="text-left">
                       Tambahkan penerima email baru untuk notifikasi
                     </DialogDescription>
                   </DialogHeader>
