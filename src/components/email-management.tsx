@@ -395,7 +395,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                                 <AlertDialogContent>
                                   <AlertDialogHeader>
                                     <AlertDialogTitle>Hapus Penerima Email</AlertDialogTitle>
-                                    <AlertDialogDescription>
+                                    <AlertDialogDescription className="center">
                                       Apakah Anda yakin ingin menghapus penerima email "{recipient.name}"? 
                                       Tindakan ini tidak dapat dibatalkan.
                                     </AlertDialogDescription>
