@@ -7,8 +7,8 @@ Aplikasi web untuk mengelola dan memonitor lisensi aset berbasis React dengan Ty
 - **Dashboard Monitoring**: Tampilan ringkasan status lisensi dengan kartu statistik
 - **Manajemen Lisensi**: CRUD (Create, Read, Update, Delete) data lisensi
 - **Notifikasi Email**: Sistem pemberitahuan otomatis untuk lisensi yang akan berakhir
-- **Export Data**: Ekspor data lisensi ke format Excel
-- **Autentikasi**: Sistem login dan logout yang aman
+- **Import & Export Data**: Import dan ekspor data lisensi dari atau ke format Excel
+- **Autentikasi**: Sistem authentikasi dengan mode stand alone dan iframe
 - **Responsive Design**: Tampilan yang optimal di desktop dan mobile
 - **Dark/Light Mode**: Dukungan tema gelap dan terang
 
@@ -88,7 +88,7 @@ src/
    ```
 
 4. **Akses aplikasi**
-   - Buka browser dan kunjungi `http://localhost:8080`
+   - Buka browser dan kunjungi `http://localhost:5173`
    - Server development akan berjalan dengan hot-reload otomatis
 
 ### Scripts yang Tersedia
@@ -99,23 +99,6 @@ src/
 - `npm run lint` - Menjalankan ESLint untuk code quality
 
 ## 🌐 Deploy ke Production
-
-### Melalui Lovable Platform
-
-1. **Akses Project Lovable**
-   - Buka [Lovable Project](https://lovable.dev/projects/13758f70-cb3c-461e-b957-5ced12a623c6)
-
-2. **Deploy Aplikasi**
-   - Klik tombol **"Publish"** di bagian atas kanan editor
-   - Ikuti instruksi yang diberikan
-   - Aplikasi akan otomatis di-deploy dan mendapat URL publik
-
-3. **Custom Domain (Opsional)**
-   - Navigasi ke Project > Settings > Domains
-   - Klik "Connect Domain" untuk menghubungkan domain custom
-   - Catatan: Memerlukan paket berbayar Lovable
-
-### Build Manual
 
 1. **Build aplikasi**
    ```bash
@@ -166,8 +149,6 @@ Aplikasi menggunakan design system berbasis Tailwind CSS dengan:
 
 ## 📞 Support & Dokumentasi
 
-- [Lovable Documentation](https://docs.lovable.dev/)
-- [Lovable Discord Community](https://discord.com/channels/1119885301872070706/1280461670979993613)
 - [React Documentation](https://reactjs.org/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/)
 
