@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import { EditLicense } from "./pages/EditLicense";
 import { AddLicense } from "./pages/AddLicense";
 import LicensePrices from "./pages/LicensePrices";
+import NotFound from "./pages/NotFound";
 import { getAuth, isAuthenticated, logout as authLogout } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryParams } from "@/hooks/use-query-params";
@@ -208,6 +209,7 @@ const AppContent = () => {
               <LicensePrices onLogout={handleLogout} />
             </ProtectedRoute>
           } />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <Footer />
