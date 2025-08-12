@@ -1,73 +1,176 @@
-# Welcome to your Lovable project
+# Sistem Monitoring Lisensi Aset
 
-## Project info
+Aplikasi web untuk mengelola dan memonitor lisensi aset berbasis React dengan TypeScript.
 
-**URL**: https://lovable.dev/projects/13758f70-cb3c-461e-b957-5ced12a623c6
+## 🚀 Fitur Utama
 
-## How can I edit this code?
+- **Dashboard Monitoring**: Tampilan ringkasan status lisensi dengan kartu statistik
+- **Manajemen Lisensi**: CRUD (Create, Read, Update, Delete) data lisensi
+- **Notifikasi Email**: Sistem pemberitahuan otomatis untuk lisensi yang akan berakhir
+- **Export Data**: Ekspor data lisensi ke format Excel
+- **Autentikasi**: Sistem login dan logout yang aman
+- **Responsive Design**: Tampilan yang optimal di desktop dan mobile
+- **Dark/Light Mode**: Dukungan tema gelap dan terang
 
-There are several ways of editing your application.
+## 🏗️ Struktur Project
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/13758f70-cb3c-461e-b957-5ced12a623c6) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/           # Komponen UI yang dapat digunakan kembali
+│   ├── ui/              # Komponen UI dasar (shadcn/ui)
+│   ├── dashboard-header.tsx    # Header dashboard
+│   ├── email-management.tsx    # Kelola penerima email
+│   ├── license-table.tsx       # Tabel lisensi dashboard
+│   ├── login-form.tsx          # Form login
+│   └── status-cards.tsx        # Kartu status statistik
+├── pages/               # Halaman-halaman aplikasi
+│   ├── Dashboard.tsx    # Halaman dashboard utama
+│   ├── Index.tsx        # Halaman beranda
+│   ├── Login.tsx        # Halaman login
+│   ├── AddLicense.tsx   # Halaman tambah lisensi
+│   ├── EditLicense.tsx  # Halaman edit lisensi
+│   ├── LicensePrices.tsx # Halaman harga lisensi
+│   └── NotFound.tsx     # Halaman 404
+├── lib/                 # Utilities dan konfigurasi
+│   ├── auth.ts         # Fungsi autentikasi
+│   ├── cookies.ts      # Manajemen cookies
+│   └── utils.ts        # Utility functions
+├── hooks/              # Custom React hooks
+│   ├── use-mobile.tsx  # Hook untuk deteksi mobile
+│   ├── use-query-params.tsx # Hook untuk query parameters
+│   └── use-toast.ts    # Hook untuk toast notifications
+├── App.tsx             # Komponen utama aplikasi
+├── main.tsx           # Entry point aplikasi
+└── index.css          # Styling global dan design tokens
 ```
 
-**Edit a file directly in GitHub**
+## 🛠️ Teknologi yang Digunakan
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **Frontend Framework**: React 18 dengan TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Routing**: React Router DOM
+- **State Management**: React Query (@tanstack/react-query)
+- **Theme**: next-themes untuk dark/light mode
+- **Icons**: Lucide React
+- **Forms**: React Hook Form dengan Zod validation
+- **Notifications**: Sonner untuk toast notifications
+- **Charts**: Recharts untuk visualisasi data
+- **Excel Export**: SheetJS (xlsx)
 
-**Use GitHub Codespaces**
+## 🚀 Menjalankan Mode Development
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Prasyarat
+- Node.js (versi 16 atau lebih tinggi)
+- npm atau yarn
 
-## What technologies are used for this project?
+### Langkah-langkah
 
-This project is built with:
+1. **Clone repository**
+   ```bash
+   git clone <repository-url>
+   cd <project-name>
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+2. **Install dependencies**
+   ```bash
+   npm install
+   # atau
+   yarn install
+   ```
 
-## How can I deploy this project?
+3. **Jalankan development server**
+   ```bash
+   npm run dev
+   # atau
+   yarn dev
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/13758f70-cb3c-461e-b957-5ced12a623c6) and click on Share -> Publish.
+4. **Akses aplikasi**
+   - Buka browser dan kunjungi `http://localhost:8080`
+   - Server development akan berjalan dengan hot-reload otomatis
 
-## Can I connect a custom domain to my Lovable project?
+### Scripts yang Tersedia
 
-Yes, you can!
+- `npm run dev` - Menjalankan development server
+- `npm run build` - Build aplikasi untuk production
+- `npm run preview` - Preview build production secara lokal
+- `npm run lint` - Menjalankan ESLint untuk code quality
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🌐 Deploy ke Production
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Melalui Lovable Platform
+
+1. **Akses Project Lovable**
+   - Buka [Lovable Project](https://lovable.dev/projects/13758f70-cb3c-461e-b957-5ced12a623c6)
+
+2. **Deploy Aplikasi**
+   - Klik tombol **"Publish"** di bagian atas kanan editor
+   - Ikuti instruksi yang diberikan
+   - Aplikasi akan otomatis di-deploy dan mendapat URL publik
+
+3. **Custom Domain (Opsional)**
+   - Navigasi ke Project > Settings > Domains
+   - Klik "Connect Domain" untuk menghubungkan domain custom
+   - Catatan: Memerlukan paket berbayar Lovable
+
+### Build Manual
+
+1. **Build aplikasi**
+   ```bash
+   npm run build
+   ```
+
+2. **Preview build**
+   ```bash
+   npm run preview
+   ```
+
+3. **Deploy ke hosting**
+   - Upload folder `dist` ke web hosting pilihan Anda
+   - Pastikan server mendukung Single Page Application (SPA)
+   - Konfigurasi redirect semua routes ke `index.html`
+
+## 📁 File Konfigurasi Penting
+
+- `vite.config.ts` - Konfigurasi Vite build tool
+- `tailwind.config.ts` - Konfigurasi Tailwind CSS
+- `tsconfig.json` - Konfigurasi TypeScript
+- `package.json` - Dependencies dan scripts
+- `.env` - Environment variables (jangan commit ke Git)
+
+## 🔧 Konfigurasi Environment
+
+Buat file `.env` di root project dengan variabel yang diperlukan:
+
+```env
+# Tambahkan environment variables sesuai kebutuhan
+# VITE_API_URL=https://api.example.com
+```
+
+## 📱 Responsive Design
+
+Aplikasi dirancang untuk optimal di berbagai ukuran layar:
+- **Desktop**: Layout full dengan sidebar dan content area
+- **Tablet**: Layout responsif dengan adjustments
+- **Mobile**: Layout stack dengan navigation yang mobile-friendly
+
+## 🎨 Design System
+
+Aplikasi menggunakan design system berbasis Tailwind CSS dengan:
+- **Color Palette**: Semantic tokens di `index.css`
+- **Typography**: Konsisten dengan design tokens
+- **Components**: shadcn/ui components yang dapat dikustomisasi
+- **Dark/Light Mode**: Dukungan penuh untuk kedua tema
+
+## 📞 Support & Dokumentasi
+
+- [Lovable Documentation](https://docs.lovable.dev/)
+- [Lovable Discord Community](https://discord.com/channels/1119885301872070706/1280461670979993613)
+- [React Documentation](https://reactjs.org/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/)
+
+## 📄 Lisensi
+
+Project ini menggunakan lisensi sesuai dengan ketentuan yang berlaku.
