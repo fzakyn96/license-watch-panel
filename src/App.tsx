@@ -33,13 +33,11 @@ type IframeLoginResponse = {
 };
 
 const ProtectedRoute = ({ children, isAuthenticated }: ProtectedRouteProps) => {
-  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
   if (!isAuthenticated) {
     console.log("Not authenticated, redirecting to login");
     return <Navigate to="/login" replace />;
   }
 
-  console.log("Authenticated, rendering children");
   return <>{children}</>;
 };
 

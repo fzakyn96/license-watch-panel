@@ -10,15 +10,7 @@ export function isAuthenticated(): boolean {
   const expStr = getCookie(AUTH_EXPIRES_AT_KEY);
   const exp = expStr ? parseInt(expStr, 10) : 0;
   
-  console.log("isAuthenticated() check:");
-  console.log("- token:", token ? "exists" : "null");
-  console.log("- expStr:", expStr);
-  console.log("- exp:", exp);
-  console.log("- Date.now():", Date.now());
-  console.log("- exp > Date.now():", exp > Date.now());
-  
   const result = Boolean(token && exp && exp > Date.now());
-  console.log("- final result:", result);
   
   return result;
 }
