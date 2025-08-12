@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -42,7 +43,10 @@ import {
   Loader2,
   PlusIcon,
   MoreVertical,
-  DollarSign
+  DollarSign,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -415,6 +419,15 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     setCurrentPage(1);
   };
 
+  const getSortIcon = (field: string) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="w-4 h-4 ml-1 opacity-50" />;
+    }
+    return sortOrder === "asc" ? 
+      <ArrowUp className="w-4 h-4 ml-1" /> : 
+      <ArrowDown className="w-4 h-4 ml-1" />;
+  };
+
   const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
 
   const toggleRow = (index: number) => {
@@ -530,6 +543,9 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             <DialogTitle>
               Import Data Lisensi
             </DialogTitle>
+            <DialogDescription>
+              Upload file Excel untuk mengimport data lisensi baru
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-2">
@@ -588,6 +604,9 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Konfirmasi Hapus</DialogTitle>
+            <DialogDescription>
+              Konfirmasi penghapusan data lisensi yang dipilih
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <p>Apakah Anda yakin ingin menghapus lisensi "{selectedLicense?.name}"?</p>
@@ -609,44 +628,65 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                 className="w-[200px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                 onClick={() => handleSort("name")}
               >
-                Nama Aset {sortField === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                <div className="flex items-center">
+                  Nama Aset
+                  {getSortIcon("name")}
+                </div>
               </TableHead>
               <TableHead
                 className="w-[150px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                 onClick={() => handleSort("start_date")}
               >
-                Tanggal Mulai {sortField === "start_date" && (sortOrder === "asc" ? "↑" : "↓")}
+                <div className="flex items-center">
+                  Tanggal Mulai
+                  {getSortIcon("start_date")}
+                </div>
               </TableHead>
               <TableHead
                 className="w-[150px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                 onClick={() => handleSort("end_date")}
               >
-                Tanggal Berakhir {sortField === "end_date" && (sortOrder === "asc" ? "↑" : "↓")}
+                <div className="flex items-center">
+                  Tanggal Berakhir
+                  {getSortIcon("end_date")}
+                </div>
               </TableHead>
               <TableHead
                 className="w-[150px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                 onClick={() => handleSort("end_date")}
               >
-                Status {sortField === "end_date" && (sortOrder === "asc" ? "↑" : "↓")}
+                <div className="flex items-center">
+                  Status
+                  {getSortIcon("end_date")}
+                </div>
               </TableHead>
               <TableHead
                 className="w-[80px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                 onClick={() => handleSort("volume")}
               >
-                Volume {sortField === "volume" && (sortOrder === "asc" ? "↑" : "↓")}
+                <div className="flex items-center">
+                  Volume
+                  {getSortIcon("volume")}
+                </div>
               </TableHead>
               <TableHead className="w-[100px] whitespace-nowrap">Satuan</TableHead>
               <TableHead
                 className="w-[150px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                 onClick={() => handleSort("harga_satuan")}
               >
-                Harga Satuan {sortField === "harga_satuan" && (sortOrder === "asc" ? "↑" : "↓")}
+                <div className="flex items-center">
+                  Harga Satuan
+                  {getSortIcon("harga_satuan")}
+                </div>
               </TableHead>
               <TableHead
                 className="w-[150px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                 onClick={() => handleSort("jumlah")}
               >
-                Total Harga {sortField === "jumlah" && (sortOrder === "asc" ? "↑" : "↓")}
+                <div className="flex items-center">
+                  Total Harga
+                  {getSortIcon("jumlah")}
+                </div>
               </TableHead>
             </TableRow>
           </TableHeader>
