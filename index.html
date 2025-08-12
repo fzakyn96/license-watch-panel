@@ -6,6 +6,7 @@
     <title>License Monitor - Sistem Monitoring Lisensi Aset</title>
     <meta name="description" content="Sistem monitoring dan manajemen lisensi aset perusahaan yang responsif dan modern" />
     <meta name="author" content="Lovable" />
+    <link id="favicon" rel="icon" href="/faficon-dark.ico" type="image/x-icon" />
 
     <meta property="og:title" content="13758f70-cb3c-461e-b957-5ced12a623c6" />
     <meta property="og:description" content="Lovable Generated Project" />
@@ -19,6 +20,32 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Function to update favicon based on theme
+      function updateFavicon() {
+        const favicon = document.getElementById('favicon');
+        const isDark = document.documentElement.classList.contains('dark') || 
+                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && 
+                       !document.documentElement.classList.contains('light'));
+        
+        favicon.href = isDark ? '/faficon-white.ico' : '/faficon-dark.ico';
+      }
+
+      // Initial favicon update
+      updateFavicon();
+
+      // Watch for theme changes via class changes on html element
+      const observer = new MutationObserver(updateFavicon);
+      observer.observe(document.documentElement, { 
+        attributes: true, 
+        attributeFilter: ['class'] 
+      });
+
+      // Watch for system theme changes
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
