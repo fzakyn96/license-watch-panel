@@ -227,6 +227,12 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       const data = await response.json();
       
       if (data.status !== 200) {
+        toast({
+          title: "Info",
+          description: "Tidak ada data yang bisa diekspor (data kosong)",
+          variant: "warning"
+        })
+      } else {
         throw new Error('Gagal mengambil data untuk export');
       }
       

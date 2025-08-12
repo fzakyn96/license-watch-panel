@@ -189,6 +189,12 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
           description: "Data berhasil diekspor ke Excel",
           variant: "success"
         });
+      } else {
+        toast({
+          title: "Info",
+          description: "Tidak ada data yang bisa diekspor (data kosong)",
+          variant: "warning"
+        })
       }
     } catch (error) {
       toast({
