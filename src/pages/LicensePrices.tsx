@@ -164,7 +164,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
 
   const handleExportToExcel = async () => {
     try {
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/get?name=`);
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/export`);
       const data: ApiResponse = await response.json();
 
       if (data.status === 200) {

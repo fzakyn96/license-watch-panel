@@ -223,7 +223,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       setIsLoading(true);
       
       // Fetch all data without pagination for export
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/get?name=`);
+      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/export`);
       const data = await response.json();
       
       if (data.status !== 200) {
