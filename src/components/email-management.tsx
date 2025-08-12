@@ -341,54 +341,56 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
               </Dialog>
             </div>
 
-            <div className="border rounded-lg overflow-x-auto overflow-y-auto max-h-[50vh]">
-              <Table className="min-w-full">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nama</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Tipe</TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {loading ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8">
-                        Memuat data...
-                      </TableCell>
+            {/* Desktop Table */}
+            <div className="hidden md:block">
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-b">
+                      <TableHead className="font-semibold">Nama</TableHead>
+                      <TableHead className="font-semibold">Email</TableHead>
+                      <TableHead className="font-semibold">Tipe</TableHead>
+                      <TableHead className="text-right font-semibold">Aksi</TableHead>
                     </TableRow>
-                  ) : emailRecipients.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8">
-                        Belum ada penerima email
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    emailRecipients.map((recipient) => (
-                      <TableRow key={recipient.uuid}>
-                        <TableCell className="font-medium">{recipient.name}</TableCell>
-                        <TableCell>{recipient.email}</TableCell>
-                        <TableCell>
-                          <Badge className={getEmailTypeColor(recipient.email_type)}>
-                            {recipient.email_type.toUpperCase()}
-                          </Badge>
+                  </TableHeader>
+                  <TableBody>
+                    {loading ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-8">
+                          Memuat data...
                         </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button
-                              variant="default"
-                              size="sm"
-                              onClick={() => openEditDialog(recipient)}
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="sm">
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </AlertDialogTrigger>
+                      </TableRow>
+                    ) : emailRecipients.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-8">
+                          Belum ada penerima email
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      emailRecipients.map((recipient) => (
+                        <TableRow key={recipient.uuid} className="border-b last:border-b-0">
+                          <TableCell className="font-medium">{recipient.name}</TableCell>
+                          <TableCell>{recipient.email}</TableCell>
+                          <TableCell>
+                            <Badge className={getEmailTypeColor(recipient.email_type)}>
+                              {recipient.email_type.toUpperCase()}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => openEditDialog(recipient)}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="destructive" size="sm">
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Hapus Penerima Email</AlertDialogTitle>
@@ -415,6 +417,76 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
                   )}
                 </TableBody>
               </Table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-3">
+              {loading ? (
+                <div className="text-center py-8">
+                  Memuat data...
+                </div>
+              ) : emailRecipients.length === 0 ? (
+                <div className="text-center py-8">
+                  Belum ada penerima email
+                </div>
+              ) : (
+                emailRecipients.map((recipient) => (
+                  <div key={recipient.uuid} className="border rounded-lg p-4 bg-card">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm">{recipient.name}</p>
+                          <p className="text-sm text-muted-foreground truncate mt-1">{recipient.email}</p>
+                          <Badge className={`${getEmailTypeColor(recipient.email_type)} mt-2`}>
+                            {recipient.email_type.toUpperCase()}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 pt-2 border-t">
+                        <Button
+                          size="sm"
+                          variant="default"
+                          onClick={() => openEditDialog(recipient)}
+                          className="flex-1"
+                        >
+                          <Edit className="w-4 h-4 mr-1" />
+                          Edit
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="flex-1"
+                            >
+                              <Trash2 className="w-4 h-4 mr-1" />
+                              Hapus
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Hapus Penerima Email</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Apakah Anda yakin ingin menghapus penerima email "{recipient.name}"? 
+                                Tindakan ini tidak dapat dibatalkan.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Batal</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteRecipient(recipient.uuid)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Hapus
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </DialogContent>
