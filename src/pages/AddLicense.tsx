@@ -159,9 +159,6 @@ export const AddLicense = () => {
               <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
               <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
             </div>
-            <div className="sm:hidden">
-              <h1 className="text-base font-bold text-foreground">Lisensi Aset</h1>
-            </div>
           </div>
             <Button
               variant="default"
