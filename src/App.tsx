@@ -17,6 +17,7 @@ import { getAuth, isAuthenticated, logout as authLogout } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryParams } from "@/hooks/use-query-params";
 import Footer from "@/components/footer";
+import { useNavigate } from "react-router-dom";
 
 
 const queryClient = new QueryClient();
@@ -51,14 +52,15 @@ const AppContent = () => {
   
   // Capture query parameters saat app pertama dijalankan
   const { getUuid, getAllParams, hasUuid } = useQueryParams();
+  const navigate = useNavigate();
 
   // Auto redirect to base directory on app start
   useEffect(() => {
     if (location.pathname === '/' && !isLoggedIn) {
       // If user is on root path and not logged in, redirect to login
-      window.location.replace('/lisa/login');
+      navigate({ pathname: "/login", search: location.search }, { replace: true });
     }
-  }, [location.pathname, isLoggedIn]);
+  }, [location.pathname, location.search, navigate, isLoggedIn]);
 
   // Log semua query parameters yang terdeteksi
   useEffect(() => {
