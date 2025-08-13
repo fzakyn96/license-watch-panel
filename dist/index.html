@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LISA - Sistem Monitoring Lisensi Aset</title>
+    <meta name="description" content="Sistem monitoring dan manajemen lisensi aset perusahaan yang responsif dan modern" />
+    <meta name="author" content="Lovable" />
+    <link id="favicon" rel="icon" href="/faficon-dark.ico" type="image/x-icon" />
+
+    <meta property="og:title" content="13758f70-cb3c-461e-b957-5ced12a623c6" />
+    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <script type="module" crossorigin src="/assets/index-g2j5qocc.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BFBrLLCz.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script>
+      // Function to update favicon based on theme
+      function updateFavicon() {
+        const favicon = document.getElementById('favicon');
+        const isDark = document.documentElement.classList.contains('dark') || 
+                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && 
+                       !document.documentElement.classList.contains('light'));
+        
+        favicon.href = isDark ? '/faficon-dark.ico' : '/faficon-white.ico';
+      }
+
+      // Initial favicon update
+      updateFavicon();
+
+      // Watch for theme changes via class changes on html element
+      const observer = new MutationObserver(updateFavicon);
+      observer.observe(document.documentElement, { 
+        attributes: true, 
+        attributeFilter: ['class'] 
+      });
+
+      // Watch for system theme changes
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+      }
+    </script>
+  </body>
+</html>
