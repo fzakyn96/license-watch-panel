@@ -128,7 +128,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
           {/* Logo */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             <img 
-              src={theme === 'dark' ? `${import.meta.env.VITE_BASE_NAME}/logo-dark.png` : `${import.meta.env.VITE_BASE_NAME}/logo-white.png`} 
+              src={theme === 'dark' ? '/lisa/logo-dark.png' : '/lisa/logo-white.png'} 
               alt="Lisensi Aset Logo"
               className="h-8 w-auto sm:h-8 object-contain"
             />

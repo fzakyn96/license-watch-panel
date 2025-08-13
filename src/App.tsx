@@ -56,7 +56,7 @@ const AppContent = () => {
   useEffect(() => {
     if (location.pathname === '/' && !isLoggedIn) {
       // If user is on root path and not logged in, redirect to login
-      window.location.replace('/login');
+      window.location.replace('/lisa/login');
     }
   }, [location.pathname, isLoggedIn]);
 
@@ -191,7 +191,7 @@ const AppContent = () => {
     <div className="flex flex-col min-h-screen">
       <div className="flex-1">
         <Routes>
-          <Route path='/lisa/login' element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
+          <Route path='/login' element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
           <Route
             path="/"
             element={

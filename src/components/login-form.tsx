@@ -92,7 +92,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
             {/* Logo */}
             <div className="flex justify-center mb-4">
               <img 
-                src={theme === 'dark' ? '/logo-dark.png' : '/logo-white.png'}
+                src={theme === 'dark' ? '/lisa/logo-dark.png' : '/lisa/logo-white.png'}
                 alt="Lisensi Aset Logo"
                 className="h-14 w-auto object-contain"
               />
