@@ -191,7 +191,7 @@ const AppContent = () => {
     <div className="flex flex-col min-h-screen">
       <div className="flex-1">
         <Routes>
-          <Route path="/login" element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
+          <Route path='/lisa/login' element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
           <Route
             path="/"
             element={
@@ -218,7 +218,7 @@ const AppContent = () => {
               <LicensePrices onLogout={handleLogout} />
             </ProtectedRoute>
           } />
-          <Route path="/lisa" element={<Navigate to="/login" replace />} />
+          {/* <Route path="/lisa" element={<Navigate to="/login" replace />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
