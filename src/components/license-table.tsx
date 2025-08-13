@@ -343,6 +343,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       });
 
       if (response.ok) {
+        navigate('/');
         toast({
           title: "Berhasil",
           description: "Data lisensi berhasil dihapus",

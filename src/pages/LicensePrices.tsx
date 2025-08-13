@@ -71,25 +71,25 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
 
       if (data.status === 200) {
         let sortedLicenses = data.data.docs;
-        
+
         // Apply client-side sorting if sort is enabled
         if (sortField) {
           sortedLicenses = [...sortedLicenses].sort((a, b) => {
             let aValue = a[sortField as keyof License];
             let bValue = b[sortField as keyof License];
-            
+
             // Handle numeric fields
             if (sortField === 'harga_satuan') {
               aValue = Number(aValue);
               bValue = Number(bValue);
             }
-            
+
             // Handle date fields
             if (sortField === 'start_date' || sortField === 'end_date') {
               aValue = new Date(aValue as string).getTime();
               bValue = new Date(bValue as string).getTime();
             }
-            
+
             if (sortDirection === 'asc') {
               return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
             } else {
@@ -97,7 +97,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
             }
           });
         }
-        
+
         setLicenses(sortedLicenses);
         setTotalPages(data.data.pages);
       } else {
@@ -224,8 +224,8 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
     if (sortField !== field) {
       return <ArrowUpDown className="w-4 h-4 ml-1 opacity-50" />;
     }
-    return sortDirection === "asc" ? 
-      <ArrowUp className="w-4 h-4 ml-1" /> : 
+    return sortDirection === "asc" ?
+      <ArrowUp className="w-4 h-4 ml-1" /> :
       <ArrowDown className="w-4 h-4 ml-1" />;
   };
 
@@ -267,6 +267,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 className="h-8 w-auto sm:h-8 object-contain"
               />
               <div className="hidden sm:block">
+                <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
                 <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
               </div>
             </div>
@@ -337,7 +338,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
             <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead 
+                  <TableHead
                     className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
                     onClick={() => handleSort('name')}
                   >
@@ -346,7 +347,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                       {getSortIcon('name')}
                     </div>
                   </TableHead>
-                  <TableHead 
+                  <TableHead
                     className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
                     onClick={() => handleSort('harga_satuan')}
                   >
@@ -355,7 +356,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                       {getSortIcon('harga_satuan')}
                     </div>
                   </TableHead>
-                  <TableHead 
+                  <TableHead
                     className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
                     onClick={() => handleSort('start_date')}
                   >
@@ -364,7 +365,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                       {getSortIcon('start_date')}
                     </div>
                   </TableHead>
-                  <TableHead 
+                  <TableHead
                     className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
                     onClick={() => handleSort('end_date')}
                   >
@@ -394,7 +395,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                   licenses.map((license) => {
                     const status = getLicenseStatus(license.end_date);
                     const StatusIcon = status.icon;
-                    
+
                     return (
                       <TableRow key={license.uuid} className="hover:bg-muted/30 transition-colors">
                         <TableCell className="font-medium">{license.name}</TableCell>
