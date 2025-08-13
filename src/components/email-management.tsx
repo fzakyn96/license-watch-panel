@@ -255,8 +255,8 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
         <DialogTrigger asChild>
           {children}
         </DialogTrigger>
-        <DialogContent className="max-w-[95vw] w-full sm:max-w-4xl max-h-[90vh] overflow-hidden p-4 sm:p-6">
-          <DialogHeader>
+        <DialogContent className="max-w-[95vw] w-full sm:max-w-4xl max-h-[90vh] flex flex-col p-4 sm:p-6">
+          <DialogHeader className="shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <Mail className="w-5 h-5" />
               Kelola Penerima Email
@@ -266,7 +266,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1 overflow-y-auto min-h-0">
             <div className="flex justify-end">
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
@@ -343,7 +343,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
             </div>
 
             {/* Desktop Table */}
-            <div className="hidden md:block">
+            <div className="hidden md:block overflow-y-auto max-h-[50vh]">
               <div className="border rounded-lg">
                 <Table>
                   <TableHeader>
@@ -422,7 +422,7 @@ export const EmailManagement = ({ children }: EmailManagementProps) => {
             </div>
 
             {/* Mobile Cards */}
-            <div className="md:hidden space-y-3">
+            <div className="md:hidden space-y-3 overflow-y-auto max-h-[50vh]">
               {loading ? (
                 <div className="text-center py-8">
                   Memuat data...

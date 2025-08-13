@@ -45,6 +45,14 @@ const emptyLicense: License = {
   last_user_input: ""
 };
 
+const formatRupiah = (amount: number): string => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(amount);
+};
+
 export const AddLicense = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -307,7 +315,13 @@ export const AddLicense = () => {
                     onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
                     aria-invalid={!!errors.harga_satuan}
                     className="mt-1"
+                    placeholder="0"
                   />
+                  {license.harga_satuan > 0 && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {formatRupiah(license.harga_satuan)}
+                    </p>
+                  )}
                   {errors.harga_satuan && <p className="text-sm text-red-500 mt-1">{errors.harga_satuan}</p>}
                 </div>
 
@@ -315,8 +329,8 @@ export const AddLicense = () => {
                   <Label htmlFor="jumlah">Total Harga</Label>
                   <Input
                     id="jumlah"
-                    type="number"
-                    value={license.jumlah || 0}
+                    type="text"
+                    value={license.jumlah > 0 ? formatRupiah(license.jumlah) : "Rp 0"}
                     disabled
                     className="mt-1 bg-muted"
                   />
