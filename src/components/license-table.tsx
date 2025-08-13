@@ -297,12 +297,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         variant: "success"
       });
     } catch (error) {
-      console.log(error);
-      toast({
-        title: "Export gagal",
-        description: "Terjadi kesalahan saat mengekspor data",
-        variant: "destructive"
-      });
+      return;
     } finally {
       setIsLoading(false);
     }
@@ -320,7 +315,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   };
 
   const handleDownloadTemplate = () => {
-    window.open('/Template_Upload_Data_Lisensi.xlsx', '_blank');
+    window.open('/lisa/Template_Upload_Data_Lisensi.xlsx', '_blank');
   };
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
