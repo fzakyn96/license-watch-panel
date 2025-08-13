@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -47,9 +47,18 @@ const AppContent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => isAuthenticated());
   const [iframeLoginFailed, setIframeLoginFailed] = useState(false);
   const { toast } = useToast();
+  const location = useLocation();
   
   // Capture query parameters saat app pertama dijalankan
   const { getUuid, getAllParams, hasUuid } = useQueryParams();
+
+  // Auto redirect to base directory on app start
+  useEffect(() => {
+    if (location.pathname === '/' && !isLoggedIn) {
+      // If user is on root path and not logged in, redirect to login
+      window.location.replace('/login');
+    }
+  }, [location.pathname, isLoggedIn]);
 
   // Log semua query parameters yang terdeteksi
   useEffect(() => {
