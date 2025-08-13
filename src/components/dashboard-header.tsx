@@ -5,6 +5,7 @@ import { Bell, LogOut, Shield, Mail, Sun, Moon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { EmailManagement } from "@/components/email-management";
+import { NotificationScheduleDialog } from "@/components/notification-schedule-dialog";
 import { useTheme } from "next-themes";
 
 interface DashboardHeaderProps {
@@ -14,6 +15,7 @@ interface DashboardHeaderProps {
 export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [isInIframe, setIsInIframe] = useState(false);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
 
@@ -65,60 +67,51 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
   };
 
   const handleNotificationToggle = async (enabled: boolean) => {
-    try {
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
-      const data = await response.json();
-      if (enabled) {
-        const uuid = data.data[0].uuid;
-        const switchResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/switch`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            uuid: uuid,
-            is_running: true
-          })
-        });
-
-        if (switchResponse.ok) {
-          setNotificationsEnabled(true);
-          toast({
-            title: "Notifikasi diaktifkan",
-            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
-            variant: "success"
+    if (enabled) {
+      // Show scheduling dialog when enabling notifications
+      setScheduleDialogOpen(true);
+    } else {
+      // Disable notifications directly
+      try {
+        const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
+        const data = await response.json();
+        
+        if (data.status === 200 && data.data && data.data.length > 0) {
+          const uuid = data.data[0].uuid;
+          const switchResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/switch`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              uuid: uuid,
+              is_running: false
+            })
           });
-        }
-      } else {
-        const uuid = data.data[0].uuid;
-        const switchResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/switch`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            uuid: uuid,
-            is_running: false
-          })
-        });
 
-        if (switchResponse.ok) {
-          setNotificationsEnabled(false);
-          toast({
-            title: "Notifikasi dinonaktifkan",
-            description: "Notifikasi telah dinonaktifkan",
-            variant: "destructive"
-          });
+          if (switchResponse.ok) {
+            setNotificationsEnabled(false);
+            toast({
+              title: "Notifikasi dinonaktifkan",
+              description: "Notifikasi telah dinonaktifkan",
+              variant: "destructive"
+            });
+          }
         }
+      } catch (error) {
+        console.error('Error disabling notification:', error);
+        toast({
+          title: "Error",
+          description: "Terjadi kesalahan saat menonaktifkan notifikasi",
+          variant: "destructive"
+        });
       }
-    } catch (error) {
-      console.error('Error toggling notification:', error);
-      toast({
-        title: "Error",
-        description: "Terjadi kesalahan saat mengubah status notifikasi",
-        variant: "destructive"
-      });
     }
+  };
+
+  const handleScheduleSuccess = () => {
+    setNotificationsEnabled(true);
+    checkNotificationStatus();
   };
 
   return (
@@ -195,6 +188,12 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
           </div>
         </div>
       </div>
+      
+      <NotificationScheduleDialog
+        open={scheduleDialogOpen}
+        onOpenChange={setScheduleDialogOpen}
+        onSuccess={handleScheduleSuccess}
+      />
     </header>
   );
 };
