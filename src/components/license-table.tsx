@@ -350,6 +350,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         });
         setIsDeleteDialogOpen(false);
         fetchLicenses(currentPage, parseInt(itemsPerPage));
+        onDataChange?.();
       } else {
         throw new Error('Gagal menghapus data');
       }
