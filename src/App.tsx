@@ -209,6 +209,7 @@ const AppContent = () => {
               <LicensePrices onLogout={handleLogout} />
             </ProtectedRoute>
           } />
+          <Route path="/lisa" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
