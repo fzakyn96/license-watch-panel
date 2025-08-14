@@ -35,6 +35,9 @@ interface ProtectedRouteProps {
 
 type IframeLoginResponse = {
   data: string;
+  token: string;
+  redirect: string;
+  cookies_session: string;
 };
 
 const ProtectedRoute = ({ children, isAuthenticated }: ProtectedRouteProps) => {
