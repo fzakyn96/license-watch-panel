@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
   base: "/lisa",
   server: {
     host: "::",
-    port: 8080,
+    port: 5173,
   },
   optimizeDeps: {
     exclude: ['date-fns/locale']
