@@ -233,6 +233,7 @@ export const AddLicense = () => {
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   aria-invalid={!!errors.name}
                   className="mt-1"
+                  placeholder="Masukkan nama aset"
                 />
                 {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
               </div>
@@ -326,6 +327,7 @@ export const AddLicense = () => {
                     onChange={(e) => handleInputChange('satuan', e.target.value)}
                     aria-invalid={!!errors.satuan}
                     className="mt-1"
+                    placeholder="Masukkan satuan"
                   />
                   {errors.satuan && <p className="text-sm text-red-500 mt-1">{errors.satuan}</p>}
                 </div>
@@ -369,6 +371,7 @@ export const AddLicense = () => {
                     onChange={(e) => handleInputChange('username', e.target.value)}
                     aria-invalid={!!errors.username}
                     className="mt-1"
+                    placeholder="Masukkan username"
                   />
                   {errors.username && <p className="text-sm text-red-500 mt-1">{errors.username}</p>}
                 </div>
@@ -382,6 +385,7 @@ export const AddLicense = () => {
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     aria-invalid={!!errors.password}
                     className="mt-1"
+                    placeholder="Masukkan volume"
                   />
                   {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
                 </div>
@@ -395,6 +399,7 @@ export const AddLicense = () => {
                   value={license.lokasi_lisensi}
                   onChange={(e) => handleInputChange('lokasi_lisensi', e.target.value)}
                   className="mt-1"
+                  placeholder="Masukkan lokasi"
                 />
               </div>
 
