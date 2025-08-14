@@ -34,9 +34,9 @@ const emptyLicense: License = {
   name: "",
   start_date: "",
   end_date: "",
-  volume: 0,
+  volume: "" as any,
   satuan: "",
-  harga_satuan: 0,
+  harga_satuan: "" as any,
   jumlah: 0,
   username: "",
   password: "",
@@ -53,12 +53,30 @@ const formatRupiah = (amount: number): string => {
   }).format(amount);
 };
 
+const formatRupiahInput = (value: string): string => {
+  // Remove all non-numeric characters
+  const numericValue = value.replace(/\D/g, '');
+  
+  if (!numericValue) return '';
+  
+  // Format with thousands separator
+  const formatted = new Intl.NumberFormat('id-ID').format(parseInt(numericValue));
+  return `Rp. ${formatted}`;
+};
+
+const parseRupiahInput = (value: string): number => {
+  // Remove Rp. prefix and all non-numeric characters except digits
+  const numericValue = value.replace(/Rp\.\s?/g, '').replace(/\./g, '');
+  return parseInt(numericValue) || 0;
+};
+
 export const AddLicense = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { theme } = useTheme();
   const [license, setLicense] = useState<License>(emptyLicense);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [priceInput, setPriceInput] = useState<string>("");
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -87,12 +105,20 @@ export const AddLicense = () => {
 
     // Kalkulasi otomatis total harga
     if (field === 'volume' || field === 'harga_satuan') {
-      const volume = field === 'volume' ? Number(value) : license.volume;
-      const hargaSatuan = field === 'harga_satuan' ? Number(value) : license.harga_satuan;
+      const volume = field === 'volume' ? Number(value) : Number(license.volume) || 0;
+      const hargaSatuan = field === 'harga_satuan' ? Number(value) : Number(license.harga_satuan) || 0;
       newLicense.jumlah = volume * hargaSatuan;
     }
 
     setLicense(newLicense);
+  };
+
+  const handlePriceInputChange = (value: string) => {
+    const formatted = formatRupiahInput(value);
+    setPriceInput(formatted);
+    
+    const numericValue = parseRupiahInput(formatted);
+    handleInputChange('harga_satuan', numericValue);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -283,10 +309,11 @@ export const AddLicense = () => {
                   <Input
                     id="volume"
                     type="number"
-                    value={license.volume}
-                    onChange={(e) => handleInputChange('volume', Number(e.target.value))}
+                    value={license.volume || ""}
+                    onChange={(e) => handleInputChange('volume', Number(e.target.value) || "")}
                     aria-invalid={!!errors.volume}
                     className="mt-1"
+                    placeholder="Masukkan volume"
                   />
                   {errors.volume && <p className="text-sm text-red-500 mt-1">{errors.volume}</p>}
                 </div>
@@ -310,18 +337,13 @@ export const AddLicense = () => {
                   <Label htmlFor="harga_satuan">Harga Satuan</Label>
                   <Input
                     id="harga_satuan"
-                    type="number"
-                    value={license.harga_satuan}
-                    onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
+                    type="text"
+                    value={priceInput}
+                    onChange={(e) => handlePriceInputChange(e.target.value)}
                     aria-invalid={!!errors.harga_satuan}
                     className="mt-1"
-                    placeholder="0"
+                    placeholder="Masukkan harga satuan"
                   />
-                  {license.harga_satuan > 0 && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {formatRupiah(license.harga_satuan)}
-                    </p>
-                  )}
                   {errors.harga_satuan && <p className="text-sm text-red-500 mt-1">{errors.harga_satuan}</p>}
                 </div>
 
