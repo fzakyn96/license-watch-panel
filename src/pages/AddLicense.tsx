@@ -13,7 +13,6 @@ import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { getCookie } from "@/lib/cookies";
 import { Shield } from "lucide-react";
-import { useTheme } from "next-themes";
 
 interface License {
   name: string;
@@ -73,7 +72,6 @@ const parseRupiahInput = (value: string): number => {
 export const AddLicense = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { theme } = useTheme();
   const [license, setLicense] = useState<License>(emptyLicense);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [priceInput, setPriceInput] = useState<string>("");
@@ -184,11 +182,7 @@ export const AddLicense = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <img 
-              src={theme === 'dark' ? '/lisa/logo-dark.png' : '/lisa/logo-white.png'}
-              alt="Lisensi Aset Logo"
-              className="h-8 w-auto sm:h-8 object-contain"
-            />
+            <Shield className="h-8 w-8 text-primary" />
             <div className="hidden sm:block">
               <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
               <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
