@@ -101,23 +101,65 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const { toast } = useToast();
 
-  const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
+  const [allLicenses, setAllLicenses] = useState<License[]>([]);
+  const [isStatusSorted, setIsStatusSorted] = useState(true);
+
+  const fetchLicenses = async (page: number, paginate: number, searchQuery?: string, forceRefresh = false) => {
     try {
       setIsLoading(true);
-      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
-      if (searchQuery) {
-        url += `${encodeURIComponent(searchQuery)}`;
-      }
-
-      const response = await apiFetch(url);
-      const data: ApiResponse = await response.json();
-
-      if (data.status === 200) {
-        let sortedLicenses = data.data.docs;
+      
+      // If no sort field is set (default status sorting) or it's a force refresh, fetch all data
+      if (!sortField || forceRefresh) {
+        // Fetch all data for proper status sorting
+        let allUrl = `${import.meta.env.VITE_BASE_URL}/licenses/export`;
+        if (searchQuery) {
+          allUrl = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=1&paginate=9999&name=${encodeURIComponent(searchQuery)}`;
+        }
         
-        // Apply client-side sorting if sort is enabled
-        if (sortField) {
-          sortedLicenses = [...sortedLicenses].sort((a, b) => {
+        const allResponse = await apiFetch(allUrl);
+        const allData = await allResponse.json();
+        
+        if (allData.status === 200) {
+          const allLicensesData = searchQuery ? allData.data.docs : allData.data;
+          setAllLicenses(allLicensesData);
+          
+          // Sort by status priority by default
+          const statusPriority = {
+            'Sudah Kadaluarsa': 1,
+            'Akan Kadaluarsa': 2,
+            'Aman': 3
+          };
+
+          const sortedLicenses = [...allLicensesData].sort((a, b) => {
+            const statusA = getLicenseStatus(a.end_date).text;
+            const statusB = getLicenseStatus(b.end_date).text;
+            return statusPriority[statusA] - statusPriority[statusB];
+          });
+          
+          // Handle pagination client-side
+          const startIndex = (page - 1) * paginate;
+          const endIndex = startIndex + paginate;
+          const paginatedData = sortedLicenses.slice(startIndex, endIndex);
+          
+          setLicenses(paginatedData);
+          setTotalPages(Math.ceil(sortedLicenses.length / paginate));
+          setIsStatusSorted(true);
+        }
+      } else {
+        // Use regular pagination for field-based sorting
+        let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
+        if (searchQuery) {
+          url += `${encodeURIComponent(searchQuery)}`;
+        }
+
+        const response = await apiFetch(url);
+        const data: ApiResponse = await response.json();
+
+        if (data.status === 200) {
+          let sortedLicenses = [...data.data.docs];
+          
+          // Apply client-side sorting for specific fields
+          sortedLicenses = sortedLicenses.sort((a, b) => {
             let aValue = a[sortField as keyof License];
             let bValue = b[sortField as keyof License];
             
@@ -139,25 +181,11 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
             }
           });
-        } else {
-          // Default sorting by status priority when no sort field is set
-          const statusPriority = {
-            'Sudah Kadaluarsa': 1,
-            'Akan Kadaluarsa': 2,
-            'Aman': 3
-          };
-
-          sortedLicenses = [...sortedLicenses].sort((a, b) => {
-            const statusA = getLicenseStatus(a.end_date).text;
-            const statusB = getLicenseStatus(b.end_date).text;
-            return statusPriority[statusA] - statusPriority[statusB];
-          });
+          
+          setLicenses(sortedLicenses);
+          setTotalPages(data.data.pages);
+          setIsStatusSorted(false);
         }
-        
-        setLicenses(sortedLicenses);
-        setTotalPages(data.data.pages);
-      } else {
-        throw new Error('Gagal memuat data lisensi');
       }
     } catch (error) {
       toast({
@@ -427,7 +455,13 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
   const handleSort = (field: string) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      // If clicking the same field twice, toggle order, then reset to default sorting
+      if (sortOrder === "desc") {
+        setSortField("");
+        setSortOrder("asc");
+      } else {
+        setSortOrder("desc");
+      }
     } else {
       setSortField(field);
       setSortOrder("asc");
