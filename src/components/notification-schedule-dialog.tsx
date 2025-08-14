@@ -264,15 +264,12 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
             <div className="space-y-2 mt-2">
               {times.map((time, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <Input
-                      type="time"
-                      value={time}
-                      onChange={(e) => updateTime(index, e.target.value)}
-                      className="pr-10"
-                    />
-                    <Timer className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                  </div>
+                  <Input
+                    type="time"
+                    value={time}
+                    onChange={(e) => updateTime(index, e.target.value)}
+                    className="flex-1"
+                  />
                   {times.length > 1 && (
                     <Button
                       type="button"
