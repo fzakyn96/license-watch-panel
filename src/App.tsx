@@ -35,6 +35,9 @@ interface ProtectedRouteProps {
 
 type IframeLoginResponse = {
   data: string;
+  token: string;
+  redirect: string;
+  cookie_session: string;
 };
 
 const ProtectedRoute = ({ children, isAuthenticated }: ProtectedRouteProps) => {
@@ -123,7 +126,7 @@ const AppContent = () => {
         throw new Error(text || "Iframe login gagal");
       }
 
-      const data = (await loginRes.json()) as any;
+      const data = (await loginRes.json()) as IframeLoginResponse;
 
       // Check if redirect and cookie_session are available
       if (data.redirect && data.cookie_session) {
