@@ -174,10 +174,10 @@ export const EditLicense = () => {
     if (!validateForm()) return;
 
     try {
-      const username = getCookie('username') || '';
+      const name = getCookie('auth_name') || '';
       const updateData = {
         ...formData,
-        last_user_input: username,
+        last_user_input: name,
         updatedAt: new Date().toISOString()
       };
 
