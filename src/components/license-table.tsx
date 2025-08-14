@@ -102,109 +102,116 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const { toast } = useToast();
 
   const [allLicenses, setAllLicenses] = useState<License[]>([]);
-  const [isStatusSorted, setIsStatusSorted] = useState(true);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  const fetchLicenses = async (page: number, paginate: number, searchQuery?: string, forceRefresh = false) => {
+  const fetchAllLicenses = async (searchQuery?: string) => {
     try {
-      setIsLoading(true);
+      // Gunakan endpoint pagination dengan paginate besar untuk mendapatkan semua data
+      const url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=1&paginate=9999&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
+      const response = await apiFetch(url);
+      const data: ApiResponse = await response.json();
       
-      // If no sort field is set (default status sorting) or it's a force refresh, fetch all data
-      if (!sortField || forceRefresh) {
-        // Fetch all data for proper status sorting
-        let allUrl = `${import.meta.env.VITE_BASE_URL}/licenses/export`;
-        if (searchQuery) {
-          allUrl = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=1&paginate=9999&name=${encodeURIComponent(searchQuery)}`;
-        }
-        
-        const allResponse = await apiFetch(allUrl);
-        const allData = await allResponse.json();
-        
-        if (allData.status === 200) {
-          const allLicensesData = searchQuery ? allData.data.docs : allData.data;
-          setAllLicenses(allLicensesData);
-          
-          // Sort by status priority by default
-          const statusPriority = {
-            'Sudah Kadaluarsa': 1,
-            'Akan Kadaluarsa': 2,
-            'Aman': 3
-          };
-
-          const sortedLicenses = [...allLicensesData].sort((a, b) => {
-            const statusA = getLicenseStatus(a.end_date).text;
-            const statusB = getLicenseStatus(b.end_date).text;
-            return statusPriority[statusA] - statusPriority[statusB];
-          });
-          
-          // Handle pagination client-side
-          const startIndex = (page - 1) * paginate;
-          const endIndex = startIndex + paginate;
-          const paginatedData = sortedLicenses.slice(startIndex, endIndex);
-          
-          setLicenses(paginatedData);
-          setTotalPages(Math.ceil(sortedLicenses.length / paginate));
-          setIsStatusSorted(true);
-        }
-      } else {
-        // Use regular pagination for field-based sorting
-        let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
-        if (searchQuery) {
-          url += `${encodeURIComponent(searchQuery)}`;
-        }
-
-        const response = await apiFetch(url);
-        const data: ApiResponse = await response.json();
-
-        if (data.status === 200) {
-          let sortedLicenses = [...data.data.docs];
-          
-          // Apply client-side sorting for specific fields
-          sortedLicenses = sortedLicenses.sort((a, b) => {
-            let aValue = a[sortField as keyof License];
-            let bValue = b[sortField as keyof License];
-            
-            // Handle numeric fields
-            if (sortField === 'volume' || sortField === 'harga_satuan' || sortField === 'jumlah') {
-              aValue = Number(aValue);
-              bValue = Number(bValue);
-            }
-            
-            // Handle date fields
-            if (sortField === 'start_date' || sortField === 'end_date') {
-              aValue = new Date(aValue as string).getTime();
-              bValue = new Date(bValue as string).getTime();
-            }
-            
-            if (sortOrder === 'asc') {
-              return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-            } else {
-              return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-            }
-          });
-          
-          setLicenses(sortedLicenses);
-          setTotalPages(data.data.pages);
-          setIsStatusSorted(false);
-        }
+      if (data.status === 200) {
+        setAllLicenses(data.data.docs);
+        setIsDataLoaded(true);
+        return data.data.docs;
       }
+      return [];
     } catch (error) {
       toast({
         title: "Error",
         description: "Terjadi kesalahan saat memuat data lisensi",
         variant: "destructive"
       });
+      return [];
+    }
+  };
+
+  const applyClientSidePagination = (data: License[], page: number, paginate: number) => {
+    const startIndex = (page - 1) * paginate;
+    const endIndex = startIndex + paginate;
+    const paginatedData = data.slice(startIndex, endIndex);
+    
+    setLicenses(paginatedData);
+    setTotalPages(Math.ceil(data.length / paginate));
+  };
+
+  const applySorting = (data: License[]) => {
+    let sortedData = [...data];
+    
+    if (!sortField) {
+      // Default sorting by status priority
+      const statusPriority = {
+        'Sudah Kadaluarsa': 1,
+        'Akan Kadaluarsa': 2,
+        'Aman': 3
+      };
+
+      sortedData = sortedData.sort((a, b) => {
+        const statusA = getLicenseStatus(a.end_date).text;
+        const statusB = getLicenseStatus(b.end_date).text;
+        return statusPriority[statusA] - statusPriority[statusB];
+      });
+    } else {
+      // Sort by selected field
+      sortedData = sortedData.sort((a, b) => {
+        let aValue = a[sortField as keyof License];
+        let bValue = b[sortField as keyof License];
+        
+        // Handle numeric fields
+        if (sortField === 'volume' || sortField === 'harga_satuan' || sortField === 'jumlah') {
+          aValue = Number(aValue);
+          bValue = Number(bValue);
+        }
+        
+        // Handle date fields
+        if (sortField === 'start_date' || sortField === 'end_date') {
+          aValue = new Date(aValue as string).getTime();
+          bValue = new Date(bValue as string).getTime();
+        }
+        
+        if (sortOrder === 'asc') {
+          return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+        } else {
+          return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+        }
+      });
+    }
+    
+    return sortedData;
+  };
+
+  const processAndDisplayData = async (searchQuery?: string, forceRefresh = false) => {
+    setIsLoading(true);
+    
+    try {
+      // Fetch data jika belum ada atau force refresh atau ada search query
+      let dataToProcess = allLicenses;
+      
+      if (!isDataLoaded || forceRefresh || searchQuery !== undefined) {
+        dataToProcess = await fetchAllLicenses(searchQuery);
+      }
+      
+      // Apply sorting
+      const sortedData = applySorting(dataToProcess);
+      
+      // Apply pagination
+      applyClientSidePagination(sortedData, currentPage, parseInt(itemsPerPage));
+      
+    } catch (error) {
+      console.error('Error processing data:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchLicenses(currentPage, parseInt(itemsPerPage));
+    processAndDisplayData();
   }, [currentPage, itemsPerPage, sortField, sortOrder]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      fetchLicenses(1, parseInt(itemsPerPage), searchTerm);
+      processAndDisplayData(searchTerm);
       setCurrentPage(1);
     }, 500);
 
@@ -263,22 +270,23 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     try {
       setIsLoading(true);
       
-      // Fetch all data without pagination for export
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/export`);
-      const data = await response.json();
+      // Gunakan data yang sudah ada atau fetch jika belum ada
+      let dataToExport = allLicenses;
       
-      if (data.status !== 200) {
+      if (!isDataLoaded || allLicenses.length === 0) {
+        dataToExport = await fetchAllLicenses();
+      }
+      
+      if (dataToExport.length === 0) {
         toast({
           title: "Info",
           description: "Tidak ada data yang bisa diekspor (data kosong)",
           variant: "warning"
-        })
+        });
+        return;
       }
       
-      const allLicenses = data.data || [];
-      console.log(allLicenses);
-      
-      const exportData = allLicenses.map((license: License) => ({
+      const exportData = dataToExport.map((license: License) => ({
         'UUID': license.uuid,
         'Nama Aset': license.name,
         'Tanggal Mulai': formatDate(license.start_date),
@@ -392,7 +400,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
           variant: "success"
         });
         setIsDeleteDialogOpen(false);
-        fetchLicenses(currentPage, parseInt(itemsPerPage));
+        processAndDisplayData(searchTerm, true);
         onDataChange?.();
       } else {
         throw new Error('Gagal menghapus data');
@@ -438,7 +446,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         });
         setIsImportDialogOpen(false);
         setSelectedFile(null);
-        fetchLicenses(currentPage, parseInt(itemsPerPage));
+        processAndDisplayData(searchTerm, true);
         onDataChange?.();
       } else {
         throw new Error('Import gagal');
