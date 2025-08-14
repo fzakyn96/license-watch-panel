@@ -229,20 +229,6 @@ const AppContent = () => {
           }
         });
 
-        // const expiresAt = Date.now() + 3600 * 1000; // epoch ms
-
-        // // Simpan token dari iframe login response
-        // setCookie(AUTH_TOKEN_KEY, data.token, {
-        //   expires: new Date(expiresAt), path: "/",
-        //   sameSite: "None",
-        //   secure: true,
-        // });
-        // setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), {
-        //   expires: new Date(expiresAt), path: "/",
-        //   sameSite: "None",
-        //   secure: true,
-        // });
-
         // Redirect to the specified page
         window.location.href = data.redirect;
         return;

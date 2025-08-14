@@ -279,6 +279,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       console.log(allLicenses);
       
       const exportData = allLicenses.map((license: License) => ({
+        'UUID': license.uuid,
         'Nama Aset': license.name,
         'Tanggal Mulai': formatDate(license.start_date),
         'Tanggal Berakhir': formatDate(license.end_date),
