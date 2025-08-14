@@ -70,6 +70,7 @@ interface License {
   last_user_input: string;
   createdAt: string;
   updatedAt: string;
+  status_lisensi: number;
 }
 
 interface ApiResponse {
@@ -106,9 +107,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
   const fetchAllLicenses = async (searchQuery?: string) => {
     try {
-      // Gunakan endpoint khusus untuk sorting default berdasarkan status
-      // Backend sudah mengurutkan berdasarkan prioritas status: Kadaluarsa > Akan Kadaluarsa > Aman
-      const url = `${import.meta.env.VITE_BASE_URL}/licenses/sorted?name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
+      // Gunakan endpoint pagination dengan sorting berdasarkan status_lisensi dan end_date
+      const url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=1&paginate=10&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
       const response = await apiFetch(url);
       const data: ApiResponse = await response.json();
       
@@ -149,8 +149,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       };
 
       sortedData = sortedData.sort((a, b) => {
-        const statusA = getLicenseStatus(a.end_date).text;
-        const statusB = getLicenseStatus(b.end_date).text;
+        const statusA = getLicenseStatus(a.status_lisensi).text;
+        const statusB = getLicenseStatus(b.status_lisensi).text;
         return statusPriority[statusA] - statusPriority[statusB];
       });
     } else {
@@ -230,26 +230,33 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     return new Date(dateString).toLocaleDateString('id-ID', options);
   };
 
-  const getLicenseStatus = (endDate: string) => {
-    const today = new Date();
-    const end = new Date(endDate);
-    const diffDays = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) return {
-      text: 'Sudah Kadaluarsa',
-      color: 'bg-red-100 text-red-700 border-red-200',
-      icon: XCircle
-    };
-    if (diffDays <= 120) return {
-      text: 'Akan Kadaluarsa',
-      color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-      icon: AlertCircle
-    };
-    return {
-      text: 'Aman',
-      color: 'bg-green-100 text-green-700 border-green-200',
-      icon: CheckCircle2
-    };
+  const getLicenseStatus = (status_lisensi: number) => {
+    switch (status_lisensi) {
+      case 1:
+        return {
+          text: 'Sudah Kadaluarsa',
+          color: 'bg-red-100 text-red-700 border-red-200',
+          icon: XCircle
+        };
+      case 2:
+        return {
+          text: 'Akan Kadaluarsa',
+          color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+          icon: AlertCircle
+        };
+      case 3:
+        return {
+          text: 'Aman',
+          color: 'bg-green-100 text-green-700 border-green-200',
+          icon: CheckCircle2
+        };
+      default:
+        return {
+          text: 'Unknown',
+          color: 'bg-gray-100 text-gray-700 border-gray-200',
+          icon: AlertCircle
+        };
+    }
   };
 
   const togglePasswordVisibility = (index: number) => {
@@ -292,7 +299,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         'Nama Aset': license.name,
         'Tanggal Mulai': formatDate(license.start_date),
         'Tanggal Berakhir': formatDate(license.end_date),
-        'Status': getLicenseStatus(license.end_date).text,
+        'Status': getLicenseStatus(license.status_lisensi).text,
         'Volume': license.volume,
         'Satuan': license.satuan,
         'Harga Satuan': license.harga_satuan,
@@ -765,7 +772,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               </TableRow>
             ) : (
               licenses.map((license, index) => {
-                const status = getLicenseStatus(license.end_date);
+                const status = getLicenseStatus(license.status_lisensi);
                 return (
                   <React.Fragment key={license.uuid}>
                     <TableRow className="hover:bg-muted/30">
@@ -803,7 +810,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                       <TableCell className="whitespace-nowrap">{formatDate(license.end_date)}</TableCell>
                       <TableCell className="whitespace-nowrap">
                         {(() => {
-                          const status = getLicenseStatus(license.end_date);
+                          const status = getLicenseStatus(license.status_lisensi);
                           const StatusIcon = status.icon;
                           return (
                             <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${status.color}`}>
