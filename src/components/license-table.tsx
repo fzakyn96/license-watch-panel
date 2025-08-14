@@ -106,8 +106,9 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
   const fetchAllLicenses = async (searchQuery?: string) => {
     try {
-      // Gunakan endpoint pagination dengan paginate besar untuk mendapatkan semua data
-      const url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=1&paginate=9999&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
+      // Gunakan endpoint khusus untuk sorting default berdasarkan status
+      // Backend sudah mengurutkan berdasarkan prioritas status: Kadaluarsa > Akan Kadaluarsa > Aman
+      const url = `${import.meta.env.VITE_BASE_URL}/licenses/sorted?name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
       const response = await apiFetch(url);
       const data: ApiResponse = await response.json();
       
