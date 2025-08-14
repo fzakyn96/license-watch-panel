@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -7,17 +7,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setCookie } from "@/lib/cookies";
 import { AUTH_TOKEN_KEY, AUTH_NAME_KEY, AUTH_GROUP_KEY, AUTH_EXPIRES_AT_KEY } from "@/lib/auth";
 import { useRef } from "react";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import { EditLicense } from "./pages/EditLicense";
-import { AddLicense } from "./pages/AddLicense";
-import LicensePrices from "./pages/LicensePrices";
-import NotFound from "./pages/NotFound";
 import { getAuth, isAuthenticated, logout as authLogout } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryParams } from "@/hooks/use-query-params";
 import Footer from "@/components/footer";
 import { useNavigate } from "react-router-dom";
+
+// Lazy load page components for code splitting
+const Login = lazy(() => import("./pages/Login"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const EditLicense = lazy(() => import("./pages/EditLicense").then(module => ({ default: module.EditLicense })));
+const AddLicense = lazy(() => import("./pages/AddLicense").then(module => ({ default: module.AddLicense })));
+const LicensePrices = lazy(() => import("./pages/LicensePrices"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 
 const queryClient = new QueryClient();
@@ -192,37 +194,43 @@ const AppContent = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-1">
-        <Routes>
-          <Route path='/login' element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
-          <Route
-            path="/"
-            element={
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <Routes>
+            <Route path='/login' element={!isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/" replace />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute isAuthenticated={isLoggedIn}>
+                  <Dashboard onLogout={handleLogout} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit/:uuid"
+              element={
+                <ProtectedRoute isAuthenticated={isLoggedIn}>
+                  <EditLicense />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/add" element={
               <ProtectedRoute isAuthenticated={isLoggedIn}>
-                <Dashboard onLogout={handleLogout} />
+                <AddLicense />
               </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/edit/:uuid"
-            element={
+            } />
+            <Route path="/prices" element={
               <ProtectedRoute isAuthenticated={isLoggedIn}>
-                <EditLicense />
+                <LicensePrices onLogout={handleLogout} />
               </ProtectedRoute>
-            }
-          />
-          <Route path="/add" element={
-            <ProtectedRoute isAuthenticated={isLoggedIn}>
-              <AddLicense />
-            </ProtectedRoute>
-          } />
-          <Route path="/prices" element={
-            <ProtectedRoute isAuthenticated={isLoggedIn}>
-              <LicensePrices onLogout={handleLogout} />
-            </ProtectedRoute>
-          } />
-          {/* <Route path="/lisa" element={<Navigate to="/login" replace />} /> */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            } />
+            {/* <Route path="/lisa" element={<Navigate to="/login" replace />} /> */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </div>
       <Footer />
     </div>
