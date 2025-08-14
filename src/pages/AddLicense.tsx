@@ -182,7 +182,16 @@ export const AddLicense = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <Shield className="h-8 w-8 text-primary" />
+            <img 
+              src="/lisa/logo-white.png"
+              alt="Lisensi Aset Logo"
+              className="h-8 w-auto sm:h-8 object-contain dark:hidden"
+            />
+            <img 
+              src="/lisa/logo-dark.png"
+              alt="Lisensi Aset Logo"
+              className="h-8 w-auto sm:h-8 object-contain hidden dark:block"
+            />
             <div className="hidden sm:block">
               <h1 className="text-lg sm:text-xl font-bold text-foreground">Lisensi Aset</h1>
               <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
