@@ -10,6 +10,9 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 5173,
   },
+  optimizeDeps: {
+    exclude: ['date-fns/locale']
+  },
   plugins: [
     react(),
     mode === 'development' &&
