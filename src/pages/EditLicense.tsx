@@ -14,6 +14,31 @@ import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { getCookie } from "@/lib/cookies";
 
+const formatRupiah = (amount: number): string => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(amount);
+};
+
+const formatRupiahInput = (value: string): string => {
+  // Remove all non-numeric characters
+  const numericValue = value.replace(/\D/g, '');
+  
+  if (!numericValue) return '';
+  
+  // Format with thousands separator
+  const formatted = new Intl.NumberFormat('id-ID').format(parseInt(numericValue));
+  return `Rp. ${formatted}`;
+};
+
+const parseRupiahInput = (value: string): number => {
+  // Remove Rp. prefix and all non-numeric characters except digits
+  const numericValue = value.replace(/Rp\.\s?/g, '').replace(/\./g, '');
+  return parseInt(numericValue) || 0;
+};
+
 interface License {
   uuid: string;
   name: string;
@@ -40,6 +65,7 @@ export const EditLicense = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<License | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [priceInput, setPriceInput] = useState<string>("");
 
   useEffect(() => {
     const fetchLicense = async () => {
@@ -51,6 +77,10 @@ export const EditLicense = () => {
           // Exclude history_licenses dari data yang diterima
           const { history_licenses, ...licenseData } = data.data;
           setFormData(licenseData);
+          // Set price input with Rupiah formatting
+          if (licenseData.harga_satuan) {
+            setPriceInput(formatRupiahInput(licenseData.harga_satuan.toString()));
+          }
         } else {
           throw new Error('Gagal memuat data lisensi');
         }
@@ -106,6 +136,14 @@ export const EditLicense = () => {
     }
 
     setFormData(newFormData);
+  };
+
+  const handlePriceInputChange = (value: string) => {
+    const formatted = formatRupiahInput(value);
+    setPriceInput(formatted);
+    
+    const numericValue = parseRupiahInput(formatted);
+    handleInputChange('harga_satuan', numericValue);
   };
 
   const getLicenseStatus = (endDate: string) => {
@@ -352,9 +390,9 @@ export const EditLicense = () => {
                   <Label htmlFor="harga_satuan">Harga Satuan</Label>
                   <Input
                     id="harga_satuan"
-                    type="number"
-                    value={formData?.harga_satuan || ''}
-                    onChange={(e) => handleInputChange('harga_satuan', Number(e.target.value))}
+                    type="text"
+                    value={priceInput}
+                    onChange={(e) => handlePriceInputChange(e.target.value)}
                     aria-invalid={!!errors.harga_satuan}
                     className="mt-1"
                     placeholder="Masukkan harga satuan"
@@ -366,8 +404,8 @@ export const EditLicense = () => {
                   <Label htmlFor="jumlah">Total Harga</Label>
                   <Input
                     id="jumlah"
-                    type="number"
-                    value={formData?.jumlah || 0}
+                    type="text"
+                    value={formData?.jumlah ? formatRupiah(formData.jumlah) : "Rp 0"}
                     disabled
                     className="mt-1 bg-muted"
                   />

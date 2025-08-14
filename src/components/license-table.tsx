@@ -139,6 +139,19 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
             }
           });
+        } else {
+          // Default sorting by status priority when no sort field is set
+          const statusPriority = {
+            'Sudah Kadaluarsa': 1,
+            'Akan Kadaluarsa': 2,
+            'Aman': 3
+          };
+
+          sortedLicenses = [...sortedLicenses].sort((a, b) => {
+            const statusA = getLicenseStatus(a.end_date).text;
+            const statusB = getLicenseStatus(b.end_date).text;
+            return statusPriority[statusA] - statusPriority[statusB];
+          });
         }
         
         setLicenses(sortedLicenses);
