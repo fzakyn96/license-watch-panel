@@ -123,7 +123,32 @@ const AppContent = () => {
         throw new Error(text || "Iframe login gagal");
       }
 
-      const data = (await loginRes.json()) as IframeLoginResponse;
+      const data = (await loginRes.json()) as any;
+
+      // Check if redirect and cookie_session are available
+      if (data.redirect && data.cookie_session) {
+        // Inject cookie from cookie_session
+        const cookieEntries = data.cookie_session.split(';');
+        cookieEntries.forEach((entry: string) => {
+          const [name, value] = entry.trim().split('=');
+          if (name && value) {
+            setCookie(name, value, {
+              path: "/",
+              sameSite: "None",
+              secure: true,
+            });
+          }
+        });
+
+        // Store token in session storage
+        if (data.token) {
+          sessionStorage.setItem('auth_token', data.token);
+        }
+
+        // Redirect to the specified page
+        window.location.href = data.redirect;
+        return;
+      }
 
       const expiresAt = Date.now() + 3600 * 1000; // epoch ms
 
