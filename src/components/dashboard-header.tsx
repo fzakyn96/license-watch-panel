@@ -66,11 +66,11 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
       }
       if (data.status === 200 && data.data[0].is_running === false) {
         setNotificationsEnabled(false);
-        toast({
-          title: "Notifikasi dalam keadaan nonaktif",
-          description: "Anda tidak akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
-          variant: "destructive"
-        });
+        // toast({
+        //   title: "Notifikasi dalam keadaan nonaktif",
+        //   description: "Anda tidak akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
+        //   variant: "destructive"
+        // });
       }
     } catch (error) {
       console.error('Error checking notification status:', error);
