@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trash2, Timer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 
@@ -17,11 +17,11 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
   const [loading, setLoading] = useState(false);
   const [existingData, setExistingData] = useState<any>(null);
   const [hasExistingData, setHasExistingData] = useState(false);
-  
+
   // Form state
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [times, setTimes] = useState<string[]>(['09:00']);
-  
+
   const { toast } = useToast();
 
   const daysOfWeek = [
@@ -69,12 +69,12 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
     const parts = cronExpression.split(' ');
     if (parts.length === 5) {
       const [minute, hour, , , dayOfWeek] = parts;
-      
+
       // Parse hours
       const hourParts = hour.split(',');
       const parsedTimes = hourParts.map(h => `${h.padStart(2, '0')}:${minute.padStart(2, '0')}`);
       setTimes(parsedTimes);
-      
+
       // Parse days
       if (dayOfWeek.includes('-')) {
         const [start, end] = dayOfWeek.split('-').map(Number);
@@ -95,11 +95,11 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
     // Extract unique hours and minutes
     const timeHours = [...new Set(times.map(time => time.split(':')[0]))];
     const minutes = times[0]?.split(':')[1] || '00';
-    
+
     // Create cron expression
     const hourExpression = timeHours.join(',');
     const dayExpression = selectedDays.sort((a, b) => Number(a) - Number(b)).join(',');
-    
+
     return `${minutes} ${hourExpression} * * ${dayExpression}`;
   };
 
@@ -116,7 +116,7 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
     setLoading(true);
     try {
       const cronExpression = convertToCron();
-      
+
       const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/create`, {
         method: 'POST',
         headers: {
@@ -131,9 +131,9 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
 
       if (response.ok) {
         toast({
-          title: "Penjadwalan berhasil disimpan",
+          title: "Notifikasi berhasil disimpan dan diaktifkan",
           description: "Notifikasi telah dijadwalkan sesuai pengaturan",
-          variant: "default"
+          variant: "success"
         });
         onSuccess();
         onOpenChange(false);
@@ -165,7 +165,7 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
     setLoading(true);
     try {
       const cronExpression = convertToCron();
-      
+
       const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/update`, {
         method: 'PUT',
         headers: {
@@ -180,9 +180,9 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
 
       if (response.ok) {
         toast({
-          title: "Penjadwalan berhasil diperbarui",
+          title: "Notifikasi berhasil diperbarui dan diaktifkan",
           description: "Notifikasi telah dijadwalkan ulang sesuai pengaturan",
-          variant: "default"
+          variant: "success"
         });
         onSuccess();
         onOpenChange(false);
@@ -228,10 +228,16 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Pengaturan Penjadwalan Notifikasi</DialogTitle>
+        <DialogHeader className="shrink-0">
+          <DialogTitle className="flex items-center gap-2">
+            <Timer className="w-5 h-5" />
+            Pengaturan Penjadwalan Notifikasi
+          </DialogTitle>
+          <DialogDescription className="text-left">
+            Atur hari dan waktu untuk pengiriman notifikasi
+          </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-6">
           {/* Days Selection */}
           <div>
@@ -267,22 +273,23 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
                   {times.length > 1 && (
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="destructive"
                       size="sm"
                       onClick={() => removeTime(index)}
                     >
-                      Hapus
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   )}
                 </div>
               ))}
               <Button
                 type="button"
-                variant="outline"
+                variant="warning"
                 size="sm"
                 onClick={addTime}
                 className="w-full"
               >
+                <Plus className="w-4 h-4" />
                 Tambah Waktu
               </Button>
             </div>
@@ -291,20 +298,20 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
           {/* Action Buttons */}
           <div className="flex gap-2 pt-4">
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
               Batal
             </Button>
-            
+
             {hasExistingData ? (
               <Button
                 onClick={handleUpdate}
                 disabled={loading}
                 className="flex-1"
               >
-                {loading ? "Memperbarui..." : "Perbarui"}
+                {loading ? "Memperbarui..." : "Perbarui & Aktifkan"}
               </Button>
             ) : (
               <Button
@@ -312,7 +319,7 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
                 disabled={loading}
                 className="flex-1"
               >
-                {loading ? "Menyimpan..." : "Simpan"}
+                {loading ? "Menyimpan..." : "Simpan & Aktifkan"}
               </Button>
             )}
           </div>

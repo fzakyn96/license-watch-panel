@@ -34,32 +34,43 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
       const data = await response.json();
 
       if (data.status === 404) {
-        const createResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/create`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: "sendEmail",
-            time_schedule: "0 9,15 * * 1-5",
-            is_running: true
-          })
-        });
+        // const createResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/create`, {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({
+        //     name: "sendEmail",
+        //     time_schedule: "0 9,15 * * 1-5",
+        //     is_running: true
+        //   })
+        // });
 
-        if (createResponse.ok) {
-          setNotificationsEnabled(true);
-          toast({
-            title: "Notifikasi diaktifkan",
-            description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
-            variant: "success"
-          });
-        }
+        // if (createResponse.ok) {
+        //   setNotificationsEnabled(true);
+        //   toast({
+        //     title: "Notifikasi diaktifkan",
+        //     description: "Anda akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
+        //     variant: "success"
+        //   });
+        // }
+        setNotificationsEnabled(false);
+        toast({
+          title: "Penjadwalan notifikasi belum tersedia",
+          description: "Aktifkan notifikasi untuk membuat jadwal pengiriman notifikasi",
+          variant: "destructive"
+        });
       }
       if (data.status === 200 && data.data[0].is_running === true) {
         setNotificationsEnabled(true);
       }
       if (data.status === 200 && data.data[0].is_running === false) {
         setNotificationsEnabled(false);
+        toast({
+          title: "Notifikasi dalam keadaan nonaktif",
+          description: "Anda tidak akan menerima notifikasi untuk lisensi yang akan kadaluarsa",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Error checking notification status:', error);
