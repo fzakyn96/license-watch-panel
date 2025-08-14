@@ -54,7 +54,7 @@ const AppContent = () => {
   const [iframeLoginFailed, setIframeLoginFailed] = useState(false);
   const { toast } = useToast();
   const location = useLocation();
-  
+
   // Capture query parameters saat app pertama dijalankan
   const { getUuid, getAllParams, hasUuid } = useQueryParams();
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ const AppContent = () => {
     const allParams = getAllParams();
     if (Object.keys(allParams).length > 0) {
       console.log("🔍 Query parameters terdeteksi saat app start:", allParams);
-      
+
       // Contoh handling parameter spesifik
       if (hasUuid()) {
         console.log("📋 UUID parameter ditemukan:", getUuid());
@@ -184,6 +184,86 @@ const AppContent = () => {
     }
   }
 
+  const loginButton = async () => {
+    try {
+      // Cek apakah ada UUID dari query parameter
+      const queryUuid = getUuid();
+      let uuid = queryUuid;
+
+      if (!queryUuid) {
+        // Jika tidak ada UUID dari query, buat baru seperti sebelumnya
+        toast({
+          title: "Tidak ditemukan UUID",
+          description: "UUID harus terdaftar",
+          variant: "destructive",
+        })
+      } else {
+        console.log("🔗 Menggunakan UUID dari query parameter:", queryUuid);
+      }
+
+      // Iframe login flow: Step 2 - Login with UUID
+      const loginRes = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/iframeLogin?uuid=${uuid}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!loginRes.ok) {
+        const text = await loginRes.text();
+        throw new Error(text || "Iframe login gagal");
+      }
+
+      const data = (await loginRes.json()) as IframeLoginResponse;
+
+      // Check if redirect and cookie_session are available
+      if (data.redirect && data.cookie_session) {
+        // Inject cookie from cookie_session
+        const cookieEntries = data.cookie_session.split(';');
+        cookieEntries.forEach((entry: string) => {
+          const [name, value] = entry.trim().split('=');
+          if (name && value) {
+            setCookie(name, value, {
+              path: "/",
+              sameSite: "None",
+              secure: true,
+            });
+          }
+        });
+
+        // const expiresAt = Date.now() + 3600 * 1000; // epoch ms
+
+        // // Simpan token dari iframe login response
+        // setCookie(AUTH_TOKEN_KEY, data.token, {
+        //   expires: new Date(expiresAt), path: "/",
+        //   sameSite: "None",
+        //   secure: true,
+        // });
+        // setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), {
+        //   expires: new Date(expiresAt), path: "/",
+        //   sameSite: "None",
+        //   secure: true,
+        // });
+
+        // Redirect to the specified page
+        window.location.href = data.redirect;
+        return;
+      }
+
+      toast({
+        title: "Login berhasil",
+        description: `Selamat datang`,
+        variant: "success",
+      });
+
+    } catch (error) {
+      setIframeLoginFailed(true); // Prevent retry loop
+      toast({
+        title: "Login gagal",
+        description: error instanceof Error ? error.message : "Terjadi kesalahan saat login iframe",
+        variant: "destructive",
+      });
+    }
+  }
+
   // Sync state with actual authentication status
   useEffect(() => {
     const actualAuthStatus = isAuthenticated();
@@ -212,6 +292,12 @@ const AppContent = () => {
     if (isInIframe() && !isLoggedIn && !attemptedRef.current && !iframeLoginFailed) {
       attemptedRef.current = true;
       void loginIframe({ onLogin: handleLogin });
+    }
+
+    const queryUuid = getUuid();
+
+    if (queryUuid &&!isLoggedIn &&!attemptedRef.current &&!iframeLoginFailed) {
+      void loginButton();
     }
 
     return () => {
