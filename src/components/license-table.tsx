@@ -141,17 +141,16 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage, itemsPerPage]);
-
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      fetchData(searchTerm);
-      setCurrentPage(1);
-    }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm]);
+    if (searchTerm) {
+      const delayDebounce = setTimeout(() => {
+        fetchData(searchTerm);
+        setCurrentPage(1);
+      }, 500);
+      return () => clearTimeout(delayDebounce);
+    } else {
+      fetchData();
+    }
+  }, [currentPage, itemsPerPage, searchTerm]);
 
   const [showPassword, setShowPassword] = useState<{ [key: number]: boolean }>({});
 
