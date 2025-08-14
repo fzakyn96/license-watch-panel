@@ -76,9 +76,9 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,theme(colors.primary/20),transparent_50%)] animate-pulse"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,theme(colors.secondary/20),transparent_50%)] animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_80%,theme(colors.accent/10),transparent_50%)] animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)_/_20%),transparent_50%)] animate-pulse"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(var(--secondary)_/_20%),transparent_50%)] animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_80%,hsl(var(--accent)_/_10%),transparent_50%)] animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
       
       {/* Floating Elements */}
