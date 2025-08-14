@@ -263,6 +263,10 @@ export const AddLicense = () => {
                           // Auto close popover after selection
                           document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
                         }}
+                        showOutsideDays={true}
+                        captionLayout="dropdown-buttons"
+                        fromYear={2000}
+                        toYear={2050}
                         className="pointer-events-auto"
                       />
                     </PopoverContent>
@@ -294,6 +298,10 @@ export const AddLicense = () => {
                           // Auto close popover after selection
                           document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
                         }}
+                        showOutsideDays={true}
+                        captionLayout="dropdown-buttons"
+                        fromYear={2000}
+                        toYear={2050}
                         className="pointer-events-auto"
                       />
                     </PopoverContent>
