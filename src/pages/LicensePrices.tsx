@@ -115,17 +115,16 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   };
 
   useEffect(() => {
-    fetchLicenses(currentPage, parseInt(itemsPerPage));
-  }, [currentPage, itemsPerPage, sortField, sortDirection]);
-
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      fetchLicenses(1, parseInt(itemsPerPage), searchTerm);
-      setCurrentPage(1);
-    }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm]);
+    if (searchTerm) {
+      const delayDebounce = setTimeout(() => {
+        fetchLicenses(1, parseInt(itemsPerPage), searchTerm);
+        setCurrentPage(1);
+      }, 500);
+      return () => clearTimeout(delayDebounce);
+    } else {
+      fetchLicenses(currentPage, parseInt(itemsPerPage));
+    }
+  }, [currentPage, itemsPerPage, sortField, sortDirection, searchTerm]);
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
