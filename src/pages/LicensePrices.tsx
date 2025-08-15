@@ -296,7 +296,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
             <div className="flex gap-2 w-full sm:w-auto">
               <Button
                 onClick={handleExportToExcel}
-                variant="outline"
+                variant="success"
                 className="flex items-center gap-2 w-full sm:w-auto"
               >
                 <Download className="w-4 h-4" />
