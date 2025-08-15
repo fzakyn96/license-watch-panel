@@ -99,7 +99,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const [itemsPerPage, setItemsPerPage] = useState("10");
   const [totalPages, setTotalPages] = useState(1);
   const [sortField, setSortField] = useState<string>("status_lisensi");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const { toast } = useToast();
 
   const [allLicenses, setAllLicenses] = useState<License[]>([]);
@@ -111,7 +111,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
       
       // Tambahkan parameter sorting (backend expect default sortField dan sortOrder)
-      const sortFieldParam = sort || "end_date";
+      const sortFieldParam = sort || "status_lisensi";
       const sortOrderParam = (order || "desc").toUpperCase();
       url += `&sortField=${sortFieldParam}&sortOrder=${sortOrderParam}`;
       
