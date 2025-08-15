@@ -99,11 +99,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const [itemsPerPage, setItemsPerPage] = useState("10");
   const [totalPages, setTotalPages] = useState(1);
   const [sortField, setSortField] = useState<string>("status_lisensi");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const { toast } = useToast();
-
-  const [allLicenses, setAllLicenses] = useState<License[]>([]);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const fetchLicenses = async (page: number = 1, paginate: number = 10, searchQuery?: string, sort?: string, order?: string) => {
     try {
@@ -112,7 +109,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       
       // Tambahkan parameter sorting (backend expect default sortField dan sortOrder)
       const sortFieldParam = sort || "status_lisensi";
-      const sortOrderParam = (order || "desc").toUpperCase();
+      const sortOrderParam = (order || "asc").toUpperCase();
       url += `&sortField=${sortFieldParam}&sortOrder=${sortOrderParam}`;
       
       const response = await apiFetch(url);
