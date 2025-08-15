@@ -98,8 +98,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState("10");
   const [totalPages, setTotalPages] = useState(1);
-  const [sortField, setSortField] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortField, setSortField] = useState<string>("status");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const { toast } = useToast();
 
   const [allLicenses, setAllLicenses] = useState<License[]>([]);
@@ -110,10 +110,10 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       // Gunakan endpoint pagination dengan dynamic sorting
       let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
       
-      // Tambahkan parameter sorting jika ada
-      if (sort && order) {
-        url += `&sortField=${sort}&sortOrder=${order}`;
-      }
+      // Tambahkan parameter sorting (backend expect default sortField dan sortOrder)
+      const sortFieldParam = sort || "status";
+      const sortOrderParam = (order || "desc").toUpperCase();
+      url += `&sortField=${sortFieldParam}&sortOrder=${sortOrderParam}`;
       
       const response = await apiFetch(url);
       const data: ApiResponse = await response.json();
