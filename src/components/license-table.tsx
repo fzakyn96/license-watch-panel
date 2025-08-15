@@ -105,10 +105,16 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const [allLicenses, setAllLicenses] = useState<License[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  const fetchLicenses = async (page: number = 1, paginate: number = 10, searchQuery?: string) => {
+  const fetchLicenses = async (page: number = 1, paginate: number = 10, searchQuery?: string, sort?: string, order?: string) => {
     try {
-      // Gunakan endpoint pagination dengan sorting berdasarkan status_lisensi dan end_date
-      const url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
+      // Gunakan endpoint pagination dengan dynamic sorting
+      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
+      
+      // Tambahkan parameter sorting jika ada
+      if (sort && order) {
+        url += `&sort=${sort}&order=${order}`;
+      }
+      
       const response = await apiFetch(url);
       const data: ApiResponse = await response.json();
       
@@ -132,7 +138,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     setIsLoading(true);
     
     try {
-      await fetchLicenses(currentPage, parseInt(itemsPerPage), searchQuery);
+      await fetchLicenses(currentPage, parseInt(itemsPerPage), searchQuery, sortField, sortOrder);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -150,7 +156,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     } else {
       fetchData();
     }
-  }, [currentPage, itemsPerPage, searchTerm]);
+  }, [currentPage, itemsPerPage, searchTerm, sortField, sortOrder]);
 
   const [showPassword, setShowPassword] = useState<{ [key: number]: boolean }>({});
 
@@ -404,13 +410,15 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   };
 
   const handleSort = (field: string) => {
-    // Untuk saat ini, sorting dilakukan di backend melalui endpoint /licenses/get
-    // Jadi kita tidak perlu client-side sorting
-    toast({
-      title: "Info",
-      description: "Sorting dilakukan otomatis oleh sistem berdasarkan status lisensi",
-      variant: "default"
-    });
+    if (sortField === field) {
+      // Toggle order jika field sama
+      setSortOrder(prev => prev === "asc" ? "desc" : "asc");
+    } else {
+      // Set field baru dengan order asc
+      setSortField(field);
+      setSortOrder("asc");
+    }
+    setCurrentPage(1); // Reset ke halaman pertama saat sorting
   };
 
   const getSortIcon = (field: string) => {
