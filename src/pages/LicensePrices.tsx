@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download, CheckCircle2, AlertCircle, XCircle, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
@@ -296,7 +297,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
             <div className="flex gap-2 w-full sm:w-auto">
               <Button
                 onClick={handleExportToExcel}
-                variant="success"
+                variant="outline"
                 className="flex items-center gap-2 w-full sm:w-auto"
               >
                 <Download className="w-4 h-4" />
@@ -305,124 +306,124 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
             </div>
           </div>
 
-          {/* Search and Controls */}
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-            <div className="relative flex-1 max-w-sm w-full md:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Cari nama lisensi..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-              <span className="text-sm text-muted-foreground">Tampilkan:</span>
-              <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-                <SelectTrigger className="w-16">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Table */}
-          <div className="border rounded-lg overflow-x-auto">
-            <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
-              <TableHeader>
-                <TableRow className="bg-muted/50">
-                  <TableHead
-                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
-                    onClick={() => handleSort('name')}
-                  >
-                    <div className="flex items-center">
-                      Nama Lisensi
-                      {getSortIcon('name')}
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
-                    onClick={() => handleSort('harga_satuan')}
-                  >
-                    <div className="flex items-center">
-                      Harga Satuan
-                      {getSortIcon('harga_satuan')}
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
-                    onClick={() => handleSort('start_date')}
-                  >
-                    <div className="flex items-center">
-                      Tanggal Awal
-                      {getSortIcon('start_date')}
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
-                    onClick={() => handleSort('end_date')}
-                  >
-                    <div className="flex items-center">
-                      Tanggal Berakhir
-                      {getSortIcon('end_date')}
-                    </div>
-                  </TableHead>
-                  <TableHead className="font-semibold">Catatan</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-32 text-center">
-                      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
-                      <p>Memuat data...</p>
-                    </TableCell>
-                  </TableRow>
-                ) : licenses.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-32 text-center">
-                      <p>Tidak ada data yang ditemukan</p>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  licenses.map((license) => {
-                    const status = getLicenseStatus(license.end_date);
-                    const StatusIcon = status.icon;
-
-                    return (
-                      <TableRow key={license.uuid} className="hover:bg-muted/30 transition-colors">
-                        <TableCell className="font-medium">{license.name}</TableCell>
-                        <TableCell className="text-right whitespace-nowrap">
-                          {formatCurrency(license.harga_satuan)}
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap">
-                          {formatDate(license.start_date)}
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap">
-                          {formatDate(license.end_date)}
-                        </TableCell>
-                        {/* <TableCell>
-                          <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${status.color}`}>
-                            <StatusIcon className="w-3 h-3 mr-1" />
-                            {status.text}
+          <Card>
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
+              <CardTitle className="text-lg font-semibold">Daftar Harga Lisensi</CardTitle>
+              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <div className="relative flex-1 sm:max-w-sm w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    placeholder="Cari nama lisensi..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">Tampilkan:</span>
+                  <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+                    <SelectTrigger className="w-20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="25">25</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
+                      <SelectItem value="100">100</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="rounded-lg border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead
+                        className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
+                        onClick={() => handleSort('name')}
+                      >
+                        <div className="flex items-center">
+                          Nama Lisensi
+                          {getSortIcon('name')}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors text-right"
+                        onClick={() => handleSort('harga_satuan')}
+                      >
+                        <div className="flex items-center justify-end">
+                          Harga Satuan
+                          {getSortIcon('harga_satuan')}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
+                        onClick={() => handleSort('start_date')}
+                      >
+                        <div className="flex items-center">
+                          Tanggal Awal
+                          {getSortIcon('start_date')}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="font-semibold cursor-pointer hover:bg-muted/70 transition-colors"
+                        onClick={() => handleSort('end_date')}
+                      >
+                        <div className="flex items-center">
+                          Tanggal Berakhir
+                          {getSortIcon('end_date')}
+                        </div>
+                      </TableHead>
+                      <TableHead className="font-semibold">Catatan</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isLoading ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="h-32 text-center">
+                          <div className="flex flex-col items-center justify-center">
+                            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+                            <p className="text-muted-foreground">Memuat data...</p>
                           </div>
-                        </TableCell> */}
-                        <TableCell className="max-w-xs truncate">
-                          {license.description}
                         </TableCell>
                       </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                    ) : licenses.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="h-32 text-center">
+                          <div className="flex flex-col items-center justify-center">
+                            <Shield className="h-12 w-12 text-muted-foreground mb-2" />
+                            <p className="text-muted-foreground">Tidak ada data yang ditemukan</p>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      licenses.map((license) => (
+                        <TableRow key={license.uuid} className="hover:bg-muted/50 transition-colors">
+                          <TableCell className="font-medium py-4">{license.name}</TableCell>
+                          <TableCell className="text-right whitespace-nowrap py-4 font-medium text-primary">
+                            {formatCurrency(license.harga_satuan)}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap py-4 text-muted-foreground">
+                            {formatDate(license.start_date)}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap py-4 text-muted-foreground">
+                            {formatDate(license.end_date)}
+                          </TableCell>
+                          <TableCell className="max-w-xs py-4">
+                            <div className="truncate text-sm text-muted-foreground" title={license.description}>
+                              {license.description}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Pagination */}
           {!isLoading && licenses.length > 0 && (
