@@ -11,19 +11,44 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download, CheckCircle2, AlertCircle, XCircle, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Search, ChevronLeft, ChevronRight, Loader2, Shield, Download, CheckCircle2, AlertCircle, XCircle, ArrowUpDown, ArrowUp, ArrowDown, History, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { useTheme } from "next-themes";
 import * as XLSX from 'xlsx';
 
+interface HistoryLicense {
+  id: number;
+  uuid: string;
+  licenses_uuid: string;
+  harga_satuan: number;
+  tanggal: string;
+  description: string;
+  last_user_input: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface License {
+  id: number;
   uuid: string;
   name: string;
   start_date: string;
   end_date: string;
+  volume: number;
+  satuan: string;
   harga_satuan: number;
+  jumlah: number;
+  username: string;
+  password: string;
+  lokasi_lisensi: string;
   description: string;
+  status_lisensi: number;
+  last_user_input: string;
+  createdAt: string;
+  updatedAt: string;
+  history_licenses: HistoryLicense[];
 }
 
 interface ApiResponse {
@@ -61,7 +86,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
     try {
       setIsLoading(true);
-      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
+      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&sortField=end_date&sortDirection=desc&name=`;
       if (searchQuery) {
         url += `${encodeURIComponent(searchQuery)}`;
       }
@@ -172,25 +197,57 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
       const data: ExportPrice = await response.json();
 
       if (data.status === 200) {
+        // Main license data
         const exportData = data.data.map((license, index) => ({
           'No': index + 1,
           'Nama Lisensi': license.name,
+          'Volume': license.volume,
+          'Satuan': license.satuan,
           'Harga Satuan': license.harga_satuan,
-          'Tanggal Awal': formatDate(license.start_date),
+          'Total Harga': license.jumlah,
+          'Tanggal Mulai': formatDate(license.start_date),
           'Tanggal Berakhir': formatDate(license.end_date),
-          'Deskripsi': license.description
+          'Lokasi Lisensi': license.lokasi_lisensi,
+          'Deskripsi': license.description,
+          'Terakhir Diubah Oleh': license.last_user_input
         }));
 
-        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        // History data
+        const historyData: any[] = [];
+        data.data.forEach((license, licenseIndex) => {
+          if (license.history_licenses && license.history_licenses.length > 0) {
+            license.history_licenses.forEach((history, historyIndex) => {
+              historyData.push({
+                'No': `${licenseIndex + 1}.${historyIndex + 1}`,
+                'Nama Lisensi': license.name,
+                'Harga Satuan (History)': history.harga_satuan,
+                'Tanggal Record': formatDate(history.tanggal),
+                'Deskripsi (History)': history.description,
+                'Terakhir Input Oleh': history.last_user_input,
+                'Dibuat Pada': formatDate(history.createdAt)
+              });
+            });
+          }
+        });
+
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Harga Lisensi");
+        
+        // Main data worksheet
+        const mainWorksheet = XLSX.utils.json_to_sheet(exportData);
+        XLSX.utils.book_append_sheet(workbook, mainWorksheet, "Harga Lisensi");
+        
+        // History data worksheet
+        if (historyData.length > 0) {
+          const historyWorksheet = XLSX.utils.json_to_sheet(historyData);
+          XLSX.utils.book_append_sheet(workbook, historyWorksheet, "History Harga");
+        }
 
         const today = new Date().toISOString().split('T')[0];
         XLSX.writeFile(workbook, `Harga_Lisensi_${today}.xlsx`);
 
         toast({
           title: "Berhasil",
-          description: "Data berhasil diekspor ke Excel",
+          description: "Data berhasil diekspor ke Excel dengan history",
           variant: "success"
         });
       } else {
@@ -383,18 +440,19 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                       </div>
                     </TableHead>
                     <TableHead className="w-[200px] whitespace-nowrap">Catatan</TableHead>
+                    <TableHead className="w-[100px] whitespace-nowrap">History</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="[&_tr:last-child]:border-b-0">
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8">
+                      <TableCell colSpan={6} className="text-center py-8">
                         Memuat data...
                       </TableCell>
                     </TableRow>
                   ) : licenses.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                         Tidak ada data harga lisensi yang ditemukan
                       </TableCell>
                     </TableRow>
@@ -409,6 +467,71 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                           <div className="truncate" title={license.description}>
                             {license.description}
                           </div>
+                        </TableCell>
+                        <TableCell>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                                disabled={!license.history_licenses || license.history_licenses.length === 0}
+                              >
+                                <History className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                              <DialogHeader>
+                                <DialogTitle>History Harga - {license.name}</DialogTitle>
+                              </DialogHeader>
+                              <div className="mt-4">
+                                {license.history_licenses && license.history_licenses.length > 0 ? (
+                                  <div className="border rounded-lg overflow-x-auto">
+                                    <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
+                                      <TableHeader>
+                                        <TableRow className="bg-muted/50">
+                                          <TableHead className="w-[150px]">Tanggal</TableHead>
+                                          <TableHead className="w-[150px]">Harga Satuan</TableHead>
+                                          <TableHead className="w-[200px]">Deskripsi</TableHead>
+                                          <TableHead className="w-[150px]">Input Oleh</TableHead>
+                                          <TableHead className="w-[150px]">Dibuat</TableHead>
+                                        </TableRow>
+                                      </TableHeader>
+                                      <TableBody>
+                                        {license.history_licenses.map((history) => (
+                                          <TableRow key={history.uuid}>
+                                            <TableCell className="whitespace-nowrap">
+                                              {formatDate(history.tanggal)}
+                                            </TableCell>
+                                            <TableCell className="text-right whitespace-nowrap">
+                                              {formatCurrency(history.harga_satuan)}
+                                            </TableCell>
+                                            <TableCell>
+                                              <div className="max-w-xs">
+                                                <div className="truncate" title={history.description}>
+                                                  {history.description}
+                                                </div>
+                                              </div>
+                                            </TableCell>
+                                            <TableCell className="whitespace-nowrap">
+                                              {history.last_user_input}
+                                            </TableCell>
+                                            <TableCell className="whitespace-nowrap">
+                                              {formatDate(history.createdAt)}
+                                            </TableCell>
+                                          </TableRow>
+                                        ))}
+                                      </TableBody>
+                                    </Table>
+                                  </div>
+                                ) : (
+                                  <div className="text-center py-8 text-muted-foreground">
+                                    Tidak ada history harga untuk lisensi ini
+                                  </div>
+                                )}
+                              </div>
+                            </DialogContent>
+                          </Dialog>
                         </TableCell>
                       </TableRow>
                     ))
