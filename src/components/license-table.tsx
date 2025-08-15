@@ -108,11 +108,11 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const fetchLicenses = async (page: number = 1, paginate: number = 10, searchQuery?: string, sort?: string, order?: string) => {
     try {
       // Gunakan endpoint pagination dengan dynamic sorting
-      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
+      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=`;
       
       // Tambahkan parameter sorting jika ada
       if (sort && order) {
-        url += `&sort=${sort}&order=${order}`;
+        url += `&sortField=${sort}&sortOrder=${order}`;
       }
       
       const response = await apiFetch(url);

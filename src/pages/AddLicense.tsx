@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { getCookie } from "@/lib/cookies";
-import { Shield } from "lucide-react";
 
 interface License {
   name: string;
