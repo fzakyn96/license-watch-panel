@@ -577,14 +577,14 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                                 </TableHead>
                                 <TableHead onClick={() => handleHistorySort("tanggal")} className="cursor-pointer">
                                   <div className="flex items-center">
-                                    Tanggal Record
+                                    Berlaku Sejak
                                     {getHistorySortIcon("tanggal")}
                                   </div>
                                 </TableHead>
                                 <TableHead>Deskripsi</TableHead>
                                 <TableHead onClick={() => handleHistorySort("last_user_input")} className="cursor-pointer">
                                   <div className="flex items-center">
-                                    User Input
+                                    User
                                     {getHistorySortIcon("last_user_input")}
                                   </div>
                                 </TableHead>

@@ -267,7 +267,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         'Password': license.password,
         'Lokasi': license.lokasi_lisensi,
         'Catatan': license.description,
-        'Pengguna Terakhir': license.last_user_input
+        'User': license.last_user_input
       }));
 
       const ws = XLSX.utils.json_to_sheet(exportData);
@@ -288,7 +288,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         { wch: 20 }, // Password
         { wch: 30 }, // Lokasi
         { wch: 40 }, // Catatan
-        { wch: 20 }  // Pengguna Terakhir
+        { wch: 20 }  // User
       ];
       ws['!cols'] = colWidths;
 
@@ -833,7 +833,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                           <TableHead>Deskripsi</TableHead>
                           <TableHead onClick={() => handleHistorySort("last_user_input")} className="cursor-pointer">
                             <div className="flex items-center">
-                              User Input
+                              User
                               {getHistorySortIcon("last_user_input")}
                             </div>
                           </TableHead>
@@ -1163,7 +1163,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                                   <p className="mt-1">{license.description}</p>
                                 </div>
                                 <div>
-                                  <span className="font-medium">Pengguna Terakhir:</span> {license.last_user_input}
+                                  <span className="font-medium">User:</span> {license.last_user_input}
                                 </div>
                               </div>
                             </div>
@@ -1296,7 +1296,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                         <p className="mt-1 text-muted-foreground">{license.description}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Pengguna Terakhir:</span> {license.last_user_input}
+                        <span className="font-medium">User:</span> {license.last_user_input}
                       </div>
                     </div>
                   </div>
