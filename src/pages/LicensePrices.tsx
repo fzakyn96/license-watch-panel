@@ -581,49 +581,52 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                   ) : (
                     licenses.map((license) => (
                       <TableRow key={license.uuid} className="hover:bg-muted/30">
-                         <TableCell>
-                           <Dialog onOpenChange={(open) => !open && resetHistoryState()}>
-                             <DialogTrigger asChild>
-                               <Button
-                                 variant="default"
-                                 size="sm"
-                                 className="h-8 w-8 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0"
-                                 disabled={!license.history_licenses || license.history_licenses.length === 0}
-                               >
-                                 <History className="h-4 w-4" />
-                               </Button>
-                             </DialogTrigger>
+                         <TableCell className="text-center">
+                           <div className="flex justify-center">
+                             <Dialog onOpenChange={(open) => !open && resetHistoryState()}>
+                               <DialogTrigger asChild>
+                                 <Button
+                                   variant="default"
+                                   size="sm"
+                                   className="h-8 w-8 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0"
+                                   disabled={!license.history_licenses || license.history_licenses.length === 0}
+                                 >
+                                   <History className="h-4 w-4" />
+                                 </Button>
+                               </DialogTrigger>
                              <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
-                               <DialogHeader className="flex-shrink-0">
-                                 <DialogTitle className="text-lg sm:text-xl">History Harga - {license.name}</DialogTitle>
+                               <DialogHeader className="flex-shrink-0 flex flex-row items-center justify-between">
+                                 <div>
+                                   <DialogTitle className="text-lg sm:text-xl">History Harga - {license.name}</DialogTitle>
+                                 </div>
+                                 <Button
+                                   onClick={() => handleExportHistory(license)}
+                                   variant="outline"
+                                   size="sm"
+                                   className="flex items-center gap-2"
+                                 >
+                                   <Download className="w-4 h-4" />
+                                   Export
+                                 </Button>
                                </DialogHeader>
                                <div className="flex-1 overflow-hidden flex flex-col space-y-4">
                                  {license.history_licenses && license.history_licenses.length > 0 ? (
                                    <>
                                      {/* Controls */}
                                      <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-                                       <div className="relative flex-1 max-w-sm w-full">
+                                       <div className="relative w-full sm:max-w-md">
                                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                                          <Input
-                                           placeholder="Cari history..."
+                                           placeholder="Cari berdasarkan deskripsi atau pengguna..."
                                            value={historySearchTerm}
                                            onChange={(e) => {
                                              setHistorySearchTerm(e.target.value);
                                              setHistoryCurrentPage(1);
                                            }}
-                                           className="pl-10"
+                                           className="pl-10 w-full"
                                          />
                                        </div>
-                                       <div className="flex items-center gap-2">
-                                         <Button
-                                           onClick={() => handleExportHistory(license)}
-                                           variant="success"
-                                           size="sm"
-                                           className="flex items-center gap-2"
-                                         >
-                                           <FileSpreadsheet className="w-4 h-4" />
-                                           <span className="hidden sm:inline">Export</span>
-                                         </Button>
+                                       <div className="flex items-center gap-2 w-full sm:w-auto">
                                          <span className="text-sm text-muted-foreground hidden sm:inline">Tampilkan:</span>
                                          <Select 
                                            value={historyItemsPerPage.toString()} 
@@ -632,7 +635,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                                              setHistoryCurrentPage(1);
                                            }}
                                          >
-                                           <SelectTrigger className="w-16">
+                                           <SelectTrigger className="w-full sm:w-16">
                                              <SelectValue />
                                            </SelectTrigger>
                                            <SelectContent>
@@ -785,10 +788,21 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                                    <div className="text-center py-8 text-muted-foreground">
                                      Tidak ada history harga untuk lisensi ini
                                    </div>
-                                 )}
-                               </div>
-                             </DialogContent>
-                           </Dialog>
+                                   )}
+                                 </div>
+                                 
+                                 {/* Dialog Footer with Close Button */}
+                                 <div className="flex-shrink-0 flex justify-end pt-4 border-t">
+                                   <Button 
+                                     variant="outline" 
+                                     onClick={() => resetHistoryState()}
+                                   >
+                                     Tutup
+                                   </Button>
+                                 </div>
+                               </DialogContent>
+                             </Dialog>
+                           </div>
                          </TableCell>
                         <TableCell className="font-medium">{license.name}</TableCell>
                         <TableCell className="text-right whitespace-nowrap">{formatCurrency(license.harga_satuan)}</TableCell>
