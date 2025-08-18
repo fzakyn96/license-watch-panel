@@ -403,6 +403,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
               <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
                 <TableHeader>
                   <TableRow className="bg-muted/50 border-b">
+                    <TableHead className="w-[100px] whitespace-nowrap">Aksi</TableHead>
                     <TableHead
                       className="w-[200px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                       onClick={() => handleSort("name")}
@@ -440,7 +441,6 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                       </div>
                     </TableHead>
                     <TableHead className="w-[200px] whitespace-nowrap">Catatan</TableHead>
-                    <TableHead className="w-[100px] whitespace-nowrap">History</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="[&_tr:last-child]:border-b-0">
@@ -459,15 +459,6 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                   ) : (
                     licenses.map((license) => (
                       <TableRow key={license.uuid} className="hover:bg-muted/30">
-                        <TableCell className="font-medium">{license.name}</TableCell>
-                        <TableCell className="text-right whitespace-nowrap">{formatCurrency(license.harga_satuan)}</TableCell>
-                        <TableCell className="whitespace-nowrap">{formatDate(license.start_date)}</TableCell>
-                        <TableCell className="whitespace-nowrap">{formatDate(license.end_date)}</TableCell>
-                        <TableCell className="max-w-xs">
-                          <div className="truncate" title={license.description}>
-                            {license.description}
-                          </div>
-                        </TableCell>
                         <TableCell>
                           <Dialog>
                             <DialogTrigger asChild>
@@ -532,6 +523,15 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                               </div>
                             </DialogContent>
                           </Dialog>
+                        </TableCell>
+                        <TableCell className="font-medium">{license.name}</TableCell>
+                        <TableCell className="text-right whitespace-nowrap">{formatCurrency(license.harga_satuan)}</TableCell>
+                        <TableCell className="whitespace-nowrap">{formatDate(license.start_date)}</TableCell>
+                        <TableCell className="whitespace-nowrap">{formatDate(license.end_date)}</TableCell>
+                        <TableCell className="max-w-xs">
+                          <div className="truncate" title={license.description}>
+                            {license.description}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
