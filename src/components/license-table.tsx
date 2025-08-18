@@ -568,7 +568,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         'No': index + 1,
         'Nama Lisensi': license.name,
         'Harga Satuan': history.harga_satuan,
-        'Tanggal Record': formatDate(history.tanggal),
+        'Berlaku Sejak': formatDate(history.tanggal),
         'Deskripsi': history.description,
         'Terakhir Input Oleh': history.last_user_input,
         'Dibuat Pada': formatDate(history.createdAt)
@@ -579,7 +579,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       XLSX.utils.book_append_sheet(workbook, worksheet, "Riwayat Harga");
 
       const today = new Date().toISOString().split('T')[0];
-      XLSX.writeFile(workbook, `History_${license.name}_${today}.xlsx`);
+      XLSX.writeFile(workbook, `Riwayat Harga Lisensi_${license.name}_${today}.xlsx`);
 
       toast({
         title: "Berhasil",
@@ -761,21 +761,18 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       </Dialog>
 
       <Dialog open={isPriceHistoryDialogOpen} onOpenChange={setIsPriceHistoryDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Riwayat Harga Lisensi</DialogTitle>
-            <DialogDescription>
-              Detail riwayat harga lisensi
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="max-w-[95vw] w-full sm:max-w-4xl max-h-[90vh] flex flex-col p-4 sm:p-6">
           <Dialog open={isPriceHistoryDialogOpen} onOpenChange={(open) => {
             setIsPriceHistoryDialogOpen(open);
             if (!open) resetHistoryState();
           }}>
             <DialogContent className="w-full max-w-full sm:max-w-4xl">
               <DialogHeader>
-                <DialogTitle>Riwayat Harga Lisensi</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className="flex items-center gap-2">
+                  <History className="w-5 h-5" />
+                  Riwayat Harga Lisensi
+                </DialogTitle>
+                <DialogDescription className="text-left">
                   Detail riwayat harga lisensi
                 </DialogDescription>
               </DialogHeader>
@@ -788,7 +785,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                     <div className="relative w-full sm:max-w-xs">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
                       <Input
-                        placeholder="Cari history..."
+                        placeholder="Cari..."
                         value={historySearchTerm}
                         onChange={(e) => setHistorySearchTerm(e.target.value)}
                         className="pl-10 w-full"
@@ -815,10 +812,11 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                   </div>
 
                   {/* Table History - Desktop & Tablet */}
-                  <div className="hidden sm:block w-full overflow-x-auto">
+                  <div className="hidden sm:block border rounded-lg overflow-x-auto">
                     <Table className="w-full min-w-[700px] text-sm">
                       <TableHeader>
-                        <TableRow>
+                        <TableRow className="bg-muted/50 border-b">
+
                           <TableHead className="w-12 text-center">No</TableHead>
                           <TableHead onClick={() => handleHistorySort("harga_satuan")} className="cursor-pointer">
                             <div className="flex items-center">
@@ -828,7 +826,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                           </TableHead>
                           <TableHead onClick={() => handleHistorySort("tanggal")} className="cursor-pointer">
                             <div className="flex items-center">
-                              Tanggal Record
+                              Berlaku Sejak
                               {getHistorySortIcon("tanggal")}
                             </div>
                           </TableHead>
