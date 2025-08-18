@@ -18,7 +18,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     <div className="min-h-screen bg-background">
       <DashboardHeader onLogout={onLogout} />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <div className="space-y-6 sm:space-y-8">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
