@@ -81,14 +81,14 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const [totalPages, setTotalPages] = useState(1);
   const [sortField, setSortField] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  
+
   // History dialog states
   const [historySearchTerm, setHistorySearchTerm] = useState("");
   const [historySortField, setHistorySortField] = useState<string>("");
   const [historySortDirection, setHistorySortDirection] = useState<"asc" | "desc">("asc");
   const [historyCurrentPage, setHistoryCurrentPage] = useState(1);
   const [historyItemsPerPage, setHistoryItemsPerPage] = useState(5);
-  
+
   const { toast } = useToast();
 
   const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
@@ -239,15 +239,15 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
         });
 
         const workbook = XLSX.utils.book_new();
-        
+
         // Main data worksheet
         const mainWorksheet = XLSX.utils.json_to_sheet(exportData);
         XLSX.utils.book_append_sheet(workbook, mainWorksheet, "Harga Lisensi");
-        
+
         // History data worksheet
         if (historyData.length > 0) {
           const historyWorksheet = XLSX.utils.json_to_sheet(historyData);
-          XLSX.utils.book_append_sheet(workbook, historyWorksheet, "History Harga");
+          XLSX.utils.book_append_sheet(workbook, historyWorksheet, "Riwayat Harga");
         }
 
         const today = new Date().toISOString().split('T')[0];
@@ -383,7 +383,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
     const filteredAndSorted = getFilteredAndSortedHistory(historyData);
     const startIndex = (historyCurrentPage - 1) * historyItemsPerPage;
     const endIndex = startIndex + historyItemsPerPage;
-    
+
     return {
       items: filteredAndSorted.slice(startIndex, endIndex),
       totalItems: filteredAndSorted.length,
@@ -405,7 +405,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
 
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.json_to_sheet(historyData);
-      XLSX.utils.book_append_sheet(workbook, worksheet, "History Harga");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Riwayat Harga");
 
       const today = new Date().toISOString().split('T')[0];
       XLSX.writeFile(workbook, `History_${license.name}_${today}.xlsx`);
@@ -435,7 +435,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   return (
     <div>
       <header className="bg-card border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -461,7 +461,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <div className="space-y-6 sm:space-y-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -581,229 +581,229 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                   ) : (
                     licenses.map((license) => (
                       <TableRow key={license.uuid} className="hover:bg-muted/30">
-                         <TableCell className="text-center">
-                           <div className="flex justify-center">
-                             <Dialog onOpenChange={(open) => !open && resetHistoryState()}>
-                               <DialogTrigger asChild>
-                                 <Button
-                                   variant="default"
-                                   size="sm"
-                                   className="h-8 w-8 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0"
-                                   disabled={!license.history_licenses || license.history_licenses.length === 0}
-                                 >
-                                   <History className="h-4 w-4" />
-                                 </Button>
-                               </DialogTrigger>
-                             <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
-                               <DialogHeader className="flex-shrink-0 flex flex-row items-center justify-between">
-                                 <div>
-                                   <DialogTitle className="text-lg sm:text-xl">History Harga - {license.name}</DialogTitle>
-                                 </div>
-                                 <Button
-                                   onClick={() => handleExportHistory(license)}
-                                   variant="outline"
-                                   size="sm"
-                                   className="flex items-center gap-2"
-                                 >
-                                   <Download className="w-4 h-4" />
-                                   Export
-                                 </Button>
-                               </DialogHeader>
-                               <div className="flex-1 overflow-hidden flex flex-col space-y-4">
-                                 {license.history_licenses && license.history_licenses.length > 0 ? (
-                                   <>
-                                     {/* Controls */}
-                                     <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-                                       <div className="relative w-full sm:max-w-md">
-                                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                                         <Input
-                                           placeholder="Cari berdasarkan deskripsi atau pengguna..."
-                                           value={historySearchTerm}
-                                           onChange={(e) => {
-                                             setHistorySearchTerm(e.target.value);
-                                             setHistoryCurrentPage(1);
-                                           }}
-                                           className="pl-10 w-full"
-                                         />
-                                       </div>
-                                       <div className="flex items-center gap-2 w-full sm:w-auto">
-                                         <span className="text-sm text-muted-foreground hidden sm:inline">Tampilkan:</span>
-                                         <Select 
-                                           value={historyItemsPerPage.toString()} 
-                                           onValueChange={(value) => {
-                                             setHistoryItemsPerPage(parseInt(value));
-                                             setHistoryCurrentPage(1);
-                                           }}
-                                         >
-                                           <SelectTrigger className="w-full sm:w-16">
-                                             <SelectValue />
-                                           </SelectTrigger>
-                                           <SelectContent>
-                                             <SelectItem value="5">5</SelectItem>
-                                             <SelectItem value="10">10</SelectItem>
-                                             <SelectItem value="25">25</SelectItem>
-                                           </SelectContent>
-                                         </Select>
-                                       </div>
-                                     </div>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center">
+                            <Dialog onOpenChange={(open) => !open && resetHistoryState()}>
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0"
+                                  disabled={!license.history_licenses || license.history_licenses.length === 0}
+                                >
+                                  <History className="h-4 w-4" />
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+                                <DialogHeader className="flex-shrink-0 flex flex-row items-center justify-between">
+                                  <div>
+                                    <DialogTitle className="text-lg sm:text-xl">History Harga - {license.name}</DialogTitle>
+                                  </div>
+                                  <Button
+                                    onClick={() => handleExportHistory(license)}
+                                    variant="success"
+                                    size="sm"
+                                    className="flex items-center gap-2"
+                                  >
+                                    <Download className="w-4 h-4" />
+                                    Export Excel
+                                  </Button>
+                                </DialogHeader>
+                                <div className="flex-1 overflow-hidden flex flex-col space-y-4">
+                                  {license.history_licenses && license.history_licenses.length > 0 ? (
+                                    <>
+                                      {/* Controls */}
+                                      <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+                                        <div className="relative w-full sm:max-w-md">
+                                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                                          <Input
+                                            placeholder="Cari berdasarkan deskripsi atau pengguna..."
+                                            value={historySearchTerm}
+                                            onChange={(e) => {
+                                              setHistorySearchTerm(e.target.value);
+                                              setHistoryCurrentPage(1);
+                                            }}
+                                            className="pl-10 w-full"
+                                          />
+                                        </div>
+                                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                                          <span className="text-sm text-muted-foreground hidden sm:inline">Tampilkan:</span>
+                                          <Select
+                                            value={historyItemsPerPage.toString()}
+                                            onValueChange={(value) => {
+                                              setHistoryItemsPerPage(parseInt(value));
+                                              setHistoryCurrentPage(1);
+                                            }}
+                                          >
+                                            <SelectTrigger className="w-full sm:w-16">
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="5">5</SelectItem>
+                                              <SelectItem value="10">10</SelectItem>
+                                              <SelectItem value="25">25</SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                      </div>
 
-                                     {/* Table */}
-                                     <div className="flex-1 border rounded-lg overflow-hidden">
-                                       <div className="overflow-x-auto overflow-y-auto max-h-96">
-                                         <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
-                                           <TableHeader className="sticky top-0 bg-background">
-                                             <TableRow className="bg-muted/50 border-b">
-                                               <TableHead className="w-[50px] text-center">No</TableHead>
-                                               <TableHead 
-                                                 className="w-[130px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
-                                                 onClick={() => handleHistorySort("harga_satuan")}
-                                               >
-                                                 <div className="flex items-center text-xs sm:text-sm">
-                                                   Harga Satuan
-                                                   {getHistorySortIcon("harga_satuan")}
-                                                 </div>
-                                               </TableHead>
-                                               <TableHead 
-                                                 className="w-[110px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
-                                                 onClick={() => handleHistorySort("tanggal")}
-                                               >
-                                                 <div className="flex items-center text-xs sm:text-sm">
-                                                   Tanggal
-                                                   {getHistorySortIcon("tanggal")}
-                                                 </div>
-                                               </TableHead>
-                                               <TableHead 
-                                                 className="w-[180px] cursor-pointer hover:bg-muted/70"
-                                                 onClick={() => handleHistorySort("description")}
-                                               >
-                                                 <div className="flex items-center text-xs sm:text-sm">
-                                                   Deskripsi
-                                                   {getHistorySortIcon("description")}
-                                                 </div>
-                                               </TableHead>
-                                               <TableHead 
-                                                 className="w-[130px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
-                                                 onClick={() => handleHistorySort("last_user_input")}
-                                               >
-                                                 <div className="flex items-center text-xs sm:text-sm">
-                                                   Input Oleh
-                                                   {getHistorySortIcon("last_user_input")}
-                                                 </div>
-                                               </TableHead>
-                                               <TableHead 
-                                                 className="w-[110px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
-                                                 onClick={() => handleHistorySort("createdAt")}
-                                               >
-                                                 <div className="flex items-center text-xs sm:text-sm">
-                                                   Dibuat
-                                                   {getHistorySortIcon("createdAt")}
-                                                 </div>
-                                               </TableHead>
-                                             </TableRow>
-                                           </TableHeader>
-                                           <TableBody>
-                                             {(() => {
-                                               const { items, totalItems } = getPaginatedHistory(license.history_licenses);
-                                               return items.length > 0 ? items.map((history, index) => (
-                                                 <TableRow key={history.uuid} className="hover:bg-muted/30">
-                                                   <TableCell className="text-center text-xs sm:text-sm">
-                                                     {((historyCurrentPage - 1) * historyItemsPerPage) + index + 1}
-                                                   </TableCell>
-                                                   <TableCell className="text-right whitespace-nowrap text-xs sm:text-sm">
-                                                     {formatCurrency(history.harga_satuan)}
-                                                   </TableCell>
-                                                   <TableCell className="whitespace-nowrap text-xs sm:text-sm">
-                                                     {formatDate(history.tanggal)}
-                                                   </TableCell>
-                                                   <TableCell className="max-w-[150px] sm:max-w-xs">
-                                                     <div className="truncate text-xs sm:text-sm" title={history.description}>
-                                                       {history.description}
-                                                     </div>
-                                                   </TableCell>
-                                                   <TableCell className="text-xs sm:text-sm">{history.last_user_input}</TableCell>
-                                                   <TableCell className="whitespace-nowrap text-xs sm:text-sm">
-                                                     {formatDate(history.createdAt)}
-                                                   </TableCell>
-                                                 </TableRow>
-                                               )) : (
-                                                 <TableRow>
-                                                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                                                     Tidak ada history yang ditemukan
-                                                   </TableCell>
-                                                 </TableRow>
-                                               );
-                                             })()}
-                                           </TableBody>
-                                         </Table>
-                                       </div>
-                                     </div>
+                                      {/* Table */}
+                                      <div className="flex-1 border rounded-lg overflow-hidden">
+                                        <div className="overflow-x-auto overflow-y-auto max-h-96">
+                                          <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
+                                            <TableHeader className="sticky top-0 bg-background">
+                                              <TableRow className="bg-muted/50 border-b">
+                                                <TableHead className="w-[50px] text-center">No</TableHead>
+                                                <TableHead
+                                                  className="w-[130px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
+                                                  onClick={() => handleHistorySort("harga_satuan")}
+                                                >
+                                                  <div className="flex items-center text-xs sm:text-sm">
+                                                    Harga Satuan
+                                                    {getHistorySortIcon("harga_satuan")}
+                                                  </div>
+                                                </TableHead>
+                                                <TableHead
+                                                  className="w-[110px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
+                                                  onClick={() => handleHistorySort("tanggal")}
+                                                >
+                                                  <div className="flex items-center text-xs sm:text-sm">
+                                                    Tanggal
+                                                    {getHistorySortIcon("tanggal")}
+                                                  </div>
+                                                </TableHead>
+                                                <TableHead
+                                                  className="w-[180px] cursor-pointer hover:bg-muted/70"
+                                                  onClick={() => handleHistorySort("description")}
+                                                >
+                                                  <div className="flex items-center text-xs sm:text-sm">
+                                                    Deskripsi
+                                                    {getHistorySortIcon("description")}
+                                                  </div>
+                                                </TableHead>
+                                                <TableHead
+                                                  className="w-[130px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
+                                                  onClick={() => handleHistorySort("last_user_input")}
+                                                >
+                                                  <div className="flex items-center text-xs sm:text-sm">
+                                                    Input Oleh
+                                                    {getHistorySortIcon("last_user_input")}
+                                                  </div>
+                                                </TableHead>
+                                                <TableHead
+                                                  className="w-[110px] cursor-pointer hover:bg-muted/70 whitespace-nowrap"
+                                                  onClick={() => handleHistorySort("createdAt")}
+                                                >
+                                                  <div className="flex items-center text-xs sm:text-sm">
+                                                    Dibuat
+                                                    {getHistorySortIcon("createdAt")}
+                                                  </div>
+                                                </TableHead>
+                                              </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                              {(() => {
+                                                const { items, totalItems } = getPaginatedHistory(license.history_licenses);
+                                                return items.length > 0 ? items.map((history, index) => (
+                                                  <TableRow key={history.uuid} className="hover:bg-muted/30">
+                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                      {((historyCurrentPage - 1) * historyItemsPerPage) + index + 1}
+                                                    </TableCell>
+                                                    <TableCell className="text-right whitespace-nowrap text-xs sm:text-sm">
+                                                      {formatCurrency(history.harga_satuan)}
+                                                    </TableCell>
+                                                    <TableCell className="whitespace-nowrap text-xs sm:text-sm">
+                                                      {formatDate(history.tanggal)}
+                                                    </TableCell>
+                                                    <TableCell className="max-w-[150px] sm:max-w-xs">
+                                                      <div className="truncate text-xs sm:text-sm" title={history.description}>
+                                                        {history.description}
+                                                      </div>
+                                                    </TableCell>
+                                                    <TableCell className="text-xs sm:text-sm">{history.last_user_input}</TableCell>
+                                                    <TableCell className="whitespace-nowrap text-xs sm:text-sm">
+                                                      {formatDate(history.createdAt)}
+                                                    </TableCell>
+                                                  </TableRow>
+                                                )) : (
+                                                  <TableRow>
+                                                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                                                      Tidak ada riwayat yang ditemukan
+                                                    </TableCell>
+                                                  </TableRow>
+                                                );
+                                              })()}
+                                            </TableBody>
+                                          </Table>
+                                        </div>
+                                      </div>
 
-                                     {/* Pagination */}
-                                     {(() => {
-                                       const { totalPages } = getPaginatedHistory(license.history_licenses);
-                                       return totalPages > 1 && (
-                                         <div className="flex-shrink-0 flex items-center justify-between">
-                                           <div className="flex items-center gap-2">
-                                             <Button
-                                               variant="outline"
-                                               size="sm"
-                                               onClick={() => setHistoryCurrentPage(Math.max(1, historyCurrentPage - 1))}
-                                               disabled={historyCurrentPage === 1}
-                                             >
-                                               <ChevronLeft className="w-4 h-4" />
-                                               <span className="hidden sm:inline ml-1">Previous</span>
-                                             </Button>
-                                             <div className="flex items-center gap-1">
-                                               {getPageNumbers(historyCurrentPage, totalPages).map((page, index) => (
-                                                 <Button
-                                                   key={index}
-                                                   variant={page === historyCurrentPage ? "default" : "outline"}
-                                                   size="sm"
-                                                   className="w-8 h-8 p-0"
-                                                   onClick={() => typeof page === 'number' && setHistoryCurrentPage(page)}
-                                                   disabled={typeof page !== 'number'}
-                                                 >
-                                                   {page}
-                                                 </Button>
-                                               ))}
-                                             </div>
-                                             <Button
-                                               variant="outline"
-                                               size="sm"
-                                               onClick={() => setHistoryCurrentPage(Math.min(totalPages, historyCurrentPage + 1))}
-                                               disabled={historyCurrentPage === totalPages}
-                                             >
-                                               <span className="hidden sm:inline mr-1">Next</span>
-                                               <ChevronRight className="w-4 h-4" />
-                                             </Button>
-                                           </div>
-                                           <div className="text-xs sm:text-sm text-muted-foreground">
-                                             Halaman {historyCurrentPage} dari {totalPages}
-                                           </div>
-                                         </div>
-                                       );
-                                     })()}
-                                   </>
-                                 ) : (
-                                   <div className="text-center py-8 text-muted-foreground">
-                                     Tidak ada history harga untuk lisensi ini
-                                   </div>
-                                   )}
-                                 </div>
-                                 
-                                 {/* Dialog Footer with Close Button */}
-                                 <div className="flex-shrink-0 flex justify-end pt-4 border-t">
-                                   <Button 
-                                     variant="outline" 
-                                     onClick={() => resetHistoryState()}
-                                   >
-                                     Tutup
-                                   </Button>
-                                 </div>
-                               </DialogContent>
-                             </Dialog>
-                           </div>
-                         </TableCell>
+                                      {/* Pagination */}
+                                      {(() => {
+                                        const { totalPages } = getPaginatedHistory(license.history_licenses);
+                                        return totalPages > 1 && (
+                                          <div className="flex-shrink-0 flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                              <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => setHistoryCurrentPage(Math.max(1, historyCurrentPage - 1))}
+                                                disabled={historyCurrentPage === 1}
+                                              >
+                                                <ChevronLeft className="w-4 h-4" />
+                                                <span className="hidden sm:inline ml-1">Previous</span>
+                                              </Button>
+                                              <div className="flex items-center gap-1">
+                                                {getPageNumbers(historyCurrentPage, totalPages).map((page, index) => (
+                                                  <Button
+                                                    key={index}
+                                                    variant={page === historyCurrentPage ? "default" : "outline"}
+                                                    size="sm"
+                                                    className="w-8 h-8 p-0"
+                                                    onClick={() => typeof page === 'number' && setHistoryCurrentPage(page)}
+                                                    disabled={typeof page !== 'number'}
+                                                  >
+                                                    {page}
+                                                  </Button>
+                                                ))}
+                                              </div>
+                                              <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => setHistoryCurrentPage(Math.min(totalPages, historyCurrentPage + 1))}
+                                                disabled={historyCurrentPage === totalPages}
+                                              >
+                                                <span className="hidden sm:inline mr-1">Next</span>
+                                                <ChevronRight className="w-4 h-4" />
+                                              </Button>
+                                            </div>
+                                            <div className="text-xs sm:text-sm text-muted-foreground">
+                                              Halaman {historyCurrentPage} dari {totalPages}
+                                            </div>
+                                          </div>
+                                        );
+                                      })()}
+                                    </>
+                                  ) : (
+                                    <div className="text-center py-8 text-muted-foreground">
+                                      Tidak ada riwayat harga untuk lisensi ini
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Dialog Footer with Close Button */}
+                                <div className="flex-shrink-0 flex justify-end pt-4 border-t">
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => resetHistoryState()}
+                                  >
+                                    Tutup
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                        </TableCell>
                         <TableCell className="font-medium">{license.name}</TableCell>
                         <TableCell className="text-right whitespace-nowrap">{formatCurrency(license.harga_satuan)}</TableCell>
                         <TableCell className="whitespace-nowrap">{formatDate(license.start_date)}</TableCell>
