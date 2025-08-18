@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import * as XLSX from 'xlsx';
 import {
   Dialog,
@@ -131,7 +131,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     }
   };
 
-  const fetchData = async (searchQuery?: string) => {
+  const fetchData = useCallback(async (searchQuery?: string) => {
     setIsLoading(true);
     
     try {
@@ -141,7 +141,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage, sortField, sortOrder]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -406,7 +406,9 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     }
   };
 
-  const handleSort = (field: string) => {
+  const handleSort = useCallback((field: string) => {
+    setCurrentPage(1); // Reset ke halaman pertama saat sorting
+    
     if (sortField === field) {
       // Toggle order jika field sama
       setSortOrder(prev => prev === "asc" ? "desc" : "asc");
@@ -415,17 +417,16 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       setSortField(field);
       setSortOrder("asc");
     }
-    setCurrentPage(1); // Reset ke halaman pertama saat sorting
-  };
+  }, [sortField]);
 
-  const getSortIcon = (field: string) => {
+  const getSortIcon = useMemo(() => (field: string) => {
     if (sortField !== field) {
       return <ArrowUpDown className="w-4 h-4 ml-1 opacity-50" />;
     }
     return sortOrder === "asc" ? 
       <ArrowUp className="w-4 h-4 ml-1" /> : 
       <ArrowDown className="w-4 h-4 ml-1" />;
-  };
+  }, [sortField, sortOrder]);
 
   const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
 
