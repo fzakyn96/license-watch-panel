@@ -525,7 +525,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
               <Table className="[&_tr>*]:border-r [&_tr>*:last-child]:border-r-0 [&_tr]:border-b [&_tr:last-child]:border-b-0">
                 <TableHeader>
                   <TableRow className="bg-muted/50 border-b">
-                    <TableHead className="w-[100px] whitespace-nowrap">Aksi</TableHead>
+                    <TableHead className="w-[80px] whitespace-nowrap">Aksi</TableHead>
                     <TableHead
                       className="w-[200px] whitespace-nowrap cursor-pointer hover:bg-muted/70"
                       onClick={() => handleSort("name")}
