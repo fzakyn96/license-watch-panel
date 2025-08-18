@@ -1,4 +1,4 @@
-import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, AlertTriangle, XCircle, AlertCircle } from "lucide-react";
 import { apiFetch } from "@/lib/auth";
@@ -25,7 +25,7 @@ interface StatusCardsRef {
   refreshData: () => void;
 }
 
-export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, ref) => {
+const StatusCardsComponent = forwardRef<StatusCardsRef, StatusCardsProps>((props, ref) => {
   const [statusData, setStatusData] = useState<StatusCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -154,3 +154,5 @@ export const StatusCards = forwardRef<StatusCardsRef, StatusCardsProps>((props, 
     </div>
   );
 });
+
+export const StatusCards = memo(StatusCardsComponent);
