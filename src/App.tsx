@@ -128,7 +128,6 @@ const AppContent = () => {
 
       const data = (await loginRes.json()) as IframeLoginResponse;
 
-      console.log("data:", data)
       if (data.redirect) {
         window.location.href = data.redirect;
         return;
@@ -142,6 +141,7 @@ const AppContent = () => {
         sameSite: "None",
         secure: true,
       });
+
       setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), {
         expires: new Date(expiresAt), path: "/",
         sameSite: "None",
@@ -195,22 +195,7 @@ const AppContent = () => {
 
       const data = (await loginRes.json()) as IframeLoginResponse;
 
-      // Check if redirect and cookie_session are available
       if (data.redirect) {
-        // Inject cookie from cookie_session
-        // const cookieEntries = data.cookie_session.split(';');
-        // cookieEntries.forEach((entry: string) => {
-        //   const [name, value] = entry.trim().split('=');
-        //   if (name && value) {
-        //     setCookie(name, value, {
-        //       path: "/",
-        //       sameSite: "None",
-        //       secure: true,
-        //     });
-        //   }
-        // });
-
-        // Redirect to the specified page
         window.location.href = data.redirect;
         return;
       }
