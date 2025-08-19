@@ -129,6 +129,7 @@ const AppContent = () => {
       const data = (await loginRes.json()) as IframeLoginResponse;
 
       // Check if redirect and cookie_session are available
+      console.log("redirect:", data.redirect)
       if (data.redirect) {
         // Inject cookie from cookie_session
         // const cookieEntries = data.cookie_session.split(';');
