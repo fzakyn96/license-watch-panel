@@ -129,24 +129,24 @@ const AppContent = () => {
       const data = (await loginRes.json()) as IframeLoginResponse;
 
       // Check if redirect and cookie_session are available
-      if (data.redirect && data.cookie_session) {
+      if (data.redirect) {
         // Inject cookie from cookie_session
-        const cookieEntries = data.cookie_session.split(';');
-        cookieEntries.forEach((entry: string) => {
-          const [name, value] = entry.trim().split('=');
-          if (name && value) {
-            setCookie(name, value, {
-              path: "/",
-              sameSite: "None",
-              secure: true,
-            });
-          }
-        });
+        // const cookieEntries = data.cookie_session.split(';');
+        // cookieEntries.forEach((entry: string) => {
+        //   const [name, value] = entry.trim().split('=');
+        //   if (name && value) {
+        //     setCookie(name, value, {
+        //       path: "/",
+        //       sameSite: "None",
+        //       secure: true,
+        //     });
+        //   }
+        // });
 
         // Store token in session storage
-        if (data.token) {
-          sessionStorage.setItem('auth_token', data.token);
-        }
+        // if (data.token) {
+        //   sessionStorage.setItem('auth_token', data.token);
+        // }
 
         // Redirect to the specified page
         window.location.href = data.redirect;
