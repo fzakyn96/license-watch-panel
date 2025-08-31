@@ -227,14 +227,15 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md h-full max-h-[85vh] overflow-y-auto">
         <DialogHeader className="shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <Timer className="w-5 h-5" />
             Pengaturan Penjadwalan Notifikasi
           </DialogTitle>
           <DialogDescription className="text-left">
-            Atur hari dan waktu untuk pengiriman notifikasi
+            {/* Atur hari dan waktu untuk pengiriman notifikasi */}
+            Notifikasi lisensi akan dikirim 1 kali pada 6 bulan, 3 bulan, 1 bulan, dan tepat saat lisensi kadaluarsa. Jika lisensi sudah kadaluarsa lebih dari 1 hari, notifikasi akan dikirim seminggu sekali hanya di hari kerja. Pengaturan dibawah ini berfungsi untuk melakukan pengecekan lisensi dan waktu pengiriman notifikasi.
           </DialogDescription>
         </DialogHeader>
 
