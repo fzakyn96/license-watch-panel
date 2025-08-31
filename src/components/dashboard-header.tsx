@@ -101,7 +101,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
             })
           });
 
-          if (switchResponse.ok || switchResponse.status === 200) {
+          if (switchResponse.status === 200) {
             setNotificationsEnabled(false);
             toast({
               title: "Notifikasi dinonaktifkan",
