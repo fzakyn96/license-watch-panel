@@ -82,7 +82,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
       // Show scheduling dialog when enabling notifications
       setScheduleDialogOpen(true);
     } else {
-      // Disable notifications directly
+      // Disable notifications directly!
       try {
         setNotificationsEnabled(false);
         const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
