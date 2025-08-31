@@ -1306,7 +1306,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                           variant="ghost"
                           size="sm"
                           onClick={() => togglePasswordVisibility(index)}
-                          className="hidden sm:inline-flex">
+                          className="sm:inline-flex">
                           {showPassword[index] ? (
                             <EyeOff className="h-4 w-4" />
                           ) : (
