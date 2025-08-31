@@ -521,10 +521,10 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                     <DialogHeader>
                       <DialogTitle className="flex items-center gap-2">
                         <History className="w-5 h-5" />
-                        Riwayat Harga Lisensi {selectedLicense?.name}
+                        Riwayat Harga Lisensi 
                       </DialogTitle>
                       <DialogDescription className="text-left">
-                        Detail riwayat harga lisensi
+                        Detail riwayat harga lisensi: {selectedLicense?.name}
                       </DialogDescription>
                     </DialogHeader>
 

@@ -267,8 +267,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         'Password': license.password,
         'Lokasi': license.lokasi_lisensi,
         'Catatan': license.description,
-        'Dibuat pada': formatDate(license.createdAt),
-        'Diupdate pada': formatDate(license.updatedAt)
+        'Tanggal dibuat': formatDate(license.createdAt),
+        'Tanggal update': formatDate(license.updatedAt)
       }));
 
       const ws = XLSX.utils.json_to_sheet(exportData);
@@ -277,7 +277,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
       // Mengatur lebar kolom
       const colWidths = [
-        { wch: 30 }, // Nama Aset
+        { wch: 60 }, // Nama Aset
         { wch: 15 }, // Tanggal Mulai
         { wch: 15 }, // Tanggal Berakhir
         { wch: 15 }, // Status
@@ -289,8 +289,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         { wch: 20 }, // Password
         { wch: 30 }, // Lokasi
         { wch: 40 }, // Catatan
-        { wch: 15 }, // Dibuat pada
-        { wch: 15 }  // Diupdate pada
+        { wch: 15 }, // Tanggal dibuat
+        { wch: 15 }  // Tanggal update
       ];
       ws['!cols'] = colWidths;
 
@@ -572,7 +572,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         'Harga Satuan': history.harga_satuan,
         'Berlaku Sejak': formatDate(history.tanggal),
         'Deskripsi': history.description,
-        'Terakhir Input Oleh': history.last_user_input,
+        // 'Terakhir Input Oleh': history.last_user_input,
         'Dibuat Pada': formatDate(history.createdAt)
       }));
 
@@ -772,10 +772,10 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <History className="w-5 h-5" />
-                  Riwayat Harga Lisensi {selectedLicense?.name}
+                  Riwayat Harga Lisensi
                 </DialogTitle>
                 <DialogDescription className="text-left">
-                  Detail riwayat harga lisensi
+                  Detail riwayat harga lisensi : {selectedLicense?.name}
                 </DialogDescription>
               </DialogHeader>
 
@@ -834,12 +834,12 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                             </div>
                           </TableHead>
                           <TableHead>Deskripsi</TableHead>
-                          <TableHead onClick={() => handleHistorySort("last_user_input")} className="cursor-pointer">
+                          {/* <TableHead onClick={() => handleHistorySort("last_user_input")} className="cursor-pointer">
                             <div className="flex items-center">
                               User
                               {getHistorySortIcon("last_user_input")}
                             </div>
-                          </TableHead>
+                          </TableHead> */}
                           <TableHead onClick={() => handleHistorySort("createdAt")} className="cursor-pointer">
                             <div className="flex items-center">
                               Dibuat Pada
@@ -859,7 +859,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                             <TableCell className="whitespace-pre-wrap break-words max-w-[200px]">
                               {h.description}
                             </TableCell>
-                            <TableCell>{h.last_user_input}</TableCell>
+                            {/* <TableCell>{h.last_user_input}</TableCell> */}
                             <TableCell>{formatDate(h.createdAt)}</TableCell>
                           </TableRow>
                         ))}
@@ -884,7 +884,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                         >
                           <div className="flex justify-between text-xs text-muted-foreground mb-1">
                             <span>No: {(historyCurrentPage - 1) * historyItemsPerPage + idx + 1}</span>
-                            <span>{formatDate(h.tanggal)}</span>
+                            <span>Berlaku sejak: {formatDate(h.tanggal)}</span>
                           </div>
                           <div className="font-medium text-sm">
                             {formatCurrency(h.harga_satuan)}
@@ -893,8 +893,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                             {h.description}
                           </div>
                           <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>User: {h.last_user_input}</span>
-                            <span>Dibuat: {formatDate(h.createdAt)}</span>
+                            {/* <span>User: {h.last_user_input}</span> */}
+                            <span>Tanggal dibuat: {formatDate(h.createdAt)}</span>
                           </div>
                         </div>
                       ))
@@ -1048,7 +1048,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                 onClick={() => handleSort("createdAt")}
               >
                 <div className="flex items-center">
-                  Dibuat pada
+                  Tanggal dibuat
                   {getSortIcon("createdAt")}
                 </div>
               </TableHead>
@@ -1057,7 +1057,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                 onClick={() => handleSort("updatedAt")}
               >
                 <div className="flex items-center">
-                  Diupdate pada
+                  Tanggal update
                   {getSortIcon("updatedAt")}
                 </div>
               </TableHead>
@@ -1185,12 +1185,12 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                                   <span className="font-medium">Catatan:</span>
                                   <p className="mt-1">{license.description}</p>
                                 </div>
-                                <div>
+                                {/* <div>
                                   <span className="font-medium">Dibuat pada:</span> {formatDate(license.createdAt)}
                                 </div>
                                 <div>
                                   <span className="font-medium">Diupdate pada:</span> {formatDate(license.updatedAt)}
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                           </div>
@@ -1322,10 +1322,10 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                         <p className="mt-1 text-muted-foreground">{license.description}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Dibuat pada:</span> {formatDate(license.createdAt)}
+                        <span className="font-medium">Tanggal dibuat</span> {formatDate(license.createdAt)}
                       </div>
                       <div>
-                        <span className="font-medium">Diupdate pada:</span> {formatDate(license.updatedAt)}
+                        <span className="font-medium">Tanggal update:</span> {formatDate(license.updatedAt)}
                       </div>
                     </div>
                   </div>

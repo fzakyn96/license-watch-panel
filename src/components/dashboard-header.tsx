@@ -84,6 +84,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
     } else {
       // Disable notifications directly
       try {
+        setNotificationsEnabled(false);
         const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
         const data = await response.json();
         
@@ -100,7 +101,7 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
             })
           });
 
-          if (switchResponse.ok) {
+          if (switchResponse.ok || switchResponse.status === 200) {
             setNotificationsEnabled(false);
             toast({
               title: "Notifikasi dinonaktifkan",
