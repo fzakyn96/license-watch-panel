@@ -791,6 +791,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                         value={historySearchTerm}
                         onChange={(e) => setHistorySearchTerm(e.target.value)}
                         className="pl-10 w-full"
+                        autoFocus={false}
                       />
                     </div>
 
