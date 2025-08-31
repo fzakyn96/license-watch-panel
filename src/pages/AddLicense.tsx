@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronLeft } from "lucide-react";
+import { CalendarIcon, ChevronLeft, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
@@ -74,6 +74,7 @@ export const AddLicense = () => {
   const [license, setLicense] = useState<License>(emptyLicense);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [priceInput, setPriceInput] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -378,19 +379,30 @@ export const AddLicense = () => {
                   {errors.username && <p className="text-sm text-red-500 mt-1">{errors.username}</p>}
                 </div>
 
-                <div>
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={license.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    aria-invalid={!!errors.password}
-                    className="mt-1"
-                    placeholder="Masukkan volume"
-                  />
-                  {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
-                </div>
+                 <div>
+                   <Label htmlFor="password">Password</Label>
+                   <div className="relative">
+                     <Input
+                       id="password"
+                       type={showPassword ? "text" : "password"}
+                       value={license.password}
+                       onChange={(e) => handleInputChange('password', e.target.value)}
+                       aria-invalid={!!errors.password}
+                       className="mt-1 pr-10"
+                       placeholder="Masukkan password"
+                     />
+                     <Button
+                       type="button"
+                       variant="ghost"
+                       size="sm"
+                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                       onClick={() => setShowPassword(!showPassword)}
+                     >
+                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                     </Button>
+                   </div>
+                   {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+                 </div>
               </div>
 
               {/* Lokasi */}
