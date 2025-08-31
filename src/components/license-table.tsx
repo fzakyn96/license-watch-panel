@@ -768,7 +768,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
             setIsPriceHistoryDialogOpen(open);
             if (!open) resetHistoryState();
           }}>
-            <DialogContent className="w-full max-w-full sm:max-w-4xl">
+            <DialogContent className="w-full max-w-full sm:max-w-4xl" onOpenAutoFocus={(e) => e.preventDefault()}>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <History className="w-5 h-5" />
@@ -791,7 +791,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                         value={historySearchTerm}
                         onChange={(e) => setHistorySearchTerm(e.target.value)}
                         className="pl-10 w-full"
-                        autoFocus={false}
+                        tabIndex={-1}
                       />
                     </div>
 
