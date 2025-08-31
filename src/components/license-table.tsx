@@ -253,8 +253,9 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
       const dataToExport = data.data.docs;
 
-      const exportData = dataToExport.map((license: License) => ({
-        'UUID': license.uuid,
+      const exportData = dataToExport.map((license: License, index: number) => ({
+        'No': index + 1,
+        // 'UUID': license.uuid,
         'Nama Aset': license.name,
         'Tanggal Mulai': formatDate(license.start_date),
         'Tanggal Berakhir': formatDate(license.end_date),
@@ -573,7 +574,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         'Berlaku Sejak': formatDate(history.tanggal),
         'Deskripsi': history.description,
         // 'Terakhir Input Oleh': history.last_user_input,
-        'Dibuat Pada': formatDate(history.createdAt)
+        'Tanggal Dibuat': formatDate(history.createdAt),
+        'Tanggal Update': formatDate(history.updatedAt)
       }));
 
       const workbook = XLSX.utils.book_new();
