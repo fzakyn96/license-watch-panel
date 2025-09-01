@@ -39,26 +39,46 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
         body: JSON.stringify({ username, password, directory: "pertamina" }),
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Login gagal");
+      // if (!res.ok) {
+      //   const text = await res.text();
+      //   throw new Error(text || "Login gagal");
+      // }
+      console.log(res.status);
+      if (res.status === 401) {
+        toast({
+          title: "Login gagal",
+          description: "Kredensial tidak valid, cek kembali username dan password anda!",
+          variant: "destructive",
+        });
+      } else if (res.status === 403) {
+        toast({
+          title: "Login gagal",
+          description: "Anda tidak berhak mengakses halaman ini.",
+          variant: "destructive",
+        });
+      } else if (res.status === 500) {
+        toast({
+          title: "Login gagal",
+          description: "Terjadi kesalahan pada server, silakan coba lagi nanti.",
+          variant: "destructive",
+        });
+      } else {
+        const data = (await res.json()) as LoginResponse;
+
+        const expiresAt = Date.now() + data.expires * 1000; // epoch ms
+
+        // Simpan semua nilai response ke cookie
+        setCookie(AUTH_TOKEN_KEY, data.token, { expires: new Date(expiresAt), path: "/" });
+        setCookie(AUTH_NAME_KEY, data.name, { expires: new Date(expiresAt), path: "/" });
+        setCookie(AUTH_GROUP_KEY, data.group, { expires: new Date(expiresAt), path: "/" });
+        setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
+
+        toast({
+          title: "Login berhasil",
+          description: `Selamat datang, ${data.name}`,
+          variant: "success",
+        });
       }
-
-      const data = (await res.json()) as LoginResponse;
-
-      const expiresAt = Date.now() + data.expires * 1000; // epoch ms
-
-      // Simpan semua nilai response ke cookie
-      setCookie(AUTH_TOKEN_KEY, data.token, { expires: new Date(expiresAt), path: "/" });
-      setCookie(AUTH_NAME_KEY, data.name, { expires: new Date(expiresAt), path: "/" });
-      setCookie(AUTH_GROUP_KEY, data.group, { expires: new Date(expiresAt), path: "/" });
-      setCookie(AUTH_EXPIRES_AT_KEY, String(expiresAt), { expires: new Date(expiresAt), path: "/" });
-
-      toast({
-        title: "Login berhasil",
-        description: `Selamat datang, ${data.name}`,
-        variant: "success",
-      });
 
       onLogin();
     } catch (error: any) {

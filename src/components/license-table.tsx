@@ -587,13 +587,13 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
       toast({
         title: "Berhasil",
-        description: "History berhasil diekspor ke Excel",
+        description: "Riwayat harga berhasil diekspor ke Excel",
         variant: "success"
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Gagal mengekspor history ke Excel",
+        description: "Gagal mengekspor riwayat harga ke Excel",
         variant: "destructive"
       });
     }

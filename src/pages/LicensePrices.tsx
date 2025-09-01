@@ -402,13 +402,13 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
 
       toast({
         title: "Berhasil",
-        description: "History berhasil diekspor ke Excel",
+        description: "Riwayat harga berhasil diekspor ke Excel",
         variant: "success"
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Gagal mengekspor history ke Excel",
+        description: "Gagal mengekspor riwayat harga ke Excel",
         variant: "destructive"
       });
     }
@@ -583,12 +583,12 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                                   </div>
                                 </TableHead>
                                 <TableHead>Deskripsi</TableHead>
-                                <TableHead onClick={() => handleHistorySort("last_user_input")} className="cursor-pointer">
+                                {/* <TableHead onClick={() => handleHistorySort("last_user_input")} className="cursor-pointer">
                                   <div className="flex items-center">
                                     User
                                     {getHistorySortIcon("last_user_input")}
                                   </div>
-                                </TableHead>
+                                </TableHead> */}
                                 <TableHead onClick={() => handleHistorySort("createdAt")} className="cursor-pointer">
                                   <div className="flex items-center">
                                     Dibuat Pada
@@ -608,7 +608,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                                   <TableCell className="whitespace-pre-wrap break-words max-w-[200px]">
                                     {h.description}
                                   </TableCell>
-                                  <TableCell>{h.last_user_input}</TableCell>
+                                  {/* <TableCell>{h.last_user_input}</TableCell> */}
                                   <TableCell>{formatDate(h.createdAt)}</TableCell>
                                 </TableRow>
                               ))}
