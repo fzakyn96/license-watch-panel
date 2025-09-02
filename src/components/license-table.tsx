@@ -264,8 +264,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         'Satuan': license.satuan,
         'Harga Satuan': license.harga_satuan,
         'Total Harga': license.jumlah,
-        'Username': license.username,
-        'Password': license.password,
+        // 'Username': license.username,
+        // 'Password': license.password,
         'Lokasi': license.lokasi_lisensi,
         'Catatan': license.description,
         'Tanggal dibuat': formatDate(license.createdAt),
@@ -278,6 +278,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
 
       // Mengatur lebar kolom
       const colWidths = [
+        { wch: 5 }, // No
         { wch: 60 }, // Nama Aset
         { wch: 15 }, // Tanggal Mulai
         { wch: 15 }, // Tanggal Berakhir
@@ -286,12 +287,12 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         { wch: 10 }, // Satuan
         { wch: 15 }, // Harga Satuan
         { wch: 15 }, // Total Harga
-        { wch: 20 }, // Username
-        { wch: 20 }, // Password
+        // { wch: 20 }, // Username
+        // { wch: 20 }, // Password
         { wch: 30 }, // Lokasi
         { wch: 40 }, // Catatan
-        { wch: 15 }, // Tanggal dibuat
-        { wch: 15 }  // Tanggal update
+        { wch: 20 }, // Tanggal dibuat
+        { wch: 20 }  // Tanggal update
       ];
       ws['!cols'] = colWidths;
 
