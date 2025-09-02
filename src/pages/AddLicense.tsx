@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,6 +92,16 @@ export const AddLicense = () => {
 
     if (license.harga_satuan && license.harga_satuan < 0) {
       newErrors.harga_satuan = 'Harga satuan tidak boleh negatif';
+    }
+
+    // Validasi tanggal mulai tidak boleh lebih besar dari tanggal berakhir
+    if (license.start_date && license.end_date) {
+      const startDate = new Date(license.start_date);
+      const endDate = new Date(license.end_date);
+      if (startDate > endDate) {
+        newErrors.start_date = 'Tanggal mulai tidak boleh lebih besar dari tanggal berakhir';
+        newErrors.end_date = 'Tanggal berakhir tidak boleh lebih kecil dari tanggal mulai';
+      }
     }
 
     setErrors(newErrors);
