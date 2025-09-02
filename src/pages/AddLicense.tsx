@@ -75,6 +75,12 @@ export const AddLicense = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [priceInput, setPriceInput] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  useEffect(() => {
+    // Check if app is running in iframe
+    setIsInIframe(window.self !== window.top);
+  }, []);
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -207,14 +213,16 @@ export const AddLicense = () => {
               <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
             </div>
           </div>
-            <Button
-              variant="default"
-              onClick={() => navigate('/')}
-              className="flex items-center space-x-2"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Kembali</span>
-            </Button>
+            {!isInIframe && (
+              <Button
+                variant="default"
+                onClick={() => navigate('/')}
+                className="flex items-center space-x-2"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Kembali</span>
+              </Button>
+            )}
           </div>
         </div>
       </header>
