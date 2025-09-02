@@ -152,6 +152,32 @@ export const EditLicense = () => {
       newFormData.jumlah = volume * hargaSatuan;
     }
 
+    // Validasi real-time untuk tanggal
+    if (field === 'start_date' || field === 'end_date') {
+      const newErrors = { ...errors };
+      
+      const startDate = field === 'start_date' ? value : formData.start_date;
+      const endDate = field === 'end_date' ? value : formData.end_date;
+      
+      if (startDate && endDate) {
+        const start = new Date(startDate as string);
+        const end = new Date(endDate as string);
+        
+        if (start > end) {
+          newErrors.start_date = 'Tanggal mulai tidak boleh lebih besar dari tanggal berakhir';
+          newErrors.end_date = 'Tanggal berakhir tidak boleh lebih kecil dari tanggal mulai';
+        } else {
+          delete newErrors.start_date;
+          delete newErrors.end_date;
+        }
+      } else {
+        delete newErrors.start_date;
+        delete newErrors.end_date;
+      }
+      
+      setErrors(newErrors);
+    }
+
     setFormData(newFormData);
   };
 
