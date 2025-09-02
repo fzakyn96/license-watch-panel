@@ -11,6 +11,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useQueryParams } from '@/hooks/use-query-params';
 import { logQueryParams, hasValidUuid } from '@/utils/query-params';
+import { BASE_URL } from '@/lib/config';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       
-      const loginRes = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/iframeLogin?uuid=${uuid}`, {
+      const loginRes = await fetch(`${BASE_URL}/auth/iframeLogin?uuid=${uuid}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });

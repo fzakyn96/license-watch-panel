@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { getCookie } from "@/lib/cookies";
+import { BASE_URL } from "@/lib/config";
 
 const formatRupiah = (amount: number): string => {
   return new Intl.NumberFormat('id-ID', {
@@ -78,7 +79,7 @@ export const EditLicense = () => {
   useEffect(() => {
     const fetchLicense = async () => {
       try {
-        const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/find?uuid=${uuid}`);
+        const response = await apiFetch(`${BASE_URL}/licenses/find?uuid=${uuid}`);
         const data = await response.json();
 
         if (data.status === 200 && data.data) {
@@ -221,7 +222,7 @@ export const EditLicense = () => {
         updatedAt: new Date().toISOString()
       };
 
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/update`, {
+      const response = await apiFetch(`${BASE_URL}/licenses/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

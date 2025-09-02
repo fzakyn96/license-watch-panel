@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { useTheme } from "next-themes";
 import * as XLSX from 'xlsx';
+import { BASE_URL } from "@/lib/config";
 
 interface HistoryLicense {
   id: number;
@@ -98,7 +99,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
     try {
       setIsLoading(true);
-      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&sortField=end_date&sortOrder=desc&name=`;
+      let url = `${BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&sortField=end_date&sortOrder=desc&name=`;
       if (searchQuery) {
         url += `${encodeURIComponent(searchQuery)}`;
       }
@@ -191,7 +192,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
 
   const handleExportToExcel = async () => {
     try {
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/export`);
+      const response = await apiFetch(`${BASE_URL}/licenses/export`);
       const data: ExportPrice = await response.json();
 
       if (data.status === 200) {

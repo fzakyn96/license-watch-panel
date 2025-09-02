@@ -54,6 +54,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "@/lib/config";
 
 interface License {
   uuid: string;
@@ -127,7 +128,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
   const fetchLicenses = async (page: number = 1, paginate: number = 10, searchQuery?: string, sort?: string, order?: string) => {
     try {
       // Gunakan endpoint pagination dengan dynamic sorting
-      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
+      let url = `${BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&name=${searchQuery ? encodeURIComponent(searchQuery) : ''}`;
 
       // Tambahkan parameter sorting (backend expect default sortField dan sortOrder)
       const sortFieldParam = sort || "status_lisensi";
@@ -238,7 +239,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       setIsLoading(true);
 
       // Fetch semua data untuk export dengan paginate besar
-      const url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=1&paginate=9999&name=`;
+      const url = `${BASE_URL}/licenses/get?page=1&paginate=9999&name=`;
       const response = await apiFetch(url);
       const data: ApiResponse = await response.json();
 
@@ -359,7 +360,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
     if (!selectedLicense) return;
 
     try {
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/delete`, {
+      const response = await apiFetch(`${BASE_URL}/licenses/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -407,7 +408,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
       const username = getCookie('auth_name') || '';
       formData.append('last_user_input', username);
 
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/upload`, {
+      const response = await apiFetch(`${BASE_URL}/licenses/upload`, {
         method: 'POST',
         body: formData
       });

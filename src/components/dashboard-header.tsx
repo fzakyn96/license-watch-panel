@@ -7,6 +7,7 @@ import { apiFetch } from "@/lib/auth";
 import { EmailManagement } from "@/components/email-management";
 import { NotificationScheduleDialog } from "@/components/notification-schedule-dialog";
 import { useTheme } from "next-themes";
+import { BASE_URL } from "@/lib/config";
 
 interface DashboardHeaderProps {
   onLogout: () => void;
@@ -30,11 +31,11 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
 
   const checkNotificationStatus = async () => {
     try {
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
+      const response = await apiFetch(`${BASE_URL}/cron/running`);
       const data = await response.json();
 
       if (data.status === 404) {
-        // const createResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/create`, {
+        // const createResponse = await apiFetch(`${BASE_URL}/cron/create`, {
         //   method: 'POST',
         //   headers: {
         //     'Content-Type': 'application/json',
@@ -85,12 +86,12 @@ export const DashboardHeader = ({ onLogout }: DashboardHeaderProps) => {
       // Disable notifications directly!
       try {
         setNotificationsEnabled(false);
-        const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
+        const response = await apiFetch(`${BASE_URL}/cron/running`);
         const data = await response.json();
         
         if (data.status === 200 && data.data && data.data.length > 0) {
           const uuid = data.data[0].uuid;
-          const switchResponse = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/switch`, {
+          const switchResponse = await apiFetch(`${BASE_URL}/cron/switch`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

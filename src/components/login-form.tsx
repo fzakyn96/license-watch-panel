@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { setCookie } from "@/lib/cookies";
 import { AUTH_TOKEN_KEY, AUTH_NAME_KEY, AUTH_GROUP_KEY, AUTH_EXPIRES_AT_KEY } from "@/lib/auth";
 import { useTheme } from "next-themes";
+import { BASE_URL } from "@/lib/config";
 
 interface LoginFormProps {
   onLogin: () => void;
@@ -33,7 +34,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
 
     try {
       // Normal login flow
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+      const res = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password, directory: "pertamina" }),

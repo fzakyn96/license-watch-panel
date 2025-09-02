@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, AlertTriangle, XCircle, AlertCircle } from "lucide-react";
 import { apiFetch } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { BASE_URL } from "@/lib/config";
 
 interface StatusData {
   status: string;
@@ -73,7 +74,7 @@ const StatusCardsComponent = forwardRef<StatusCardsRef, StatusCardsProps>((props
 
   const fetchStatusData = async () => {
     try {
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/home/get`);
+      const response = await apiFetch(`${BASE_URL}/home/get`);
       const result = await response.json();
 
       if (result.status === 200 && result.data) {

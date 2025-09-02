@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Plus, Trash2, Timer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
+import { BASE_URL } from "@/lib/config";
 
 interface NotificationScheduleDialogProps {
   open: boolean;
@@ -42,7 +43,7 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
 
   const checkExistingSchedule = async () => {
     try {
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/running`);
+      const response = await apiFetch(`${BASE_URL}/cron/running`);
       const data = await response.json();
 
       if (data.status === 200 && data.data && data.data.length > 0) {
@@ -117,7 +118,7 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
     try {
       const cronExpression = convertToCron();
 
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/create`, {
+      const response = await apiFetch(`${BASE_URL}/cron/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +167,7 @@ export const NotificationScheduleDialog = ({ open, onOpenChange, onSuccess }: No
     try {
       const cronExpression = convertToCron();
 
-      const response = await apiFetch(`${import.meta.env.VITE_BASE_URL}/cron/update`, {
+      const response = await apiFetch(`${BASE_URL}/cron/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

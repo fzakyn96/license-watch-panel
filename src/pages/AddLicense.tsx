@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from "@/lib/auth";
 import { getCookie } from "@/lib/cookies";
+import { BASE_URL } from "@/lib/config";
 
 interface License {
   name: string;
@@ -193,7 +194,7 @@ export const AddLicense = () => {
         last_user_input: name
       };
 
-      await apiFetch(`${import.meta.env.VITE_BASE_URL}/licenses/create`, {
+      await apiFetch(`${BASE_URL}/licenses/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
