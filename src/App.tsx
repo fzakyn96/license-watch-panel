@@ -7,10 +7,12 @@ import { AppLayout, AppRoutes } from '@/components';
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
+  const isDev = import.meta.env.VITE_ISDEV === "true";
+  const baseName = isDev ? "/lisa" : "/lisa/";
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter
-        basename={import.meta.env.VITE_BASE_NAME}
+        basename={baseName}
         future={{
           v7_startTransition: true,
           v7_relativeSplatPath: true,
