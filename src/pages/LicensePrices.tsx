@@ -223,7 +223,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 'Berlaku Sejak': formatDate(history.tanggal),
                 'Deskripsi (History)': history.description,
                 // 'Terakhir Input Oleh': history.last_user_input,
-                'Dibuat Pada': formatDate(history.createdAt)
+                'Tanggal Dibuat': formatDate(history.createdAt)
               });
             });
           }
@@ -391,7 +391,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
         'Berlaku Sejak': formatDate(history.tanggal),
         'Deskripsi': history.description,
         // 'Terakhir Input Oleh': history.last_user_input,
-        'Dibuat Pada': formatDate(history.createdAt)
+        'Tanggal Dibuat': formatDate(history.createdAt)
       }));
 
       const workbook = XLSX.utils.book_new();
@@ -592,7 +592,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                                 </TableHead> */}
                                 <TableHead onClick={() => handleHistorySort("createdAt")} className="cursor-pointer">
                                   <div className="flex items-center">
-                                    Dibuat Pada
+                                    Tanggal Dibuat
                                     {getHistorySortIcon("createdAt")}
                                   </div>
                                 </TableHead>

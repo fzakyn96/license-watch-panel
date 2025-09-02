@@ -269,8 +269,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         // 'Password': license.password,
         'Lokasi': license.lokasi_lisensi,
         'Catatan': license.description,
-        'Tanggal dibuat': formatDate(license.createdAt),
-        'Tanggal update': formatDate(license.updatedAt)
+        'Tanggal Dibuat': formatDate(license.createdAt),
+        'Tanggal Update': formatDate(license.updatedAt)
       }));
 
       const ws = XLSX.utils.json_to_sheet(exportData);
@@ -292,8 +292,8 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
         // { wch: 20 }, // Password
         { wch: 30 }, // Lokasi
         { wch: 40 }, // Catatan
-        { wch: 20 }, // Tanggal dibuat
-        { wch: 20 }  // Tanggal update
+        { wch: 20 }, // Tanggal Dibuat
+        { wch: 20 }  // Tanggal Update
       ];
       ws['!cols'] = colWidths;
 
@@ -846,7 +846,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                           </TableHead> */}
                           <TableHead onClick={() => handleHistorySort("createdAt")} className="cursor-pointer">
                             <div className="flex items-center">
-                              Dibuat Pada
+                              Tanggal Dibuat
                               {getHistorySortIcon("createdAt")}
                             </div>
                           </TableHead>
@@ -898,7 +898,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                           </div>
                           <div className="flex justify-between text-xs text-muted-foreground">
                             {/* <span>User: {h.last_user_input}</span> */}
-                            <span>Tanggal dibuat: {formatDate(h.createdAt)}</span>
+                            <span>Tanggal Dibuat: {formatDate(h.createdAt)}</span>
                           </div>
                         </div>
                       ))
@@ -1052,7 +1052,7 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                 onClick={() => handleSort("createdAt")}
               >
                 <div className="flex items-center">
-                  Tanggal dibuat
+                  Tanggal Dibuat
                   {getSortIcon("createdAt")}
                 </div>
               </TableHead>
@@ -1326,10 +1326,10 @@ export const LicenseTable = ({ onDataChange }: LicenseTableProps) => {
                         <p className="mt-1 text-muted-foreground">{license.description}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Tanggal dibuat</span> {formatDate(license.createdAt)}
+                        <span className="font-medium">Tanggal Dibuat</span> {formatDate(license.createdAt)}
                       </div>
                       <div>
-                        <span className="font-medium">Tanggal update:</span> {formatDate(license.updatedAt)}
+                        <span className="font-medium">Tanggal Update:</span> {formatDate(license.updatedAt)}
                       </div>
                     </div>
                   </div>

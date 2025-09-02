@@ -2,7 +2,6 @@
  * Get the base API URL based on development flag
  */
 export const getBaseUrl = (): string => {
-  // Check if we're in development mode based on ISDEV flag
   const isDev = import.meta.env.VITE_ISDEV === 'true';
   
   if (isDev) {
