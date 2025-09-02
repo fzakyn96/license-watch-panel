@@ -52,6 +52,7 @@ interface License {
   password: string;
   lokasi_lisensi: string;
   description: string;
+  status_lisensi: number;
   last_user_input: string;
   createdAt: string;
   updatedAt: string;
@@ -189,17 +190,13 @@ export const EditLicense = () => {
     handleInputChange('harga_satuan', numericValue);
   };
 
-  const getLicenseStatus = (endDate: string) => {
-    const today = new Date();
-    const end = new Date(endDate);
-    const diffDays = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) return {
+  const getLicenseStatus = (statusLisensi: number) => {
+    if (statusLisensi === 1) return {
       text: 'Sudah Kadaluarsa',
       color: 'bg-red-100 text-red-700 border-red-200',
       icon: XCircle
     };
-    if (diffDays <= 120) return {
+    if (statusLisensi === 2) return {
       text: 'Akan Kadaluarsa',
       color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
       icon: AlertCircle
@@ -301,7 +298,7 @@ export const EditLicense = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Status:</span>
                 {(() => {
-                  const status = getLicenseStatus(formData.end_date);
+                  const status = getLicenseStatus(formData.status_lisensi);
                   const StatusIcon = status.icon;
                   return (
                     <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${status.color}`}>
