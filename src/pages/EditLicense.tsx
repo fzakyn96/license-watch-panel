@@ -67,6 +67,12 @@ export const EditLicense = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [priceInput, setPriceInput] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  useEffect(() => {
+    // Check if app is running in iframe
+    setIsInIframe(window.self !== window.top);
+  }, []);
 
   useEffect(() => {
     const fetchLicense = async () => {
@@ -118,6 +124,16 @@ export const EditLicense = () => {
 
     if (formData?.harga_satuan && formData.harga_satuan < 0) {
       newErrors.harga_satuan = 'Harga satuan tidak boleh negatif';
+    }
+
+    // Validasi tanggal mulai tidak boleh lebih besar dari tanggal berakhir
+    if (formData?.start_date && formData?.end_date) {
+      const startDate = new Date(formData.start_date);
+      const endDate = new Date(formData.end_date);
+      if (startDate > endDate) {
+        newErrors.start_date = 'Tanggal mulai tidak boleh lebih besar dari tanggal berakhir';
+        newErrors.end_date = 'Tanggal berakhir tidak boleh lebih kecil dari tanggal mulai';
+      }
     }
 
     setErrors(newErrors);
@@ -230,14 +246,16 @@ export const EditLicense = () => {
                 <p className="text-xs sm:text-sm text-muted-foreground">Sistem Monitoring Lisensi Aset</p>
               </div>
             </div>
-            <Button
-              variant="default"
-              onClick={() => navigate('/')}
-              className="flex items-center space-x-2"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Kembali</span>
-            </Button>
+            {!isInIframe && (
+              <Button
+                variant="default"
+                onClick={() => navigate('/')}
+                className="flex items-center space-x-2"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Kembali</span>
+              </Button>
+            )}
           </div>
         </div>
       </header>
