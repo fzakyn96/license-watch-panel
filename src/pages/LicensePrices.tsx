@@ -98,7 +98,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
   const fetchLicenses = async (page: number, paginate: number, searchQuery?: string) => {
     try {
       setIsLoading(true);
-      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&sortField=end_date&sortDirection=desc&name=`;
+      let url = `${import.meta.env.VITE_BASE_URL}/licenses/get?page=${page}&paginate=${paginate}&sortField=end_date&sortOrder=desc&name=`;
       if (searchQuery) {
         url += `${encodeURIComponent(searchQuery)}`;
       }
@@ -207,7 +207,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
           'Tanggal Berakhir': formatDate(license.end_date),
           'Lokasi Lisensi': license.lokasi_lisensi,
           'Deskripsi': license.description,
-          'Terakhir Diubah Oleh': license.last_user_input
+          // 'Terakhir Diubah Oleh': license.last_user_input
         }));
 
         // History data
@@ -221,7 +221,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
                 'Harga Satuan (History)': history.harga_satuan,
                 'Berlaku Sejak': formatDate(history.tanggal),
                 'Deskripsi (History)': history.description,
-                'Terakhir Input Oleh': history.last_user_input,
+                // 'Terakhir Input Oleh': history.last_user_input,
                 'Dibuat Pada': formatDate(history.createdAt)
               });
             });
@@ -389,7 +389,7 @@ const LicensePrices = ({ onLogout }: LicensePricesProps) => {
         'Harga Satuan': history.harga_satuan,
         'Berlaku Sejak': formatDate(history.tanggal),
         'Deskripsi': history.description,
-        'Terakhir Input Oleh': history.last_user_input,
+        // 'Terakhir Input Oleh': history.last_user_input,
         'Dibuat Pada': formatDate(history.createdAt)
       }));
 
