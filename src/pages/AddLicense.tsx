@@ -101,7 +101,7 @@ export const AddLicense = () => {
       newErrors.harga_satuan = 'Harga satuan tidak boleh negatif';
     }
 
-    // Validasi tanggal mulai tidak boleh lebih besar dari tanggal berakhir
+    // Validasi tanggal mulai tidak boleh lebih besar dari tanggal berakhir.
     if (license.start_date && license.end_date) {
       const startDate = new Date(license.start_date);
       const endDate = new Date(license.end_date);
